@@ -1,0 +1,3659 @@
+{
+  "sample": [
+    {
+      "alias": "animal_35",
+      "title": "ANIMAL:::ID:::CS05_1999",
+      "releaseDate": "2018-11-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "855"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Cinta Senese"
+          }
+        ],
+        "EFABIS Breed country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ]
+      },
+      "sampleRelationships": []
+    },
+    {
+      "alias": "animal_42",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "862"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Cinta Senese"
+          }
+        ],
+        "EFABIS Breed country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ]
+      },
+      "sampleRelationships": []
+    },
+    {
+      "alias": "animal_50",
+      "title": "ANIMAL:::ID:::VERIT12000024025_2008",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "description": "Az. Agr. Mario Alberti, Maccagno (VA)",
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "ANIMAL:::ID:::VERIT12000024025_2008"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1443"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Verzaschese"
+          }
+        ],
+        "EFABIS Breed country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "unknown accuracy level"
+          }
+        ]
+      },
+      "sampleRelationships": []
+    },
+    {
+      "alias": "animal_51",
+      "title": "ANIMAL:::ID:::VERCH1539971_2010",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "description": "Az. Agr. MArio Alberti, Maccagno (VA)",
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "ANIMAL:::ID:::VERCH1539971_2010"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1440"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:gooduser-secretpassword@www.example.com"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Verzaschese"
+          }
+        ],
+        "EFABIS Breed country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "unknown accuracy level"
+          }
+        ]
+      },
+      "sampleRelationships": []
+    },
+    {
+      "alias": "animal_52",
+      "title": "ANIMAL:::ID:::VERIT012000024961_2010",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "description": "Az. Agr. Mario Alberti, Maccagno (VA) - Soggetto momentaneamente allevato c/o Az. Agr. Didattico Sperimentale \"GP Guidobono Cavalchini\", Borgo Adorno (AL)",
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "ANIMAL:::ID:::VERIT012000024961_2010"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1452"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Verzaschese"
+          }
+        ],
+        "EFABIS Breed country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "unknown accuracy level"
+          }
+        ]
+      },
+      "sampleRelationships": []
+    },
+    {
+      "alias": "sample_256",
+      "title": "CS05_1999_IBBACNR_PTP_02.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_02.06.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1834"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-02",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_257",
+      "title": "CS05_1999_IBBACNR_PTP_23.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_23.06.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1835"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Availability": [
+          {
+            "value": "no longer available"
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-23",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_258",
+      "title": "CS05_1999_IBBACNR_PTP_19.10.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_19.10.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1836"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Availability": [
+          {
+            "value": "no longer available"
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-10-19",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ],
+        "Animal age at collection": [
+          {
+            "value": 3,
+            "units": "years"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_343",
+      "title": "CS05_1999_IBBACNR_ELPZOO_26.05.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_ELPZOO_26.05.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1998"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Availability": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-05-26",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_344",
+      "title": "CS05_1999_IBBACNR_ELPZOO_17.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_ELPZOO_17.06.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1999"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-17",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ],
+        "Collection place latitude":[
+          {
+            "value": 12.34,
+            "units": "decimal degree"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_345",
+      "title": "CS05_1999_IBBACNR_ELPZOO_30.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_ELPZOO_30.06.1999"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2000"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-30",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_213",
+      "title": "CS12_1999_IBBACNR_PTP_18.12.2000",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS12_1999_IBBACNR_PTP_18.12.2000"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1813"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2000-12-18",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_220",
+      "title": "CS12_1999_IBBACNR_PTP_08.01.2001",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS12_1999_IBBACNR_PTP_08.01.2001"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1816"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2001-01-08",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_313",
+      "title": "CS12_1999_IBBACNR_ELPZOO_04.12.2000",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS12_1999_IBBACNR_ELPZOO_04.12.2000"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1979"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2000-12-04",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_320",
+      "title": "CS12_1999_IBBACNR_ELPZOO_15.11.2000",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS12_1999_IBBACNR_ELPZOO_15.11.2000"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1978"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2000-11-15",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_321",
+      "title": "CS12_1999_IBBACNR_ELPZOO_11.12.2000",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS12_1999_IBBACNR_ELPZOO_11.12.2000"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "1980"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2000-12-11",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_355",
+      "title": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2305"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT12000024025_2008"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_50",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_361",
+      "title": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011_S",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011_S"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2421"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT12000024025_2008"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Blood"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_50",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_362",
+      "title": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011_P",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT12000024025_2008_RegLomBank_PTPLodi_03.09.2011_P"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2422"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT12000024025_2008"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Hair"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_50",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_356",
+      "title": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2302"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERCH1539971_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_51",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_359",
+      "title": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011_P",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011_P"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2419"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERCH1539971_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Hair"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_51",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_360",
+      "title": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011_S",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERCH1539971_2010_RegLomBank_PTPLodi_03.09.2011_S"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2420"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERCH1539971_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-03",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Blood"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_51",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_354",
+      "title": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2341"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT012000024961_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-20",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Semen"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "region level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Milan"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_52",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_363",
+      "title": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011_P",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011_P"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2423"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT012000024961_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-20",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Hair"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Milan"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_52",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_364",
+      "title": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011_S",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9925,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "VERIT012000024961_2010_RegLomBank_PTPLodi_20.09.2011_S"
+          }
+        ],
+        "Alternative id": [
+          {
+            "value": "2424"
+          }
+        ],
+        "Submission title": [
+          {
+            "value": "Italian Cryoweb Pigs"
+          }
+        ],
+        "Person last name": [
+          {
+            "value": "Cozzi"
+          }
+        ],
+        "Person email": [
+          {
+            "value": "mailto:cozzi@ibba.cnr.it"
+          }
+        ],
+        "Person affiliation": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Person role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Organization name": [
+          {
+            "value": "IBBA-CNR"
+          }
+        ],
+        "Extra column":[
+          {
+            "value": "extra"
+          }
+        ],
+        "Organization role": [
+          {
+            "value": "submitter",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/EFO_0001741"
+              }
+            ]
+          }
+        ],
+        "Gene bank name": [
+          {
+            "value": "CryoWeb Subset"
+          }
+        ],
+        "Gene bank country": [
+          {
+            "value": "Italy",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+              }
+            ]
+          }
+        ],
+        "Data source type": [
+          {
+            "value": "CryoWeb"
+          }
+        ],
+        "Data source version": [
+          {
+            "value": "version 0.1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Capra hircus",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9925"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::VERIT012000024961_2010"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "2011-09-20",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "Blood"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Milan"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_52",
+          "relationshipNature": "derived from"
+        }
+      ]
+    }
+  ]
+}
