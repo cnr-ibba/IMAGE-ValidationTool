@@ -127,29 +127,81 @@ def is_child_of(child, parent):
 
 
 def is_leaf(term_iri):
-    short_term = extract_ontology_id_from_iri(term_iri)
-    ontology = get_ontology_library(short_term)
-    host = "https://www.ebi.ac.uk/ols/api/ontologies/" + ontology + "/terms?iri=" + term_iri
-    request = requests.get(host)
-    response = request.json()
+    response = get_detail_by_iri(term_iri)
     has_children = response['_embedded']['terms'][0]['has_children']
     return not has_children
 
 
-def get_ontology_library(short_term):
-    return short_term.split("_")[0]
+# According to Simon's reply in ols-support #317084
+# It is best if you have the IRI. but the short id is highly likely to be unique too
+# so you are safe to lookup on the /terms endpoint using the short id.
+# You just have to be aware that the response will be a list and
+# you may have the same id approving in multiple ontologies
+# So you need to look for the term with "is_defining_ontology : true”
+# to find the description of the term in the source ontology.
+# e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
+# the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
+def get_detail_by_short_term(short_term):
+    # ontology = get_ontology_library(short_term)
+    # host = "https://www.ebi.ac.uk/ols/api/ontologies/" + ontology + "/terms?iri=" + term_iri
+    host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
+    request = requests.get(host)
+    response = request.json()
+    try:
+        terms = response['_embedded']['terms']
+        for term in terms:
+            if term['is_defining_ontology']:
+                return term
+    except KeyError:
+        print("Could not find information for "+short_term)
+        return ""
+
+
+def get_detail_by_iri(term_iri):
+    short_term = extract_ontology_id_from_iri(term_iri)
+    return get_detail_by_short_term(short_term)
+
+
+def get_ontology_name(short_term):
+    detail = get_detail_by_short_term(short_term)
+    if len(detail):
+        return detail['ontology_name']
+    else:
+        return ""
 
 
 def convert_to_iri(term):
     if is_IRI(term):
         return term
     else:
-        # as not iri, assuming to be short term
-        library = get_ontology_library(term)
-        if library.lower() == "efo":
-            return 'http://www.ebi.ac.uk/efo/' + term
+        detail = get_detail_by_short_term(term)
+        if len(detail):
+            return detail['iri']
         else:
-            return 'http://purl.obolibrary.org/obo/' + term
+            return ""
+
+
+def get_labels_by_term(short_term):
+    detail = get_detail_by_short_term(short_term)
+    result = []
+    if len(detail):
+        result.append(detail['label'])
+        if 'synonyms' in detail and detail['synonyms']:
+            for synonym in detail['synonyms']:
+                result.append(synonym)
+    return result
+
+
+def label_match_ontology (label, short_term, case_sensitive = True):
+    online_labels = get_labels_by_term(short_term)
+    if not case_sensitive:
+        label = label.lower()
+    for current in online_labels:
+        if not case_sensitive:
+            current = current.lower()
+        if label == current:
+            return True
+    return False
 
 
 def testZooma():
