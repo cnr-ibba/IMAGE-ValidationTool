@@ -147,12 +147,20 @@ def get_detail_by_short_term(short_term):
     host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
     request = requests.get(host)
     response = request.json()
-    try:
+    num = response['page']['totalElements']
+
+    if num:
+        if num > 20:
+            host = host + "&size=" + str(num)
+            request = requests.get(host)
+            response = request.json()
         terms = response['_embedded']['terms']
         for term in terms:
             if term['is_defining_ontology']:
                 return term
-    except KeyError:
+        print("No term found with is_defining_ontology as true for "+short_term)
+        return ""
+    else:
         print("Could not find information for "+short_term)
         return ""
 

@@ -202,7 +202,7 @@ def validate_one_field(entries, rule, section, record_id):
         mandatory = True
 
     # read in allowed ontologies
-    allowed_terms = []
+    allowed_conditions = []
     if 'Valid terms' in rule:
         for term in rule['Valid terms']:
             if 'term' in term:
@@ -216,7 +216,7 @@ def validate_one_field(entries, rule, section, record_id):
                 if 'allow_descendants' in term and term['allow_descendants'] == 1:
                     descendant = True
                 ontology = OntologyCondition(term['term'], descendant, leaf, root)
-                allowed_terms.append(ontology)
+                allowed_conditions.append(ontology)
 
     # check cardinality
     entry_size = len(entries)
@@ -272,41 +272,57 @@ def validate_one_field(entries, rule, section, record_id):
             return column_results
 
         if 'terms' in entry:
-            for term in entry['terms']:
-                valid = False
-                iri = term['url']
-                if not is_uri(iri):
-                    msg = "Invalid URI value " + iri + " in field " + rule['Name']
-                    column_results.append(ValidationResultColumn("Error", msg, record_id))
-                    continue
-                term_id = extract_ontology_id_from_iri(iri)
-                for allowed in allowed_terms:
-                    if allowed.is_allowed(term_id):
-                        valid = True
-                        break
-                if not valid:
-                    msg = 'Not valid ontology term in field ' + rule['Name']
-                    column_results.append(ValidationResultColumn("Error", msg, record_id))
+            if not allowed_conditions:  # allowed conditions empty
+                msg = "Ontology provided for field "+rule['Name']+" however there is no requirement in the ruleset"
+                column_results.append(ValidationResultColumn("Warning", msg, record_id))
+            else:
+                for term in entry['terms']:
+                    valid = False
+                    iri = term['url']
+                    if not is_uri(iri):
+                        msg = "Invalid URI value " + iri + " in field " + rule['Name']
+                        column_results.append(ValidationResultColumn("Error", msg, record_id))
+                        continue
+                    term_id = extract_ontology_id_from_iri(iri)
+                    for allowed in allowed_conditions:
+                        if allowed.is_allowed(term_id):
+                            valid = True
+                            break
+                    if not valid:
+                        msg = 'Not valid ontology term '+term_id+' in field ' + rule['Name']
+                        column_results.append(ValidationResultColumn("Error", msg, record_id))
 
         # check type
         # current allowed types:
         # numeric: number
         # textual: text, limited value, ontology_id, uri, doi, date
+        # number type requires a unit, which is covered in the units check above
         if rule['Type'] == 'number':
             if type(value) is not float and type(value) is not int:
                 msg = "For field " + rule['Name'] + " the provided value " + str(
                     value) + " is not of the expected type Number"
                 column_results.append(ValidationResultColumn("Error", msg, record_id))
-        # number type requires a unit, which is covered in the units check above
-        # if ('units' not in entry):
-        #	results.append("For field "+rule['Name']+" no units provided which is required by the type of Number")
         else: # textual types
             if type(value) is not str:
                 msg = "For field " + rule['Name'] + " the provided value " + str(
                     value) + " is not of the expected type " + rule['Type']
                 column_results.append(ValidationResultColumn("Error", msg, record_id))
             if rule['Type'] == 'ontology_id':
-                pass  # check whether the provided label matches to ontology id
+                if 'terms' not in entry:
+                    msg = "No url found for the field "+rule['Name']+" which has the type of ontology_id "
+                    column_results.append(ValidationResultColumn("Error", msg, record_id))
+                else:
+                    for term in entry['terms']:
+                        iri = term['url']
+                        term = extract_ontology_id_from_iri(iri)
+                        if not label_match_ontology(value, term):
+                            if label_match_ontology(value, term, False):
+                                msg = "Provided value " + value + \
+                                      " has different letter case to the term referenced by " + iri
+                                column_results.append(ValidationResultColumn("Warning", msg, record_id))
+                            else:
+                                msg = "Provided value "+value+" does not match to the provided ontology "+iri
+                                column_results.append(ValidationResultColumn("Error", msg, record_id))
             elif rule['Type'] == "uri":
                 uri_result = is_uri(value)
                 if not uri_result:
@@ -423,10 +439,14 @@ class OntologyCondition:
         self.include_descendant = include_descendant
         self.only_leaf = only_leaf
         self.include_self = include_self
-        if iri:
-            self.iri = iri
-        else:
-            self.iri = convert_to_iri(term)
+        try:
+            if iri:
+                self.iri = iri
+            else:
+                self.iri = convert_to_iri(term)
+        except TypeError:
+            print(term)
+            exit()
 
     def __str__(self):
         return "Term: " + self.term + " include descendant: " + str(self.include_descendant) + " leaf only: " + \
