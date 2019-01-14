@@ -1,30 +1,32 @@
 import requests
-# import json
-from misc import *
+import misc
+from typing import Dict, List
 
 
-def use_zooma(term, category):
+# search against zooma and return the matched ontology
+def use_zooma(term: str, category: str) -> Dict[str, str]:
     new_term = term.replace(" ", "+")
     # main production server
     host = "https://www.ebi.ac.uk/spot/zooma/v2/api/services/annotate?propertyValue=" + new_term
     # test zooma server
     # host = "http://snarf.ebi.ac.uk:8480/spot/zooma/v2/api/services/annotate?propertyValue="+newTerm
     # add filter: configure datasource and ols libraries
-    category = from_lower_camel_case(category)
+    category = misc.from_lower_camel_case(category)
     if category == "species":  # necessary if
         category = "organism"
         host += "&filter=required:[ena],ontologies:[NCBITaxon]"  # species, only search NCBI taxonomy ontology
     elif category == "breed":
         host += "&filter=required:[ena],ontologies:[lbo]"  # breed, only search Livestock Breed Ontology
     elif category == "country" or category == "geneBankCountry":
-        host += "&filter=required:[ena],ontologies:[ncit,gaz]"  # country, only search NCIT Ontology
+        host += "&filter=required:[ena],ontologies:[ncit]"  # country, only search NCIT Ontology
     else:
-        host += "&filter=required:[ena],ontologies:[efo,uberon,obi,pato]"  # according to IMAGE ruleset, only these ontology libraries are allowed in the ruleset, so not search others, gaz is for countries
+        # according to IMAGE ruleset, only these ontology libraries are allowed in the ruleset,
+        # so not search others
+        host += "&filter=required:[ena],ontologies:[efo,uberon,obi,pato]"
     high_result = {}
     good_result = {}
     result = {}
     # print (host)
-    # host = "https://github.com/timeline.json"
     request = requests.get(host)
     # print (json.dumps(request.json(), indent=4, sort_keys=True))
     for elem in request.json():
@@ -40,7 +42,8 @@ def use_zooma(term, category):
                 high_result[property_value] = semantic_tag
             elif confidence == "good":
                 good_result[property_value] = semantic_tag
-            # else: #medium/low
+            else:  # medium/low
+                pass
 
     # print(high_result)
     # print(good_result)
@@ -60,7 +63,7 @@ def use_zooma(term, category):
             return result
 
 
-def get_general_breed_by_species(species, cross=False):
+def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str, str]:
     species = species.lower()
     ontology = {}
     if species == 'bos taurus':
@@ -111,7 +114,7 @@ def get_general_breed_by_species(species, cross=False):
     return ontology
 
 
-def is_child_of(child, parent):
+def is_child_of(child: str, parent: str) -> bool:
     child = convert_to_iri(child)
     parent = convert_to_iri(parent)
     host = "https://www.ebi.ac.uk/ols/api/search?q=" + child + "&queryFields=iri&childrenOf=" + parent
@@ -126,7 +129,7 @@ def is_child_of(child, parent):
         return True
 
 
-def is_leaf(term_iri):
+def is_leaf(term_iri: str) -> bool:
     response = get_detail_by_iri(term_iri)
     has_children = response['_embedded']['terms'][0]['has_children']
     return not has_children
@@ -141,9 +144,7 @@ def is_leaf(term_iri):
 # to find the description of the term in the source ontology.
 # e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
 # the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
-def get_detail_by_short_term(short_term):
-    # ontology = get_ontology_library(short_term)
-    # host = "https://www.ebi.ac.uk/ols/api/ontologies/" + ontology + "/terms?iri=" + term_iri
+def get_detail_by_short_term(short_term: str) -> Dict:
     host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
     request = requests.get(host)
     response = request.json()
@@ -159,18 +160,22 @@ def get_detail_by_short_term(short_term):
             if term['is_defining_ontology']:
                 return term
         print("No term found with is_defining_ontology as true for "+short_term)
-        return ""
+        return {}
     else:
         print("Could not find information for "+short_term)
-        return ""
+        return {}
 
 
-def get_detail_by_iri(term_iri):
-    short_term = extract_ontology_id_from_iri(term_iri)
-    return get_detail_by_short_term(short_term)
+def get_detail_by_iri(term_iri: str) -> Dict:
+    if misc.is_IRI(term_iri):
+        short_term = misc.extract_ontology_id_from_iri(term_iri)
+        return get_detail_by_short_term(short_term)
+    else:
+        print("The given value "+term_iri+" is not a valid IRI")
+        return {}
 
 
-def get_ontology_name(short_term):
+def get_ontology_name(short_term: str) -> str:
     detail = get_detail_by_short_term(short_term)
     if len(detail):
         return detail['ontology_name']
@@ -178,8 +183,8 @@ def get_ontology_name(short_term):
         return ""
 
 
-def convert_to_iri(term):
-    if is_IRI(term):
+def convert_to_iri(term: str) -> str:
+    if misc.is_IRI(term):
         return term
     else:
         detail = get_detail_by_short_term(term)
@@ -189,7 +194,7 @@ def convert_to_iri(term):
             return ""
 
 
-def get_labels_by_term(short_term):
+def get_labels_by_term(short_term: str) -> List[str]:
     detail = get_detail_by_short_term(short_term)
     result = []
     if len(detail):
@@ -200,7 +205,8 @@ def get_labels_by_term(short_term):
     return result
 
 
-def label_match_ontology (label, short_term, case_sensitive = True):
+# check whether provided label appears in the provided ontology label and synonyms
+def label_match_ontology(label: str, short_term: str, case_sensitive: bool = True) -> bool:
     online_labels = get_labels_by_term(short_term)
     if not case_sensitive:
         label = label.lower()
@@ -212,7 +218,8 @@ def label_match_ontology (label, short_term, case_sensitive = True):
     return False
 
 
-def testZooma():
+# test zooma function
+def test_zooma() -> None:
     # annotation = useZooma('mus musculus','species')  	#organism in gxa datasource with high, disallow any datasource, good
     # annotation = useZooma('deutschland','country')		#country type=null, two matches medium/low, so returned value is None
     # annotation = useZooma('norway','country')		#country type=null, while using ena datasource, high

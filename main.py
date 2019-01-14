@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-
-from validation import *
+import json
+import validation
 import datetime
 
 # read JSON into memory
@@ -20,16 +20,16 @@ except json.decoder.JSONDecodeError as e:
     exit(1)
 
 data = data['sample']
-usi_result = check_usi_structure(data)
-deal_with_errors(usi_result)
+usi_result = validation.check_usi_structure(data)
+validation.deal_with_errors(usi_result)
 
-dup_result = check_duplicates(data)
-deal_with_errors(dup_result)
+dup_result = validation.check_duplicates(data)
+validation.deal_with_errors(dup_result)
 
-rules = read_in_ruleset("sample_ruleset_v1.3.json")
+rules = validation.read_in_ruleset("sample_ruleset_v1.3.json")
 # pprint.pprint(rules)
 print("All sample records have unique data source ids")
-ruleset_result = check_with_ruleset(data, rules)
-deal_with_validation_results(ruleset_result)
+ruleset_result = validation.check_with_ruleset(data, rules)
+validation.deal_with_validation_results(ruleset_result)
 
 print(datetime.datetime.now())
