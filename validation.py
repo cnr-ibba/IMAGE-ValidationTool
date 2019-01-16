@@ -1,8 +1,10 @@
 import json
 import misc
-from use_ontology import *
-from ValidationResult import *
-from typing import Dict
+import use_ontology
+import ValidationResult
+from typing import Dict, List
+
+ontology_libraries = use_ontology.OntologyCache()
 
 
 # Read in the ruleset from a file
@@ -26,17 +28,17 @@ def read_in_ruleset(file: str) -> Dict[str, Dict]:
     return result
 
 
-# obselete after agreeing field name should be the exact match
+# obsolete after agreeing field name should be the exact match
 def find_used_field_name(record: Dict, camel_case_str: str) -> str:
     field_name = camel_case_str
     if field_name not in record:
-        field_name = from_lower_camel_case(camel_case_str)
+        field_name = misc.from_lower_camel_case(camel_case_str)
         if field_name not in record:
             field_name = ""
     return field_name
 
 
-# obselete after agreeing field name should be the exact match
+# obsolete after agreeing field name should be the exact match
 def locate_data_source_id(record: Dict) -> str:
     id_field = find_used_field_name(record, 'dataSourceId')
     if len(id_field) == 0:
@@ -63,7 +65,8 @@ def check_usi_structure(sample: List[Dict]):
             result.append(error_prefix + "some records are not represented as hashes")
             return result
         if 'alias' not in one:
-            result.append(error_prefix + "some records do not have alias which is mandatory and used to identify record")
+            result.append(error_prefix + 'some records do not have alias which is mandatory '
+                                         'and used to identify record')
             return result
         else:
             alias = one['alias']
@@ -100,29 +103,35 @@ def check_usi_structure(sample: List[Dict]):
                 attr_values = attrs[attr_name]
                 if type(attr_values) is not list:
                     result.append(
-                        error_prefix + "the values for attribute " + attr_name + " needs to be in an array for record " + alias)
+                        error_prefix +
+                        "the values for attribute " + attr_name + " needs to be in an array for record " + alias)
                 else:
                     for attr_value in attr_values:
                         if type(attr_value) is not dict:
                             result.append(
-                                error_prefix + "the attribute value of " + attr_name + " needs to be represented as a map in record " + alias)
+                                error_prefix + "the attribute value of " + attr_name +
+                                " needs to be represented as a map in record " + alias)
                         else:
                             if 'value' not in attr_value:
                                 result.append(
-                                    error_prefix + "could not find 'value' keyword for attribute " + attr_name + " in record " + alias)
+                                    error_prefix + "could not find 'value' keyword for attribute "
+                                    + attr_name + " in record " + alias)
                             else:
                                 for key in attr_value.keys():
                                     if key != 'value' and key != 'units' and key != 'terms':
                                         result.append(
-                                            error_prefix + "Unrecognized keyword " + key + " used in attribute " + attr_name + " in record " + alias)
+                                            error_prefix + "Unrecognized keyword " + key + " used in attribute "
+                                            + attr_name + " in record " + alias)
                                     elif key == 'terms':
                                         terms_value = attr_value[key]
                                         if type(terms_value) is not list:
-                                            result.append(
-                                                error_prefix + "ontology terms need to be stored in an array in record " + alias)
+                                            msg = error_prefix + 'ontology terms need to be stored ' \
+                                                                 'in an array in record ' + alias
+                                            result.append(msg)
                                         elif type(terms_value[0]) is not dict or ('url' not in terms_value[0]):
                                             result.append(
-                                                error_prefix + "url not used as key for ontology term in record " + alias)
+                                                error_prefix +
+                                                "url not used as key for ontology term in record " + alias)
 
         # optional field
         if 'sampleRelationships' in one:
@@ -135,7 +144,8 @@ def check_usi_structure(sample: List[Dict]):
                 for relationship in relationships:
                     if type(relationship) is not dict:
                         result.append(
-                            "Wrong JSON structure: relationship needs to be presented as a hash for record with alias " + alias)
+                            "Wrong JSON structure: relationship "
+                            "needs to be presented as a hash for record with alias " + alias)
                     else:
                         if len(relationship.keys()) == 2:
                             if 'alias' in relationship and 'relationshipNature' in relationship:
@@ -145,7 +155,8 @@ def check_usi_structure(sample: List[Dict]):
                                         relationship_nature != 'same as' and \
                                         relationship_nature != 'recurated from':
                                     result.append(
-                                        "Wrong JSON structure: Unrecognized relationship nature " + relationship_nature + " within record " + alias)
+                                        "Wrong JSON structure: Unrecognized relationship nature "
+                                        + relationship_nature + " within record " + alias)
                             else:
                                 result.append(
                                     "Wrong JSON structure: Unrecognized key used (only can be alias and "
@@ -193,7 +204,7 @@ def check_duplicates(sample: List) -> List[str]:
 # record_id: the id of the record
 # return list of ValidationResultColumn object for one field
 def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
-    column_results: List[ValidationResultColumn] = []
+    column_results: List[ValidationResult.ValidationResultColumn] = []
     section_info: str = " ("+section+" section)"
     # set rule attribute
     multiple: bool = False
@@ -218,26 +229,27 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
                     leaf = True
                 if 'allow_descendants' in term and term['allow_descendants'] == 1:
                     descendant = True
-                ontology = OntologyCondition(term['term'], descendant, leaf, root)
-                allowed_conditions.append(ontology)
+                ontology_condition = OntologyCondition(term['term'], descendant, leaf, root)
+                allowed_conditions.append(ontology_condition)
 
     # check cardinality
     entry_size: int = len(entries)
     if entry_size == 0:
         if mandatory:
             msg = "Mandatory field " + rule['Name'] + " has empty value"
-            column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+            column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
         else:
             msg = rule['Required'] + " field " + rule['Name'] + " has empty value, better remove the field"
-            column_results.append(ValidationResultColumn("Warning", msg+section_info, record_id))
+            column_results.append(ValidationResult.ValidationResultColumn("Warning", msg+section_info, record_id))
     elif entry_size > 1:
         if not multiple:
             msg = "Multiple values supplied for field " + rule['Name'] + " which does not allow multiple values"
-            column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+            column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
         # multiple only be True (reaching here) when existing Allow Multiple, no need to check existence
         if entry_size > 2 and rule['Allow Multiple'] == 'max 2':
-            msg = "Maximum of 2 values allowed for field " + rule['Name'] + " but " + entry_size + " values provided"
-            column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+            msg = "Maximum of 2 values allowed for field " \
+                  + rule['Name'] + " but " + str(entry_size) + " values provided"
+            column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
     # the errors detected above mean that there is no need to validate the actual value(s)
     if column_results:
         return column_results
@@ -250,14 +262,14 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
                 if entry['units'] not in rule['Valid units']:
                     msg = entry['units'] + " for field " + rule['Name'] \
                           + " is not in the valid units list (" + ', '.join(rule['Valid units']) + ")"
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
             else:  # unit not required, but exists, raise a warning
                 msg = "No units required but " + entry['units'] + " is used as unit"
-                column_results.append(ValidationResultColumn("Warning", msg+section_info, record_id))
+                column_results.append(ValidationResult.ValidationResultColumn("Warning", msg+section_info, record_id))
         else:
             if 'Valid units' in rule:
                 msg = "One of " + ', '.join(rule['Valid units']) + " need to be present for the field " + rule['Name']
-                column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
         # check allowed values
         if 'Valid values' in rule:
             if value not in rule['Valid values']:
@@ -266,34 +278,38 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
                     if not misc.is_email(value):
                         msg = '<' + value + '> of field Availability is ' \
                                             'neither "no longer available" nor a valid mailto URI'
-                        column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                        column_results.append(ValidationResult.ValidationResultColumn("Error",
+                                                                                      msg+section_info, record_id))
                 else:
                     msg = "<" + value + "> of field " + rule[
                         'Name'] + " is not in the valid values list (<" + '>, <'.join(rule['Valid values']) + ">)"
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
         if column_results:
             return column_results
 
         if 'terms' in entry:
             if not allowed_conditions:  # allowed conditions empty
                 msg = "Ontology provided for field "+rule['Name']+" however there is no requirement in the ruleset"
-                column_results.append(ValidationResultColumn("Warning", msg+section_info, record_id))
+                column_results.append(ValidationResult.ValidationResultColumn("Warning", msg+section_info, record_id))
             else:
                 for term in entry['terms']:
                     valid = False
                     iri = term['url']
                     if not misc.is_uri(iri):
                         msg = "Invalid URI value " + iri + " in field " + rule['Name']
-                        column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                        column_results.append(ValidationResult.ValidationResultColumn("Error",
+                                                                                      msg+section_info, record_id))
                         continue
                     term_id = misc.extract_ontology_id_from_iri(iri)
+
                     for allowed in allowed_conditions:
                         if allowed.is_allowed(term_id):
                             valid = True
                             break
                     if not valid:
                         msg = 'Not valid ontology term '+term_id+' in field ' + rule['Name']
-                        column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                        column_results.append(ValidationResult.ValidationResultColumn("Error",
+                                                                                      msg+section_info, record_id))
 
         # check type
         # current allowed types:
@@ -304,58 +320,69 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
             if type(value) is not float and type(value) is not int:
                 msg = "For field " + rule['Name'] + " the provided value " + str(
                     value) + " is not of the expected type Number"
-                column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
-        else: # textual types
+                column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
+        else:  # textual types
             if type(value) is not str:
                 msg = "For field " + rule['Name'] + " the provided value " + str(
                     value) + " is not of the expected type " + rule['Type']
-                column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
             if rule['Type'] == 'ontology_id':
                 if 'terms' not in entry:
                     msg = "No url found for the field "+rule['Name']+" which has the type of ontology_id "
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
                 else:
                     for term in entry['terms']:
                         iri = term['url']
                         term = misc.extract_ontology_id_from_iri(iri)
-                        if not label_match_ontology(value, term):
-                            if label_match_ontology(value, term, False):
+                        ontology = ontology_libraries.get_ontology(term)
+                        if iri != ontology.get_iri():
+                            msg = "Provided iri "+iri+" does not match the iri retrieved from OLS in the field "\
+                                  + rule['Name']
+                            column_results.append(
+                                ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
+                        if not ontology.label_match_ontology(value):
+                            if ontology.label_match_ontology(value, False):
                                 msg = "Provided value " + value + \
                                       " has different letter case to the term referenced by " + iri
-                                column_results.append(ValidationResultColumn("Warning", msg+section_info, record_id))
+                                column_results.append(
+                                    ValidationResult.ValidationResultColumn("Warning", msg+section_info, record_id))
                             else:
                                 msg = "Provided value "+value+" does not match to the provided ontology "+iri
-                                column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                                column_results.append(
+                                    ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
             elif rule['Type'] == "uri":
                 uri_result = misc.is_uri(value)
                 if not uri_result:
                     msg = "Invalid URI value " + value + " for field " + rule['Name']
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
                 else:  # is in URI
                     # in image ruleset, when email provided, it must begin with mailto:
                     if misc.is_email(value):
                         if misc.is_email(value, True):  # the whole value of value is an email, which is wrong
                             msg = 'Email address must have prefix "mailto:" in the field ' + rule['Name']
-                            column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                            column_results.append(
+                                ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
                         else:
                             if value.find("mailto:") != 0:
                                 msg = "Unrecognized mailto value in the field " + rule['Name']
-                                column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                                column_results.append(
+                                    ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
             elif rule['Type'] == 'doi':
                 doi_result = misc.is_doi(value)
                 if doi_result:
                     msg = "Invalid DOI value supplied in the field " + rule['Name']
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
             elif rule['Type'] == 'date':
                 # there is always a format(unit) for the date type
                 if 'units' not in entry:
                     msg = "No date format found as unit in the field " + rule['Name']
-                    column_results.append(ValidationResultColumn("Error", msg+section_info, record_id))
+                    column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
                 else:
                     date_format = entry['units']
                     date_result = misc.is_date_match_format(value, date_format)
                     if date_result:
-                        column_results.append(ValidationResultColumn("Error", date_result+section_info, record_id))
+                        column_results.append(
+                            ValidationResult.ValidationResultColumn("Error", date_result+section_info, record_id))
 
         # it would be safer to skip the validations below as unmatched type detected
         if column_results:
@@ -365,17 +392,18 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
 
 # check whether all mandatory fields are present
 # check all fields in the data could be found within ruleset
-def check_with_ruleset(sample: List[Dict], ruleset: Dict[str, Dict]) -> List[ValidationResultRecord]:
+def check_with_ruleset(sample: List[Dict], ruleset: Dict[str, Dict]) -> List[ValidationResult.ValidationResultRecord]:
     submission_result = []
     for one in sample:
         one = one['attributes']
         id_field = 'Data source ID'
         record_id = one[id_field][0]['value']
-        record_result = ValidationResultRecord(record_id)
+        record_result = ValidationResult.ValidationResultRecord(record_id)
 
         material_field = 'Material'
         if material_field not in one:
-            error = ValidationResultColumn("Error", 'does not have mandatory field "Material"', record_id)
+            error = ValidationResult.ValidationResultColumn(
+                "Error", 'does not have mandatory field "Material"', record_id)
             record_result.add_validation_result_column(error)
             submission_result.append(record_result)
             continue
@@ -396,7 +424,8 @@ def check_with_ruleset(sample: List[Dict], ruleset: Dict[str, Dict]) -> List[Val
                         continue
                     if field_name not in one:
                         msg = "Mandatory field " + field_name + " in " + section + " section could not be found"
-                        record_result.add_validation_result_column(ValidationResultColumn("Error", msg, record_id))
+                        record_result.add_validation_result_column(
+                            ValidationResult.ValidationResultColumn("Error", msg, record_id))
             # check values for all required levels
             for required in section_rules.keys():
                 rules = section_rules[required]
@@ -412,16 +441,18 @@ def check_with_ruleset(sample: List[Dict], ruleset: Dict[str, Dict]) -> List[Val
         if unmapped:
             for key in unmapped.keys():
                 record_result.add_validation_result_column(
-                    ValidationResultColumn("Warning", "Column " + key + " could not be found in ruleset", record_id))
+                    ValidationResult.ValidationResultColumn(
+                        "Warning", "Column " + key + " could not be found in ruleset", record_id))
         if record_result.is_empty():
-            record_result.add_validation_result_column(ValidationResultColumn("Pass", "", record_id))
+            record_result.add_validation_result_column(
+                ValidationResult.ValidationResultColumn("Pass", "", record_id))
         submission_result.append(record_result)
     return submission_result
 
 
 # example codes consuming the validation result
 # expected to be replaced by some codes displaying on the web pages
-def deal_with_validation_results(results: List[ValidationResultRecord]) -> None:
+def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord]) -> None:
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
     for result in results:
         overall = result.get_overall_status()
@@ -447,7 +478,7 @@ class OntologyCondition:
             if iri:
                 self.iri = iri
             else:
-                self.iri = convert_to_iri(term)
+                self.iri = use_ontology.convert_to_iri(term)
         except TypeError:
             print(term)
             exit()
@@ -460,18 +491,18 @@ class OntologyCondition:
         return self.only_leaf
 
     def is_allowed(self, query: str) -> bool:
-        query_iri = convert_to_iri(query)
+        ontology_detail = ontology_libraries.get_ontology(query)
+        query_iri = ontology_detail.get_iri()
         if self.include_descendant:
-            is_child = is_child_of(query, self.term)
+            is_child = ontology_libraries.has_parent(query, self.term)
             if not is_child:
                 return False
             # check for extra settings: leaf only, include_self
             if self.only_leaf:  # the term needs to be leaf node
-                if not is_leaf(query_iri):
+                if not ontology_detail.is_leaf():
                     return False
             if not self.include_self:  # if could not be itself
                 return self.iri != query_iri
             return True
         else:  # not descendant, so only the term itself, no need to consider other settings
             return self.iri == query_iri
-

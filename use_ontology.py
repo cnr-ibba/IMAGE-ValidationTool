@@ -129,12 +129,6 @@ def is_child_of(child: str, parent: str) -> bool:
         return True
 
 
-def is_leaf(term_iri: str) -> bool:
-    response = get_detail_by_iri(term_iri)
-    has_children = response['_embedded']['terms'][0]['has_children']
-    return not has_children
-
-
 # According to Simon's reply in ols-support #317084
 # It is best if you have the IRI. but the short id is highly likely to be unique too
 # so you are safe to lookup on the /terms endpoint using the short id.
@@ -194,45 +188,151 @@ def convert_to_iri(term: str) -> str:
             return ""
 
 
-def get_labels_by_term(short_term: str) -> List[str]:
-    detail = get_detail_by_short_term(short_term)
-    result = []
-    if len(detail):
-        result.append(detail['label'])
-        if 'synonyms' in detail and detail['synonyms']:
-            for synonym in detail['synonyms']:
-                result.append(synonym)
-    return result
-
-
-# check whether provided label appears in the provided ontology label and synonyms
-def label_match_ontology(label: str, short_term: str, case_sensitive: bool = True) -> bool:
-    online_labels = get_labels_by_term(short_term)
-    if not case_sensitive:
-        label = label.lower()
-    for current in online_labels:
-        if not case_sensitive:
-            current = current.lower()
-        if label == current:
-            return True
-    return False
-
-
 # test zooma function
 def test_zooma() -> None:
-    # annotation = useZooma('mus musculus','species')  	#organism in gxa datasource with high, disallow any datasource, good
-    # annotation = useZooma('deutschland','country')		#country type=null, two matches medium/low, so returned value is None
-    # annotation = useZooma('norway','country')		#country type=null, while using ena datasource, high
-    # annotation = useZooma('bentheim black pied','breed')	#breed LBO_0000347	type=null, good
-    # annotation = useZooma('Bunte Bentheimer','breed')	#breed LBO_0000436	type=null, good
+    # organism in gxa datasource with high, disallow any datasource, good
+    # annotation = use_zooma('mus musculus','species')
+    # country type=null, two matches medium/low, so returned value is None
+    # annotation = use_zooma('deutschland','country')
+    # annotation = use_zooma('norway','country')		#country type=null, while using ena datasource, high
+    # annotation = use_zooma('bentheim black pied','breed')	#breed LBO_0000347	type=null, good
+    # annotation = use_zooma('Bunte Bentheimer','breed')	#breed LBO_0000436	type=null, good
 
-    # annotation = useZooma('normal','disease')		#Health status	type=disease
-    # annotation = useZooma('spleen','organism part')		#Organism part
-    # annotation = useZooma('semen','organism part')		#Organism part UBERON_0001968 (semen) medium for default OLS setting, good for specifying ontologies to search against
-    # annotation = useZooma('adult','developmental stage')		#Development stage type=developmental stage EFO_0001272 (adult)
-    # annotation = useZooma('mature','physiological stage')		#Physiological stage several medium/low none of them related to physiological stage PATO_0001701 (mature)
+    # Health status	type=disease
+    # annotation = use_zooma('normal','disease')
+    # Organism part
+    # annotation = use_zooma('spleen','organism part')
+    # Organism part UBERON_0001968 (semen) medium for default OLS setting,
+    # good for specifying ontologies to search against
+    # annotation = use_zooma('semen','organism part')
+    # Development stage type=developmental stage EFO_0001272 (adult)
+    # annotation = use_zooma('adult','developmental stage')
+    # Physiological stage several medium/low none of them related to physiological stage PATO_0001701 (mature)
+    # annotation = use_zooma('mature','physiological stage')
 
-    # annotation = useZooma('turkey','species')
+    # annotation = use_zooma('turkey','species')
     annotation = use_zooma('Poitevine', 'breed')  # without limiting to LBO, match to a random GAZ term
     print(annotation)
+
+
+class Ontology:
+    found: bool = False
+
+    # According to Simon's reply in ols-support #317084
+    # It is best if you have the IRI. but the short id is highly likely to be unique too
+    # so you are safe to lookup on the /terms endpoint using the short id.
+    # You just have to be aware that the response will be a list and
+    # you may have the same id approving in multiple ontologies
+    # So you need to look for the term with "is_defining_ontology : true”
+    # to find the description of the term in the source ontology.
+    # e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
+    # the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
+    def __init__(self, short_term: str):
+        self.short_term = short_term
+        host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
+        request = requests.get(host)
+        response = request.json()
+        num = response['page']['totalElements']
+
+        if num:
+            if num > 20:
+                host = host + "&size=" + str(num)
+                request = requests.get(host)
+                response = request.json()
+            terms = response['_embedded']['terms']
+            for term in terms:
+                if term['is_defining_ontology']:
+                    self.found = True
+                    self.detail = term
+        else:
+            print("Could not find information for " + short_term)
+
+    def get_short_term(self)->str:
+        if self.found:
+            return self.short_term
+        else:
+            return ""
+
+    def get_iri(self) -> str:
+        if self.found:
+            return self.detail['iri']
+        else:
+            return ""
+
+    def get_label(self) -> str:
+        if self.found:
+            return self.detail['label']
+        else:
+            return ""
+
+    def is_leaf(self) -> bool:
+        if self.found:
+            return self.detail['has_children']
+
+    def get_labels_and_synonyms(self) -> List[str]:
+        result: List[str] = []
+        if self.found:
+            result.append(self.get_label())
+            if 'synonyms' in self.detail and self.detail['synonyms']:
+                for synonym in self.detail['synonyms']:
+                    result.append(synonym)
+        return result
+
+    # check whether provided label appears in the provided ontology label and synonyms
+    def label_match_ontology(self, label: str, case_sensitive: bool = True) -> bool:
+        online_labels = self.get_labels_and_synonyms()
+        if not case_sensitive:
+            label = label.lower()
+        for current in online_labels:
+            if not case_sensitive:
+                current = current.lower()
+            if label == current:
+                return True
+        return False
+
+
+class OntologyCache:
+    cache: Dict[str, Ontology]
+    children_checked: Dict[str, Dict[str, bool]] = {}
+    # parents_checked: Dict[str, Dict[str, bool]] = {}
+
+    def __init__(self):
+        self.cache = {}
+
+    def contains(self, short_term: str)->bool:
+        return short_term in self.cache
+
+    def add_ontology(self, ontology: Ontology) -> None:
+        short_term = ontology.get_short_term()
+        self.cache[short_term] = ontology
+        if short_term not in self.children_checked:
+            self.children_checked[short_term] = {}
+
+    def get_ontology(self, short_term: str) -> Ontology:
+        if short_term in self.cache:
+            return self.cache[short_term]
+        else:
+            ontology = Ontology(short_term)
+            self.add_ontology(ontology)
+            return ontology
+
+    def has_parent(self, child_term: str, parent_term: str)->bool:
+        if parent_term not in self.children_checked[child_term]:
+            child_detail = self.get_ontology(child_term)
+            parent_detail = self.get_ontology(parent_term)
+            host = "https://www.ebi.ac.uk/ols/api/search?q=" + child_detail.get_iri()\
+                   + "&queryFields=iri&childrenOf=" + parent_detail.get_iri()
+            # print (host)
+            request = requests.get(host)
+            response = request.json()
+            # print (json.dumps(response['response'], indent=4, sort_keys=True))
+            num_found = response['response']['numFound']
+
+            if num_found == 0:
+                self.children_checked[child_term][parent_term] = False
+            else:
+                self.children_checked[child_term][parent_term] = True
+
+        return self.children_checked[child_term][parent_term]
+
 
