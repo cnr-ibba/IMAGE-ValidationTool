@@ -1,15 +1,20 @@
 import json
+import logging
+
 import misc
+
 import use_ontology
 import ValidationResult
 from typing import Dict, List
 
+logger = logging.getLogger(__name__)
 ontology_libraries = use_ontology.OntologyCache()
 
 
 # Read in the ruleset from a file
 # return a dict which has key as section name and value as another dict (required level as key)
 def read_in_ruleset(file: str) -> Dict[str, Dict]:
+    logger.debug("read in ruleset")
     result = {}
     with open(file) as infile:
         data = json.load(infile)
@@ -53,6 +58,7 @@ def locate_data_source_id(record: Dict) -> str:
 # this function checks for USI JSON format only, nothing to do with the IMAGE ruleset
 # therefore not using ValidationResultRecord class
 def check_usi_structure(sample: List[Dict]):
+    logger.debug("Check whether data meets USI data format standard")
     count: Dict[str, int] = {}
     result: List[str] = []
     error_prefix = 'Wrong JSON structure: '
@@ -174,6 +180,7 @@ def check_usi_structure(sample: List[Dict]):
 
 # not checking alias duplicates as alias is USI concept and dealt with within check_usi_structure
 def check_duplicates(sample: List) -> List[str]:
+    logger.debug("Check duplicates")
     count = {}
     result = []
     for one in sample:
@@ -399,6 +406,7 @@ def check_with_ruleset(sample: List[Dict], ruleset: Dict[str, Dict]) -> List[Val
         id_field = 'Data source ID'
         record_id = one[id_field][0]['value']
         record_result = ValidationResult.ValidationResultRecord(record_id)
+        logger.debug("Validate record "+record_id)
 
         material_field = 'Material'
         if material_field not in one:
@@ -478,7 +486,8 @@ class OntologyCondition:
             if iri:
                 self.iri = iri
             else:
-                self.iri = use_ontology.convert_to_iri(term)
+                ontology = ontology_libraries.get_ontology(term)
+                self.iri = ontology.get_iri()
         except TypeError:
             print(term)
             exit()

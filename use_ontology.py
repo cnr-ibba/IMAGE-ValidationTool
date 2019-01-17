@@ -1,6 +1,9 @@
 import requests
+import logging
 import misc
 from typing import Dict, List
+
+logger = logging.getLogger(__name__)
 
 
 # search against zooma and return the matched ontology
@@ -8,6 +11,7 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
     new_term = term.replace(" ", "+")
     # main production server
     host = "https://www.ebi.ac.uk/spot/zooma/v2/api/services/annotate?propertyValue=" + new_term
+    logger.debug(host)
     # test zooma server
     # host = "http://snarf.ebi.ac.uk:8480/spot/zooma/v2/api/services/annotate?propertyValue="+newTerm
     # add filter: configure datasource and ols libraries
@@ -64,6 +68,7 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
 
 
 def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str, str]:
+    logger.debug("species: "+species+" is crossbreed:"+str(cross))
     species = species.lower()
     ontology = {}
     if species == 'bos taurus':
@@ -112,80 +117,6 @@ def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str,
         ontology['text'] = 'buffalo breed'
         ontology['ontologyTerms'] = 'http://purl.obolibrary.org/obo/LBO_0001042'
     return ontology
-
-
-def is_child_of(child: str, parent: str) -> bool:
-    child = convert_to_iri(child)
-    parent = convert_to_iri(parent)
-    host = "https://www.ebi.ac.uk/ols/api/search?q=" + child + "&queryFields=iri&childrenOf=" + parent
-    # print (host)
-    request = requests.get(host)
-    response = request.json()
-    # print (json.dumps(response['response'], indent=4, sort_keys=True))
-    num_found = response['response']['numFound']
-    if num_found == 0:
-        return False
-    else:
-        return True
-
-
-# According to Simon's reply in ols-support #317084
-# It is best if you have the IRI. but the short id is highly likely to be unique too
-# so you are safe to lookup on the /terms endpoint using the short id.
-# You just have to be aware that the response will be a list and
-# you may have the same id approving in multiple ontologies
-# So you need to look for the term with "is_defining_ontology : true”
-# to find the description of the term in the source ontology.
-# e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
-# the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
-def get_detail_by_short_term(short_term: str) -> Dict:
-    host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
-    request = requests.get(host)
-    response = request.json()
-    num = response['page']['totalElements']
-
-    if num:
-        if num > 20:
-            host = host + "&size=" + str(num)
-            request = requests.get(host)
-            response = request.json()
-        terms = response['_embedded']['terms']
-        for term in terms:
-            if term['is_defining_ontology']:
-                return term
-        print("No term found with is_defining_ontology as true for "+short_term)
-        return {}
-    else:
-        print("Could not find information for "+short_term)
-        return {}
-
-
-def get_detail_by_iri(term_iri: str) -> Dict:
-    if misc.is_IRI(term_iri):
-        short_term = misc.extract_ontology_id_from_iri(term_iri)
-        return get_detail_by_short_term(short_term)
-    else:
-        print("The given value "+term_iri+" is not a valid IRI")
-        return {}
-
-
-def get_ontology_name(short_term: str) -> str:
-    detail = get_detail_by_short_term(short_term)
-    if len(detail):
-        return detail['ontology_name']
-    else:
-        return ""
-
-
-def convert_to_iri(term: str) -> str:
-    if misc.is_IRI(term):
-        return term
-    else:
-        detail = get_detail_by_short_term(term)
-        if len(detail):
-            return detail['iri']
-        else:
-            return ""
 
 
 # test zooma function
@@ -245,24 +176,32 @@ class Ontology:
                     self.found = True
                     self.detail = term
         else:
-            print("Could not find information for " + short_term)
+            logger.error("Could not find information for " + short_term)
 
     def get_short_term(self)->str:
+        if not self.found:
+            logger.warning("No ontology found on OLS, just return the given short term")
+        return self.short_term
+
+    def get_ontology_name(self) -> str:
         if self.found:
-            return self.short_term
+            return self.detail['ontology_name']
         else:
+            logger.warning("Return empty for ontology name as fail to find ontology on OLS for term "+self.short_term)
             return ""
 
     def get_iri(self) -> str:
         if self.found:
             return self.detail['iri']
         else:
+            logger.warning("Return empty for iri as fail to find ontology on OLS for term "+self.short_term)
             return ""
 
     def get_label(self) -> str:
         if self.found:
             return self.detail['label']
         else:
+            logger.warning("Return empty for label as fail to find ontology on OLS for term "+self.short_term)
             return ""
 
     def is_leaf(self) -> bool:
@@ -298,6 +237,7 @@ class OntologyCache:
 
     def __init__(self):
         self.cache = {}
+        logger.debug("Initializing ontology cache")
 
     def contains(self, short_term: str)->bool:
         return short_term in self.cache
@@ -310,10 +250,13 @@ class OntologyCache:
 
     def get_ontology(self, short_term: str) -> Ontology:
         if short_term in self.cache:
+            logger.debug("load from cache "+short_term)
             return self.cache[short_term]
         else:
+            logger.debug("OLS search for new term "+short_term)
             ontology = Ontology(short_term)
             self.add_ontology(ontology)
+            logger.debug("Save the new ontology into cache")
             return ontology
 
     def has_parent(self, child_term: str, parent_term: str)->bool:
