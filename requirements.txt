@@ -1,1 +1,2 @@
 coveralls==1.5.1
+python-dateutil==2.7.5
