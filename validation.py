@@ -1,10 +1,10 @@
 import json
 import logging
 
-import misc
+from . import misc
 
-import use_ontology
-import ValidationResult
+from . import use_ontology
+from . import ValidationResult
 from typing import Dict, List
 
 logger = logging.getLogger(__name__)

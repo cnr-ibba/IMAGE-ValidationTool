@@ -2,7 +2,7 @@
 # sys.path.insert(0, '../IMAGE-ValidationTool')
 
 import unittest
-import misc
+from . import misc
 
 
 class TestMisc(unittest.TestCase):
