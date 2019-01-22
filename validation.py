@@ -97,7 +97,7 @@ def check_usi_structure(sample: List[Dict]):
         if not isinstance(one['taxonId'], int):
             result.append(error_prefix + "taxonId value for record " + alias + " is not an integer")
         # releaseDate needs to be in YYYY-MM-DD
-        date_check = misc.is_date_match_format(one['releaseDate'], "YYYY-MM-DD")
+        date_check = misc.get_matched_date(one['releaseDate'], "YYYY-MM-DD")
         if date_check:
             result.append(error_prefix + date_check + " for record with alias value " + alias)
         # attributes is a list of attributes, represented as dict
@@ -386,7 +386,7 @@ def validate_one_field(entries: List, rule: Dict, section: str, record_id: str):
                     column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
                 else:
                     date_format = entry['units']
-                    date_result = misc.is_date_match_format(value, date_format)
+                    date_result = misc.get_matched_date(value, date_format)
                     if date_result:
                         column_results.append(
                             ValidationResult.ValidationResultColumn("Error", date_result+section_info, record_id))
