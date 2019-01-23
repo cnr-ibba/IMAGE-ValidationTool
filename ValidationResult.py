@@ -22,17 +22,25 @@ class ValidationResultColumn:
 
     def __str__(self)-> str:
         if self.status_id != 1:
-            message = "Record " + self.record_id + ": " + self.status.capitalize()
-            message = message + " (" + self.message + ")"
-            message = message + " status id " + str(self.status_id)
-            return message
+            return self.status.capitalize() + ": " + self.message + " for Record " + self.record_id
         return ""
+
+    def get_record_id(self):
+        return self.record_id
 
     def get_message(self)-> str:
         if self.status_id == 1:
             return ""
         else:
-            return self.status.capitalize() + ": " + self.message + " for Record " + self.record_id
+            return self.message
+
+    def get_status(self)-> str:
+        if self.status_id == 1:
+            return "Pass"
+        elif self.status_id == 0:
+            return "Error"
+        else:
+            return "Warning"
 
 
 class ValidationResultRecord:
@@ -83,7 +91,7 @@ class ValidationResultRecord:
     @staticmethod
     def add_messages(for_return: List[str], validation_results: List[ValidationResultColumn]):
         for result in validation_results:
-            for_return.append(result.get_message())
+            for_return.append(str(result))
         return for_return
 
     def is_empty(self) -> bool:
