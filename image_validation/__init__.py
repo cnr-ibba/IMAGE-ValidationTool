@@ -1,4 +1,5 @@
-"""Validation tool for validating data ready to be submitted to USI against IMAGE ruleset represented as JSON"""
+"""Validation tool for validating data ready to be submitted to USI against
+IMAGE ruleset represented as JSON"""
 
 __author__ = """Jun Fan"""
 __email__ = 'junf@ebi.ac.uk'

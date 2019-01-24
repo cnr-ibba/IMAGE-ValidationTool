@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
 
-from . import use_ontology
 import unittest
+
+from image_validation import use_ontology
 
 class TestUseOntology(unittest.TestCase):
 
