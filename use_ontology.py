@@ -1,6 +1,7 @@
 import requests
 import logging
 from . import misc
+import json
 from typing import Dict, List
 
 logger = logging.getLogger(__name__)
@@ -8,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 # search against zooma and return the matched ontology
 def use_zooma(term: str, category: str) -> Dict[str, str]:
+    if type(term) is not str:
+        raise TypeError("The method only take string for term parameter")
+    if type(category) is not str:
+        raise TypeError("The method only take string for category parameter")
     new_term = term.replace(" ", "+")
     # main production server
     host = "https://www.ebi.ac.uk/spot/zooma/v2/api/services/annotate?propertyValue=" + new_term
@@ -21,8 +26,10 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
         host += "&filter=required:[ena],ontologies:[NCBITaxon]"  # species, only search NCBI taxonomy ontology
     elif category == "breed":
         host += "&filter=required:[ena],ontologies:[lbo]"  # breed, only search Livestock Breed Ontology
-    elif category == "country" or category == "geneBankCountry":
+    elif category == "country" or category == "gene bank country":
         host += "&filter=required:[ena],ontologies:[ncit]"  # country, only search NCIT Ontology
+    elif category == "organism part":
+        host += "&filter=required:[ena],ontologies:[pato]"  # country, only search NCIT Ontology
     else:
         # according to IMAGE ruleset, only these ontology libraries are allowed in the ruleset,
         # so not search others
@@ -30,7 +37,6 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
     high_result = {}
     good_result = {}
     result = {}
-    # print (host)
     request = requests.get(host)
     # print (json.dumps(request.json(), indent=4, sort_keys=True))
     for elem in request.json():
@@ -69,6 +75,10 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
 
 def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str, str]:
     logger.debug("species: "+species+" is crossbreed:"+str(cross))
+    if type(species) is not str:
+        raise TypeError("The method only take string for species parameter")
+    if type(cross) is not bool:
+        raise TypeError("The method only take boolean value for cross parameter")
     species = species.lower()
     ontology = {}
     if species == 'bos taurus':
@@ -116,34 +126,9 @@ def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str,
     elif species == 'bubalus bubalis':
         ontology['text'] = 'buffalo breed'
         ontology['ontologyTerms'] = 'http://purl.obolibrary.org/obo/LBO_0001042'
+    else:
+        return None
     return ontology
-
-
-# test zooma function
-def test_zooma() -> None:
-    # organism in gxa datasource with high, disallow any datasource, good
-    # annotation = use_zooma('mus musculus','species')
-    # country type=null, two matches medium/low, so returned value is None
-    # annotation = use_zooma('deutschland','country')
-    # annotation = use_zooma('norway','country')		#country type=null, while using ena datasource, high
-    # annotation = use_zooma('bentheim black pied','breed')	#breed LBO_0000347	type=null, good
-    # annotation = use_zooma('Bunte Bentheimer','breed')	#breed LBO_0000436	type=null, good
-
-    # Health status	type=disease
-    # annotation = use_zooma('normal','disease')
-    # Organism part
-    # annotation = use_zooma('spleen','organism part')
-    # Organism part UBERON_0001968 (semen) medium for default OLS setting,
-    # good for specifying ontologies to search against
-    # annotation = use_zooma('semen','organism part')
-    # Development stage type=developmental stage EFO_0001272 (adult)
-    # annotation = use_zooma('adult','developmental stage')
-    # Physiological stage several medium/low none of them related to physiological stage PATO_0001701 (mature)
-    # annotation = use_zooma('mature','physiological stage')
-
-    # annotation = use_zooma('turkey','species')
-    annotation = use_zooma('Poitevine', 'breed')  # without limiting to LBO, match to a random GAZ term
-    print(annotation)
 
 
 class Ontology:
@@ -178,6 +163,9 @@ class Ontology:
         else:
             logger.error("Could not find information for " + short_term)
 
+    def __eq__(self, other):
+        return self.get_short_term() == other.get_short_term()
+
     def get_short_term(self)->str:
         if not self.found:
             logger.warning("No ontology found on OLS, just return the given short term")
@@ -206,7 +194,7 @@ class Ontology:
 
     def is_leaf(self) -> bool:
         if self.found:
-            return self.detail['has_children']
+            return not self.detail['has_children']
 
     def get_labels_and_synonyms(self) -> List[str]:
         result: List[str] = []
@@ -219,6 +207,11 @@ class Ontology:
 
     # check whether provided label appears in the provided ontology label and synonyms
     def label_match_ontology(self, label: str, case_sensitive: bool = True) -> bool:
+        if type(label) is not str:
+            raise TypeError("The method only take string for label parameter")
+        if type(case_sensitive) is not bool:
+            raise TypeError("The method only take boolean for case_sensitive parameter "
+                            "which is optional and defaulted to be true")
         online_labels = self.get_labels_and_synonyms()
         if not case_sensitive:
             label = label.lower()
@@ -240,15 +233,21 @@ class OntologyCache:
         logger.debug("Initializing ontology cache")
 
     def contains(self, short_term: str)->bool:
+        if type(short_term) is not str:
+            raise TypeError("The method only take string as its input")
         return short_term in self.cache
 
     def add_ontology(self, ontology: Ontology) -> None:
+        if type(ontology) is not Ontology:
+            raise TypeError("The method only take Ontology type as its input")
         short_term = ontology.get_short_term()
         self.cache[short_term] = ontology
         if short_term not in self.children_checked:
             self.children_checked[short_term] = {}
 
     def get_ontology(self, short_term: str) -> Ontology:
+        if type(short_term) is not str:
+            raise TypeError("The method only take string as its input")
         if short_term in self.cache:
             logger.debug("load from cache "+short_term)
             return self.cache[short_term]
@@ -259,7 +258,16 @@ class OntologyCache:
             logger.debug("Save the new ontology into cache")
             return ontology
 
+    # the method should not be here, but have not got a solution to retrieve ontology from cache
+    # while not wanting to maintain checked parent-children relationship
     def has_parent(self, child_term: str, parent_term: str)->bool:
+        if type(child_term) is not str:
+            raise TypeError("The method only take string as child term parameter")
+        if type(parent_term) is not str:
+            raise TypeError("The method only take string as parent term parameter")
+
+        if child_term not in self.children_checked:
+            self.add_ontology(Ontology(child_term))
         if parent_term not in self.children_checked[child_term]:
             child_detail = self.get_ontology(child_term)
             parent_detail = self.get_ontology(parent_term)
@@ -277,5 +285,3 @@ class OntologyCache:
                 self.children_checked[child_term][parent_term] = True
 
         return self.children_checked[child_term][parent_term]
-
-
