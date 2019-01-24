@@ -1,16 +1,21 @@
 #!/usr/bin/python3
 
+import os
 import json
-import validation
 import logging
 
-# logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
+import image_validation
+from image_validation import validation
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s', level=logging.INFO)
+
 # read JSON into memory
 logger.info("START")
-filename = 'submission_example.json'
-# filename = 'exampleJSONfromUID.json'
+
+basedir = os.path.dirname(os.path.abspath(__file__))
+filename = os.path.join(basedir, 'submission_example.json')
+
 try:
     with open(filename) as infile:
         data = json.load(infile)
@@ -28,8 +33,11 @@ validation.deal_with_errors(usi_result)
 dup_result = validation.check_duplicates(data)
 validation.deal_with_errors(dup_result)
 
-rules = validation.read_in_ruleset("sample_ruleset_v1.3.json")
-# pprint.pprint(rules)
+# read metadata rules
+moduledir = image_validation.__path__[0]
+rules = validation.read_in_ruleset(
+    os.path.join(moduledir, "sample_ruleset_v1.3.json"))
+
 logger.info("All sample records have unique data source ids")
 ruleset_result = validation.check_with_ruleset(data, rules)
 validation.deal_with_validation_results(ruleset_result)
