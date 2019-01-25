@@ -144,6 +144,8 @@ class Ontology:
     # e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
     # the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
     def __init__(self, short_term: str):
+        if type(short_term) is not str:
+            raise TypeError("The ontology object can only be initialzed with a string value")
         self.short_term = short_term
         host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
         request = requests.get(host)

@@ -155,6 +155,10 @@ class TestUseOntology(unittest.TestCase):
         self.assertFalse(correct_hair.__eq__(correct_human))
         self.assertTrue(correct_hair == correct_hair)
 
+        self.assertRaises(TypeError, use_ontology.Ontology, 12)
+        self.assertRaises(TypeError, use_ontology.Ontology, -12.34)
+        self.assertRaises(TypeError, use_ontology.Ontology, True)
+
         self.assertRaises(TypeError, correct_hair.label_match_ontology, "string", "true")
         self.assertRaises(TypeError, correct_hair.label_match_ontology, "string", 1)
         self.assertRaises(TypeError, correct_hair.label_match_ontology, "string", -1.0)
