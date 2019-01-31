@@ -1,0 +1,31 @@
+[
+  {
+    "term": "PATO_0000384",
+    "term_iri": "http://purl.obolibrary.org/obo/PATO_0000384",
+    "ontology_name": "PATO",
+    "include_root": 1,
+    "allow_descendants": 0
+  },
+  {
+    "term": "PATO_0000383",
+    "term_iri": "http://purl.obolibrary.org/obo/PATO_0000383",
+    "ontology_name": "PATO",
+    "include_root": 1,
+    "allow_descendants": 0
+  },
+  {
+    "term_iri": "http://purl.obolibrary.org/obo/EFO_0002012",
+    "ontology_name": "EFO",
+    "term": "EFO_0002012",
+    "include_root": 0,
+    "allow_descendants": 1
+  },
+  {
+    "term_iri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+    "ontology_name": "NCBITaxon",
+    "term": "NCBITaxon_9606",
+    "include_root": 1,
+    "allow_descendants": 0,
+    "leaf_only": 1
+  }
+]
