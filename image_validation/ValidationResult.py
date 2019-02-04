@@ -8,6 +8,13 @@ class ValidationResultColumn:
     status_id: int = -1
 
     def __init__(self, status: str, message: str, record_id: str):
+        if type(status) is not str:
+            raise TypeError("Status must be a string")
+        if type(message) is not str:
+            raise TypeError("Message must be a string")
+        if type(record_id) is not str:
+            raise TypeError("Record id must be a string")
+
         self.status = status.lower()
         if self.status == "pass":
             self.status_id = 1
@@ -47,10 +54,14 @@ class ValidationResultRecord:
     result_set: List[ValidationResultColumn]
 
     def __init__(self, record_id: str):
+        if type(record_id) is not str:
+            raise TypeError("Record id must be a string")
         self.record_id = record_id
         self.result_set = []
 
     def add_validation_result_column(self, result: ValidationResultColumn) -> None:
+        if type(result) is not ValidationResultColumn:
+            raise TypeError("The parameter must be of ValidationResultColumn type")
         if self.record_id != result.record_id:
             raise ValueError('Record ids do not match, fail to add result for %s to the result set of %s'
                              % (result.record_id, self.record_id))
@@ -67,15 +78,25 @@ class ValidationResultRecord:
         else:
             return "Warning"
 
+    def get_size(self) -> int:
+        return len(self.result_set)
+
     def get_specific_result_type(self, status: str) -> List[ValidationResultColumn]:
+        if type(status) is not str:
+            raise TypeError("The status parameter must be a string")
+        status = status.lower()
+        if status != 'pass' and status != 'warning' and status != 'error':
+            raise ValueError("status must be one of Pass, Warning, or Error")
         result: List[ValidationResultColumn] = []
         for one in self.result_set:
-            if one.status == status.lower():
+            if one.status == status:
                 result.append(one)
         return result
 
     # inclusive indicates whether include warning message if status is error
     def get_messages(self, inclusive=True) -> List[str]:
+        if type(inclusive) is not bool:
+            raise TypeError("Inclusive parameter must be a boolean value")
         status: str = self.get_overall_status()
         msgs: List[str] = []
         if status == "Pass":

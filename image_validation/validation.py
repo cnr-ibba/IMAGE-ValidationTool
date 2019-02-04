@@ -14,6 +14,8 @@ ontology_libraries = use_ontology.OntologyCache()
 # Read in the ruleset from a file
 # return a dict which has key as section name and value as another dict (required level as key)
 def read_in_ruleset(file: str) -> Dict[str, Dict]:
+    if type(file) is not str:
+        raise TypeError("File name must be a string")
     logger.debug("read in ruleset")
     result = {}
     with open(file) as infile:
