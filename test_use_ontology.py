@@ -1,6 +1,7 @@
 import use_ontology
 import unittest
 
+
 class TestUseOntology(unittest.TestCase):
 
     # this test is more about how to use zooma properly, the function itself is like a by-product
@@ -27,9 +28,9 @@ class TestUseOntology(unittest.TestCase):
         self.assertDictEqual(use_ontology.use_zooma('germany', 'country'), expected)
         self.assertIs(use_ontology.use_zooma('deutschland', 'country'), None)
         # country type=null, while using ena datasource, high
-        test = use_ontology.use_zooma('norway','country')
+        test = use_ontology.use_zooma('norway', 'country')
         if not test:
-            print ("\nIMAGE zooma library not loaded into Zooma for mapping")
+            print("\nIMAGE zooma library not loaded into Zooma for mapping")
         # category: breed
         expected = {
             'type': 'breed',
@@ -37,7 +38,7 @@ class TestUseOntology(unittest.TestCase):
             'text': 'Bentheim Black Pied',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000347'
         }
-        self.assertDictEqual(use_ontology.use_zooma('bentheim black pied','breed'), expected)
+        self.assertDictEqual(use_ontology.use_zooma('bentheim black pied', 'breed'), expected)
         # category: other
         # Health status	type=disease
         expected = {
@@ -64,10 +65,10 @@ class TestUseOntology(unittest.TestCase):
             'text': 'adult',
             'ontologyTerms': 'http://www.ebi.ac.uk/efo/EFO_0001272'
         }
-        self.assertDictEqual(use_ontology.use_zooma('adult','developmental stage'), expected)
+        self.assertDictEqual(use_ontology.use_zooma('adult', 'developmental stage'), expected)
 
         # Physiological stage several medium/low none of them related to physiological stage PATO_0001701 (mature)
-        self.assertIs(use_ontology.use_zooma('mature','physiological stage'), None)
+        self.assertIs(use_ontology.use_zooma('mature', 'physiological stage'), None)
         # test limiting datasource
         # without limiting to LBO, match to a random GAZ term
         self.assertIs(use_ontology.use_zooma('Poitevine', 'breed'), None)

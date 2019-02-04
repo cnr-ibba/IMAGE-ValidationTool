@@ -1,0 +1,74 @@
+{
+  "name": "spacecraft checklist",
+  "description": "a nerdy test checklist",
+  "rule_groups": [
+    {
+      "name": "standard",
+      "rules": [
+        {
+          "Name": "passenger_capacity",
+          "Type": "number",
+          "Required": "mandatory",
+          "Allow Multiple" : "no"
+        },
+        {
+          "Name": "crew_capacity",
+          "Type": "number",
+          "Required": "mandatory",
+          "Allow Multiple" : "no"
+        },
+        {
+          "Name": "class_id",
+          "Type": "text",
+          "Required": "mandatory",
+          "Allow Multiple" : "no"
+        },
+        {
+          "Name": "role",
+          "Type": "limited value",
+          "Required": "mandatory",
+          "Allow Multiple" : "no",
+          "valid_values": [
+            "transport",
+            "warship"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "warships",
+      "condition": {
+        "attribute_value_match": {
+          "role": "warship"
+        }
+      },
+      "rules": [
+        {
+          "Name": "weapon",
+          "Type": "text",
+          "Required": "mandatory",
+          "Allow Multiple": "yes"
+        }
+      ]
+    },
+    {
+      "name": "transports",
+      "condition": {
+        "attribute_value_match": {
+          "role": "warship"
+        }
+      },
+      "rules": [
+        {
+          "Name": "cargo_capacity",
+          "Type": "number",
+          "Allow Multiple" : "no",
+          "Required": "mandatory",
+          "valid_units": [
+            "kg"
+          ]
+        }
+      ]
+    }
+  ]
+}

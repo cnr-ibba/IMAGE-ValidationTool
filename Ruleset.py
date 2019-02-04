@@ -8,6 +8,16 @@ logger = logging.getLogger(__name__)
 class OntologyCondition:
 
     def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True, iri=None):
+        if type(term) is not str:
+            raise TypeError("The term parameter must be a string")
+        if type(include_self) is not bool:
+            raise TypeError("The include_self parameter must be a boolean")
+        if type(only_leaf) is not bool:
+            raise TypeError("The only_leaf parameter must be a boolean")
+        if type(include_descendant) is not bool:
+            raise TypeError("The include_descendant parameter must be a boolean")
+        if iri is not None and type(iri) is not str:
+            raise TypeError("The iri parameter must be a string")
         self.term = term
         self.include_descendant = include_descendant
         self.only_leaf = only_leaf
@@ -73,12 +83,7 @@ class RuleField:
         self.name: str = name
         self.type: str = field_type
         self.required: str = required
-        self.multiple: bool = False
-        multiple = multiple.lower()
-        if multiple == 'yes' or multiple == 'max 2':
-            self.multiple = True
-        elif multiple != 'no':
-            raise ValueError('Unrecognized allow multiple value '+multiple+" which can only be yes, no, or max 2")
+        self.multiple: str = multiple
         self.description = description
         self.allowed_values: List[str] = []
         self.allowed_units: List[str] = []
@@ -121,19 +126,38 @@ class RuleField:
     def get_name(self) -> str:
         return self.name
 
-    def get_allow_multiple(self) -> bool:
+    def get_multiple(self) -> str:
         return self.multiple
+
+    def allow_multiple(self) -> bool:
+        multiple = self.multiple.lower()
+        if multiple == 'yes' or multiple == 'max 2':
+            return True
+        return False
+
+    def check_ontology_allowed(self, short_term: str)-> bool:
+        if type(short_term) is not str:
+            raise TypeError("The short_term parameter must be a string")
+        for allowed in self.allowed_terms:
+            if allowed.is_allowed(short_term):
+                return True
+        return False
 
 
 class RuleSection:
 
     def __init__(self, section_name: str):
+        if type(section_name) is not str:
+            raise TypeError("The section_name parameter must be a string")
         self.name = section_name
         self.rules: Dict[str, Dict[str, RuleField]] = {}
         self.conditions: Dict[str, str] = {}
+        # rules are organized by requirement first, so this serves as a shortcut
         self.rule_names: Dict[str, int] = {}
 
     def add_rule(self, rule: RuleField):
+        if type(rule) is not RuleField:
+            raise TypeError("The rule parameter must be a RuleField")
         required = rule.get_required()
         name = rule.get_name()
         if required not in self.rules:
@@ -149,6 +173,25 @@ class RuleSection:
     def get_section_name(self):
         return self.name
 
+    def add_condition(self, field, value):
+        if type(field) is not str:
+            raise TypeError("The field parameter must be a string")
+        if type(value) is not str:
+            raise TypeError("The value parameter must be a string")
+        if field in self.conditions:
+            raise ValueError("Two conditions apply to the same field")
+        self.conditions[field] = value
+
+    def get_conditions(self):
+        return self.conditions
+
+    def check_contain_rule_for_field(self, field: str) -> bool:
+        if type(field) is not str:
+            raise TypeError("The field parameter must be a string")
+        if field in self.rule_names:
+            return True
+        return False
+
 
 class RuleSet:
 
@@ -156,15 +199,22 @@ class RuleSet:
         self.rule_sections: Dict[str, RuleSection] = {}
 
     def add_rule_section(self, rule_section: RuleSection):
+        if type(rule_section) is not RuleSection:
+            raise TypeError("The rule section parameter must be a RuleSection object")
         section_name = rule_section.get_section_name()
         if section_name in self.rule_sections:
-            raise KeyError("Two rule sections use the same name")
+            raise ValueError("Two rule sections use the same name")
         self.rule_sections[section_name] = rule_section
 
-    def get_all_section_names(self):
-        return self.rule_sections.keys()
+    def get_all_section_names(self) -> List[str]:
+        names: List[str] = []
+        for key in self.rule_sections.keys():
+            names.append(key)
+        return names
 
     def get_section_by_name(self, section_name: str) -> RuleSection:
+        if type(section_name) is not str:
+            raise  TypeError("The section name must be a string")
         if section_name not in self.rule_sections:
             raise ValueError("No section found according to the given name "+section_name)
         return self.rule_sections.get(section_name)
