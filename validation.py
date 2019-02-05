@@ -362,7 +362,7 @@ def check_duplicates(sample: List) -> List[str]:
 #                                     ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
 #             elif rule['Type'] == 'doi':
 #                 doi_result = misc.is_doi(value)
-#                 if doi_result:
+#                 if not doi_result:
 #                     msg = "Invalid DOI value supplied in the field " + rule['Name']
 #                     column_results.append(ValidationResult.ValidationResultColumn("Error", msg+section_info, record_id))
 #             elif rule['Type'] == 'date':
