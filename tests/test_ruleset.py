@@ -1,8 +1,8 @@
-import Ruleset
+
 import unittest
 import json
-import use_ontology
-import validation
+
+from image_validation import Ruleset, validation
 
 
 class TestRuleset(unittest.TestCase):

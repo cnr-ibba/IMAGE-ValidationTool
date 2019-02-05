@@ -1,6 +1,7 @@
 import logging
-import validation
 from typing import List, Dict
+
+from . import validation
 
 logger = logging.getLogger(__name__)
 
