@@ -3,10 +3,13 @@
 import json
 import validation
 import logging
+import ValidationResult
+from typing import List
 
 # logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s', level=logging.INFO)
+
 # read JSON into memory
 logger.info("START")
 filename = 'submission_example.json'
@@ -27,11 +30,14 @@ validation.deal_with_errors(usi_result)
 
 dup_result = validation.check_duplicates(data)
 validation.deal_with_errors(dup_result)
-
-rules = validation.read_in_ruleset("sample_ruleset_v1.3.json")
-# pprint.pprint(rules)
 logger.info("All sample records have unique data source ids")
-ruleset_result = validation.check_with_ruleset(data, rules)
-validation.deal_with_validation_results(ruleset_result)
+
+ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+submission_result: List[ValidationResult.ValidationResultRecord] = []
+for record in data:
+    record_result = ruleset.validate(record)
+    submission_result.append(record_result)
+# pprint.pprint(rules)
+validation.deal_with_validation_results(submission_result)
 
 logging.info("FINISH")

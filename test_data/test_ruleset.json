@@ -55,7 +55,7 @@
       "name": "transports",
       "condition": {
         "attribute_value_match": {
-          "role": "warship"
+          "role": "transport"
         }
       },
       "rules": [

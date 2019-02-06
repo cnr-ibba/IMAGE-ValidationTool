@@ -130,6 +130,23 @@ class TestRuleset(unittest.TestCase):
         self.assertFalse(warships_section.check_contain_rule_for_field('random'))
         self.assertTrue(warships_section.check_contain_rule_for_field('weapon'))
 
+        # test meet condition
+        filename = "test_data/test_data.json"
+        try:
+            with open(filename) as infile:
+                data = json.load(infile)
+        except FileNotFoundError:
+            exit(1)
+        except json.decoder.JSONDecodeError as e:
+            exit(1)
+        transport_data = data[0]
+        warship_data = data[1]
+        self.assertFalse(warships_section.meet_condition(transport_data))
+        self.assertTrue(warships_section.meet_condition(warship_data))
+        standard_section = ruleset.get_section_by_name("standard")
+        self.assertTrue(standard_section.meet_condition(warship_data))
+        self.assertTrue(standard_section.meet_condition(transport_data))
+
     def test_rule_set_types(self):
         self.assertRaises(TypeError, Ruleset.RuleSet.add_rule_section, "rule section")
         self.assertRaises(TypeError, Ruleset.RuleSet.get_section_by_name, True)
@@ -148,5 +165,15 @@ class TestRuleset(unittest.TestCase):
         ruleset.add_rule_section(new_section)
         section_names.append('new')
         self.assertListEqual(ruleset.get_all_section_names(), section_names)
+
+        filename = "test_data/test_data.json"
+        try:
+            with open(filename) as infile:
+                data = json.load(infile)
+        except FileNotFoundError:
+            exit(1)
+        except json.decoder.JSONDecodeError as e:
+            exit(1)
+        ruleset.validate(data[0], "id")
 
 
