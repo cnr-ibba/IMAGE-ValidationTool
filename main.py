@@ -33,9 +33,15 @@ validation.deal_with_errors(dup_result)
 logger.info("All sample records have unique data source ids")
 
 ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+logger.info("Loaded the ruleset")
 submission_result: List[ValidationResult.ValidationResultRecord] = []
 for record in data:
+    logger.info("Validate record "+record['alias'])
     record_result = ruleset.validate(record)
+    record_result = validation.context_validation(record['attributes'], record_result)
+    if record_result.is_empty():
+        record_result.add_validation_result_column(
+            ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
     submission_result.append(record_result)
 # pprint.pprint(rules)
 validation.deal_with_validation_results(submission_result)

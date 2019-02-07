@@ -6,6 +6,7 @@ from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
+
 # search against zooma and return the matched ontology
 def use_zooma(term: str, category: str) -> Dict[str, str]:
     if type(term) is not str:

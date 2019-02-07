@@ -6,7 +6,6 @@ from typing import List, Dict
 import misc
 import ValidationResult
 import use_ontology
-import json
 
 logger = logging.getLogger(__name__)
 ontology_library = use_ontology.OntologyCache()
@@ -457,6 +456,7 @@ class RuleSet:
         for section_name in self.get_all_section_names():
             section_rule = self.get_section_by_name(section_name)
             if section_rule.meet_condition(record):
+                logger.debug("Applying "+section_name+" ruleset to record "+record_id)
                 section_results = section_rule.validate(attributes, record_id, id_field)
                 for one in section_results:
                     record_result.add_validation_result_column(one)
@@ -470,7 +470,4 @@ class RuleSet:
                 record_result.add_validation_result_column(
                     ValidationResult.ValidationResultColumn(
                         "Warning", "Column " + key + " could not be found in ruleset", record_id))
-        if record_result.is_empty():
-            record_result.add_validation_result_column(
-                ValidationResult.ValidationResultColumn("Pass", "", record_id))
         return record_result
