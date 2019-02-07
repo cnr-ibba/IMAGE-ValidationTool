@@ -1,8 +1,11 @@
 import logging
+# from . import misc
+# from . import ValidationResult
+# from . import use_ontology
+from typing import List, Dict
 import misc
 import ValidationResult
 import use_ontology
-from typing import List, Dict
 import json
 
 logger = logging.getLogger(__name__)
@@ -292,7 +295,7 @@ class RuleField:
                                         ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'doi':
                     doi_result = misc.is_doi(value)
-                    if doi_result:
+                    if not doi_result:
                         msg = "Invalid DOI value supplied in the field " + self.name
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'date':

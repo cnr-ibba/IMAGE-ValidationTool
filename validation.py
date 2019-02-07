@@ -1,10 +1,9 @@
 import json
 import logging
 
-from . import misc
-
-from . import Ruleset
-from . import ValidationResult
+import misc
+import Ruleset
+import ValidationResult
 from typing import Dict, List
 import pprint
 

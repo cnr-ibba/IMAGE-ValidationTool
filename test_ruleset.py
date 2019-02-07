@@ -1,8 +1,7 @@
 import Ruleset
+import validation
 import unittest
 import json
-import use_ontology
-import validation
 
 
 class TestRuleset(unittest.TestCase):

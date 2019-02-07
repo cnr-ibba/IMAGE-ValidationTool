@@ -1,7 +1,7 @@
 import requests
 import logging
 
-from . import misc
+import misc
 from typing import Dict, List
 
 logger = logging.getLogger(__name__)
