@@ -1,13 +1,12 @@
 import logging
 import misc
-import validation
 import ValidationResult
 import use_ontology
 from typing import List, Dict
+import json
 
 logger = logging.getLogger(__name__)
-
-ontology_libraries = use_ontology.OntologyCache()
+ontology_library = use_ontology.OntologyCache()
 
 
 class OntologyCondition:
@@ -31,7 +30,7 @@ class OntologyCondition:
             if iri:
                 self.iri = iri
             else:
-                ontology = validation.ontology_libraries.get_ontology(term)
+                ontology = ontology_library.get_ontology(term)
                 self.iri = ontology.get_iri()
         except TypeError:
             print(term)
@@ -44,10 +43,10 @@ class OntologyCondition:
         return self.only_leaf
 
     def is_allowed(self, query: str) -> bool:
-        ontology_detail = validation.ontology_libraries.get_ontology(query)
+        ontology_detail = ontology_library.get_ontology(query)
         query_iri = ontology_detail.get_iri()
         if self.include_descendant:
-            is_child = validation.ontology_libraries.has_parent(query, self.term)
+            is_child = ontology_library.has_parent(query, self.term)
             if not is_child:
                 return False
             # check for extra settings: leaf only, include_self
@@ -240,12 +239,12 @@ class RuleField:
             # number type requires a unit, which is covered in the units check above
             if self.type == 'number':
                 if type(value) is not float and type(value) is not int:
-                    msg = "For field " + self.name + " the provided value " + str(value)\
+                    msg = "For field " + self.name + " the provided value " + str(value) \
                           + " is not of the expected type Number"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             else:  # textual types
                 if type(value) is not str:
-                    msg = "For field " + self.name + " the provided value " + str(value)\
+                    msg = "For field " + self.name + " the provided value " + str(value) \
                           + " is not of the expected type " + self.type
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 if self.type == 'ontology_id':
@@ -256,7 +255,7 @@ class RuleField:
                         for term in entry['terms']:
                             iri = term['url']
                             term = misc.extract_ontology_id_from_iri(iri)
-                            ontology = ontology_libraries.get_ontology(term)
+                            ontology = ontology_library.get_ontology(term)
                             if iri != ontology.get_iri():
                                 msg = "Provided iri " + iri + \
                                       " does not match the iri retrieved from OLS in the field " + self.name
@@ -267,7 +266,8 @@ class RuleField:
                                     msg = "Provided value " + value + \
                                           " has different letter case to the term referenced by " + iri
                                     results.append(ValidationResult.ValidationResultColumn("Warning",
-                                                                                        msg + section_info, record_id))
+                                                                                           msg + section_info,
+                                                                                           record_id))
                                 else:
                                     msg = "Provided value " + value + " does not match to the provided ontology " + iri
                                     results.append(
@@ -282,7 +282,7 @@ class RuleField:
                         # in image ruleset, when email provided, it must begin with mailto:
                         if misc.is_email(value):
                             if misc.is_email(value, True):  # the whole value of value is an email, which is wrong
-                                msg = 'Email address must have prefix "mailto:" in the field ' + rule['Name']
+                                msg = 'Email address must have prefix "mailto:" in the field ' + self.name
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                             else:
@@ -389,7 +389,8 @@ class RuleSection:
                 return False
         return True
 
-    def validate(self, attributes: Dict, record_id: str, id_field: str) -> List[ValidationResult.ValidationResultColumn]:
+    def validate(self, attributes: Dict, record_id: str, id_field: str) -> \
+            List[ValidationResult.ValidationResultColumn]:
         results: List[ValidationResult.ValidationResultColumn] = []
         # all mandatory fields must be there, not checking details in this step
         if 'mandatory' in self.rules:

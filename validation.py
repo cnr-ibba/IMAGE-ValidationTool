@@ -3,14 +3,12 @@ import logging
 
 import misc
 
-import use_ontology
 import ValidationResult
 import Ruleset
 from typing import Dict, List
 import pprint
 
 logger = logging.getLogger(__name__)
-ontology_libraries = use_ontology.OntologyCache()
 
 
 # Read in the ruleset from a file

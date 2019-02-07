@@ -148,6 +148,7 @@ class Ontology:
         self.short_term = short_term
         host = "http://www.ebi.ac.uk/ols/api/terms?id=" + short_term
         request = requests.get(host)
+
         response = request.json()
         num = response['page']['totalElements']
 
@@ -266,16 +267,17 @@ class OntologyCache:
             raise TypeError("The method only take string as child term parameter")
         if type(parent_term) is not str:
             raise TypeError("The method only take string as parent term parameter")
-
         if child_term not in self.children_checked:
-            self.add_ontology(Ontology(child_term))
-        if parent_term not in self.children_checked[child_term]:
+            # self.add_ontology(Ontology(child_term))
+            self.get_ontology(child_term)
+        if parent_term not in self.children_checked[child_term]: # not checked parent relation before
             child_detail = self.get_ontology(child_term)
             parent_detail = self.get_ontology(parent_term)
             host = "https://www.ebi.ac.uk/ols/api/search?q=" + child_detail.get_iri()\
                    + "&queryFields=iri&childrenOf=" + parent_detail.get_iri()
-            # print (host)
+            # print(host)
             request = requests.get(host)
+            # print(request.text) # check content while getting simplejson.errors.JSONDecodeError
             response = request.json()
             # print (json.dumps(response['response'], indent=4, sort_keys=True))
             num_found = response['response']['numFound']
