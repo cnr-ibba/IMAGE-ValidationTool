@@ -66,12 +66,11 @@ def is_doi(doi: str) -> bool:
     parts = doi.split('/')
     if len(parts) != 2:
         return False
+    # the number after "10." starts from 1000, so \d{4,}
     pattern = re.compile("^(doi:)?10\.(\d{4,})(\.\d+)?$")
     # group(1) could be None
     m = re.search(pattern, parts[0])
     if m:
-        if int(m.group(2)) < 1000: # the number starts from 1000
-            return False
         return True
     else:
         return False
@@ -104,7 +103,7 @@ def get_matched_date(date: str, date_format: str) -> str:
 def extract_ontology_id_from_iri(url: str) -> str:
     if type(url) is not str:
         raise TypeError("The method only take str as its input")
-    if url.find('/'):
+    if url.find('/') > -1:
         elmts = url.split('/')
         return elmts[-1]
     else:
