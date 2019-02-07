@@ -2,14 +2,18 @@
 # sys.path.insert(0, '../IMAGE-ValidationTool')
 
 import unittest
+import datetime
 import misc
 
 
 class TestMisc(unittest.TestCase):
 
     def test_get_today(self):
-        today = '2019-01-21T15:17:41.179403'
-        self.assertEqual(str(today)[:10], '2019-01-21')
+        dt = '2019-01-21T15:17:41.179403'
+        self.assertEqual(str(dt)[:10], '2019-01-21')
+        today = str(datetime.datetime.now().isoformat())
+        self.assertEqual(len(dt), len(today))
+        self.assertEqual(str(today)[:10], misc.get_today())
 
     def test_to_lower_camel_case(self):
         self.assertEqual(misc.to_lower_camel_case('country'),'country')

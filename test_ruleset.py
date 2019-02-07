@@ -63,6 +63,9 @@ class TestRuleset(unittest.TestCase):
         self.assertRaises(ValueError, Ruleset.RuleField, "test", "none", "mandatory")
         self.assertRaises(ValueError, Ruleset.RuleField, "test", "date", "optional", multiple="True")
 
+        self.assertRaises(TypeError, Ruleset.RuleField.check_ontology_allowed, 12)
+        self.assertRaises(TypeError, Ruleset.RuleField.check_ontology_allowed, True)
+
     def test_rule_field(self):
         rule_field_1 = Ruleset.RuleField("test", "ontology_id", "recommended")
         self.assertEqual(rule_field_1.get_required(), "recommended")
