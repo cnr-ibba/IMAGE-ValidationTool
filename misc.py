@@ -108,5 +108,4 @@ def extract_ontology_id_from_iri(url: str) -> str:
         elmts = url.split('/')
         return elmts[-1]
     else:
-        pass
-    return url
+        return url
