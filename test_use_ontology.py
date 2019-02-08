@@ -81,6 +81,10 @@ class TestUseOntology(unittest.TestCase):
         self.assertRaises(TypeError, use_ontology.use_zooma, False, 'string')
 
     def test_get_general_breed_by_species(self):
+        expected_buffalo = {
+            'text': 'buffalo breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001042'
+        }
         expected_cattle = {
             'text': 'cattle breed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000001'
@@ -106,6 +110,8 @@ class TestUseOntology(unittest.TestCase):
             'text': 'sheep breed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000004'
         }
+
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('bubalus bubalis'), expected_buffalo)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('bos taurus'), expected_cattle)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('Gallus gallus'), expected_chicken)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('Ovis aries'), expected_sheep)
@@ -124,6 +130,10 @@ class TestUseOntology(unittest.TestCase):
             'text': 'Goat crossbreed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001038'
         }
+        expected_horse_cross = {
+            'text': 'Horse crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001039'
+        }
         expected_pig_cross = {
             'text': 'Pig crossbreed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001040'
@@ -137,6 +147,7 @@ class TestUseOntology(unittest.TestCase):
         self.assertDictEqual(use_ontology.get_general_breed_by_species('capra HIrcus', True), expected_goat_cross)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('sus scrofa', True), expected_pig_cross)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('Ovis aries', True), expected_sheep_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Equus caballus'), expected_horse_cross)
         self.assertIs(use_ontology.get_general_breed_by_species('random species'), None)
 
     def test_get_general_breed_by_species_types(self):

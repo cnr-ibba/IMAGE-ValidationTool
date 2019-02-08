@@ -52,8 +52,8 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
                 high_result[property_value] = semantic_tag
             elif confidence == "good":
                 good_result[property_value] = semantic_tag
-            else:  # medium/low
-                pass
+            # else:  # medium/low, currently ignored
+            # pass
 
     # print(high_result)
     # print(good_result)
