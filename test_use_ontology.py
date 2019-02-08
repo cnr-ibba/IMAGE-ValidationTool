@@ -147,7 +147,7 @@ class TestUseOntology(unittest.TestCase):
         self.assertDictEqual(use_ontology.get_general_breed_by_species('capra HIrcus', True), expected_goat_cross)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('sus scrofa', True), expected_pig_cross)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('Ovis aries', True), expected_sheep_cross)
-        self.assertDictEqual(use_ontology.get_general_breed_by_species('Equus caballus'), expected_horse_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Equus caballus', True), expected_horse_cross)
         self.assertIs(use_ontology.get_general_breed_by_species('random species'), None)
 
     def test_get_general_breed_by_species_types(self):
