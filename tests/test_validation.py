@@ -1,5 +1,7 @@
-import validation
+
 import unittest
+
+from image_validation import validation
 
 
 class TestValidation(unittest.TestCase):
@@ -11,4 +13,3 @@ class TestValidation(unittest.TestCase):
 
     def test_read_in_ruleset(self):
         pass
-

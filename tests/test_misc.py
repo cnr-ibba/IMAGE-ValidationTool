@@ -3,7 +3,8 @@
 
 import unittest
 import datetime
-import misc
+
+from image_validation import misc
 
 
 class TestMisc(unittest.TestCase):

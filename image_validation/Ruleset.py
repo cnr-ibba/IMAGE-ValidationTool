@@ -1,8 +1,9 @@
 import logging
 from typing import List, Dict
-import misc
-import ValidationResult
-import use_ontology
+
+from . import misc
+from . import ValidationResult
+from . import use_ontology
 
 from . import validation
 

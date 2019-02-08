@@ -1,11 +1,12 @@
 import json
 import logging
 
-import misc
-import Ruleset
-import ValidationResult
 from typing import Dict, List
-import pprint
+
+from . import misc
+from . import Ruleset
+from . import ValidationResult
+
 
 logger = logging.getLogger(__name__)
 
