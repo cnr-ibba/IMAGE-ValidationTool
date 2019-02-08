@@ -3,6 +3,8 @@
 import os
 import json
 import logging
+import ValidationResult
+from typing import List
 
 import image_validation
 from image_validation import validation
@@ -32,14 +34,20 @@ validation.deal_with_errors(usi_result)
 
 dup_result = validation.check_duplicates(data)
 validation.deal_with_errors(dup_result)
-
-# read metadata rules
-moduledir = image_validation.__path__[0]
-rules = validation.read_in_ruleset(
-    os.path.join(moduledir, "sample_ruleset_v1.3.json"))
-
 logger.info("All sample records have unique data source ids")
-ruleset_result = validation.check_with_ruleset(data, rules)
-validation.deal_with_validation_results(ruleset_result)
+
+ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+logger.info("Loaded the ruleset")
+submission_result: List[ValidationResult.ValidationResultRecord] = []
+for record in data:
+    logger.info("Validate record "+record['alias'])
+    record_result = ruleset.validate(record)
+    record_result = validation.context_validation(record['attributes'], record_result)
+    if record_result.is_empty():
+        record_result.add_validation_result_column(
+            ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
+    submission_result.append(record_result)
+# pprint.pprint(rules)
+validation.deal_with_validation_results(submission_result)
 
 logging.info("FINISH")

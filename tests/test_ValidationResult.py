@@ -90,12 +90,18 @@ class TestValidationResult(unittest.TestCase):
 
     def test_get_messages(self):
         collection = ValidationResult.ValidationResultRecord('sample_1')
-        collection.add_validation_result_column(self.column_warning)
-        collection.add_validation_result_column(self.column_pass)
-        collection.add_validation_result_column(self.column_error)
-
         self.assertRaises(TypeError, collection.get_messages, 12)
         self.assertRaises(TypeError, collection.get_messages, '12')
+        # test pass status, expected empty
+        collection.add_validation_result_column(self.column_pass)
+        self.assertListEqual(collection.get_messages(), [])
+
+        # test warning status
+        collection.add_validation_result_column(self.column_warning)
+        expected_warning = ['Warning: term not match for Record sample_1']
+        self.assertListEqual(collection.get_messages(), expected_warning)
+
+        collection.add_validation_result_column(self.column_error)
         expected_error_only = ["Error: value used in field b is not allowed for Record sample_1"]
         self.assertListEqual(collection.get_messages(False), expected_error_only)
         expected_include_warning = expected_error_only

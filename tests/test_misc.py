@@ -2,14 +2,18 @@
 # -*- coding: utf-8 -*
 
 import unittest
-from image_validation import misc
+import datetime
+import misc
 
 
 class TestMisc(unittest.TestCase):
 
     def test_get_today(self):
-        today = '2019-01-21T15:17:41.179403'
-        self.assertEqual(str(today)[:10], '2019-01-21')
+        dt = '2019-01-21T15:17:41.179403'
+        self.assertEqual(str(dt)[:10], '2019-01-21')
+        today = str(datetime.datetime.now().isoformat())
+        self.assertEqual(len(dt), len(today))
+        self.assertEqual(str(today)[:10], misc.get_today())
 
     def test_to_lower_camel_case(self):
         self.assertEqual(misc.to_lower_camel_case('country'),'country')
@@ -83,7 +87,7 @@ class TestMisc(unittest.TestCase):
         # begin with 10.
         self.assertFalse(misc.is_doi("doi:11.1000/correct"))
         # 2nd part in prefix must be no less than 1000
-        self.assertFalse(misc.is_doi("doi:10.999/correct"))
+        self.assertFalse(misc.is_doi("doi:10.900/correct"))
         # only period used as separator
         self.assertFalse(misc.is_doi("doi:10.1000,1/correct"))
         # The registrant code may be further divided into sub-elements, assuming only one level down
@@ -107,6 +111,8 @@ class TestMisc(unittest.TestCase):
                          'The date value 2012 does not match to the format YYYY-MM')
         self.assertEqual(misc.get_matched_date("2012-09-07", "YYYY-MM"),
                          'The date value 2012-09-07 does not match to the format YYYY-MM')
+        self.assertEqual(misc.get_matched_date("20-1-09", "YYYY-MM"),
+                         'The date value 20-1-09 does not match to the format YYYY-MM')
         self.assertEqual(misc.get_matched_date("09-07-2012", "YYYY-MM-DD"),
                          'The date value 09-07-2012 does not match to the format YYYY-MM-DD')
 

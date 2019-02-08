@@ -632,7 +632,7 @@
          ],
          "condition" : {
             "attribute_value_match" : {
-               "Material" : "Organism"
+               "Material" : "organism"
             }
          }
       },
@@ -857,7 +857,7 @@
          ],
          "condition" : {
             "attribute_value_match" : {
-               "Material" : "Specimen from Organism"
+               "Material" : "specimen from organism"
             }
          },
          "name" : "specimen from organism"

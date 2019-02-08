@@ -84,18 +84,73 @@ class TestUseOntology(unittest.TestCase):
         self.assertRaises(TypeError, use_ontology.use_zooma, False, 'string')
 
     def test_get_general_breed_by_species(self):
+        expected_buffalo = {
+            'text': 'buffalo breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001042'
+        }
+        expected_cattle = {
+            'text': 'cattle breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000001'
+        }
+        expected_chicken = {
+            'text': 'chicken breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000002'
+        }
         expected_goat = {
             'text': 'goat breed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000954'
 
         }
+        expected_horse = {
+            'text': 'horse breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000713'
+        }
+        expected_pig = {
+            'text': 'pig breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000003'
+        }
+        expected_sheep = {
+            'text': 'sheep breed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0000004'
+        }
+
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('bubalus bubalis'), expected_buffalo)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('bos taurus'), expected_cattle)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Gallus gallus'), expected_chicken)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Ovis aries'), expected_sheep)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('suS scrofA'), expected_pig)
         self.assertDictEqual(use_ontology.get_general_breed_by_species('capra HIrcus'), expected_goat)
-        expect_pig_cross = {
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Equus caballus'), expected_horse)
+        expected_cattle_cross = {
+            'text': 'Cattle crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001036'
+        }
+        expected_chicken_cross = {
+            'text': 'Chicken crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001037'
+        }
+        expected_goat_cross = {
+            'text': 'Goat crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001038'
+        }
+        expected_horse_cross = {
+            'text': 'Horse crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001039'
+        }
+        expected_pig_cross = {
             'text': 'Pig crossbreed',
             'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001040'
-
         }
-        self.assertDictEqual(use_ontology.get_general_breed_by_species('sus scrofa', True), expect_pig_cross)
+        expected_sheep_cross = {
+            'text': 'Sheep crossbreed',
+            'ontologyTerms': 'http://purl.obolibrary.org/obo/LBO_0001041'
+        }
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('bos taurus', True), expected_cattle_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Gallus gallus', True), expected_chicken_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('capra HIrcus', True), expected_goat_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('sus scrofa', True), expected_pig_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Ovis aries', True), expected_sheep_cross)
+        self.assertDictEqual(use_ontology.get_general_breed_by_species('Equus caballus', True), expected_horse_cross)
         self.assertIs(use_ontology.get_general_breed_by_species('random species'), None)
 
     def test_get_general_breed_by_species_types(self):
@@ -190,3 +245,5 @@ class TestUseOntology(unittest.TestCase):
         self.assertRaises(TypeError, cache.get_ontology, True)
         self.assertRaises(TypeError, cache.has_parent, "str", True)
         self.assertRaises(TypeError, cache.has_parent, True, "str")
+        self.assertRaises(TypeError, cache.contains, 12)
+        self.assertRaises(TypeError, cache.contains, True)
