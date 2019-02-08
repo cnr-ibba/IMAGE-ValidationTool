@@ -74,11 +74,11 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
 
 
 def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str, str]:
-    logger.debug("species: "+species+" is crossbreed:"+str(cross))
     if type(species) is not str:
         raise TypeError("The method only take string for species parameter")
     if type(cross) is not bool:
         raise TypeError("The method only take boolean value for cross parameter")
+    logger.debug("species: "+species+" is crossbreed:"+str(cross))
     species = species.lower()
     ontology = {}
     if species == 'bos taurus':
@@ -289,4 +289,3 @@ class OntologyCache:
                 self.children_checked[child_term][parent_term] = True
 
         return self.children_checked[child_term][parent_term]
-
