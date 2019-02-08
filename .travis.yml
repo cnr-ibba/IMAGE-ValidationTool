@@ -4,7 +4,7 @@ python:
 cache: pip
 install: "pip install -r requirements.txt"
 
-script: coverage run --include="./*.py" -m unittest test_*.py
+script: coverage run --include="./*.py" --omit="./test_*.py" -m unittest test_*.py
 
 after_success:
   - coverage report --show-missing
