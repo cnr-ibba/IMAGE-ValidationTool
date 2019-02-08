@@ -11,10 +11,11 @@ class TestRuleset(unittest.TestCase):
         self.assertRaises(TypeError, Ruleset.OntologyCondition, 'term', 12, True, True)
         self.assertRaises(TypeError, Ruleset.OntologyCondition, 'term', False, 'True', True)
         self.assertRaises(TypeError, Ruleset.OntologyCondition, 'term', False, True, -12.34)
-        self.assertRaises(TypeError, Ruleset.OntologyCondition, 'True', False, True, True, True)
 
     def test_ontology_condition(self):
         filename = "test_data/ruleset_allowed_terms.json"
+        # not wrapped with try except statements which reduces the coverage
+        # also in the test environment the data files are somehow guaranteed to be there
         try:
             with open(filename) as infile:
                 data = json.load(infile)
@@ -29,15 +30,18 @@ class TestRuleset(unittest.TestCase):
 
         terms = test_rule_field.get_allowed_terms()
         self.assertEqual(terms[0].term, "PATO_0000384")
-        self.assertFalse(terms[1].include_descendant)
+        self.assertFalse(terms[0].include_descendant)
         self.assertTrue(terms[2].include_descendant)
         self.assertFalse(terms[2].include_self)
-        self.assertTrue(terms[1].include_self)
+        self.assertTrue(terms[0].include_self)
         self.assertEqual(terms[1].iri, "http://purl.obolibrary.org/obo/PATO_0000383")
         self.assertEqual(terms[2].iri, "http://www.ebi.ac.uk/efo/EFO_0002012")
+        expected_str = "Term: EFO_0002012 include descendant: True leaf only: True " \
+                       "self included: False iri: http://www.ebi.ac.uk/efo/EFO_0002012"
+        self.assertEqual(str(terms[2]), expected_str)
 
         for i, term in enumerate(terms):
-            if i == 3:
+            if i > 1:
                 self.assertTrue(term.is_leaf_only())
             else:
                 self.assertFalse(term.is_leaf_only())
@@ -51,6 +55,10 @@ class TestRuleset(unittest.TestCase):
                 self.assertTrue(term.is_allowed('EFO_0001741'))
             else:
                 self.assertFalse(term.is_allowed('EFO_0001741'))
+        # intact female (PATO_0002365) is child of female (PATO_0000383), descendant allowed
+        self.assertTrue(terms[1].is_allowed('PATO_0002365'))
+        # intact male (PATO_0002366) is child of male (PATO_0000384), but the term dow not allow descendant
+        self.assertFalse(terms[0].is_allowed('PATO_0002366'))
 
     def test_rule_field_types(self):
         self.assertRaises(TypeError, Ruleset.RuleField, "test", 12, "haha")
@@ -62,9 +70,9 @@ class TestRuleset(unittest.TestCase):
         self.assertRaises(ValueError, Ruleset.RuleField, "test", "number", "12")
         self.assertRaises(ValueError, Ruleset.RuleField, "test", "none", "mandatory")
         self.assertRaises(ValueError, Ruleset.RuleField, "test", "date", "optional", multiple="True")
-
-        self.assertRaises(TypeError, Ruleset.RuleField.check_ontology_allowed, 12)
-        self.assertRaises(TypeError, Ruleset.RuleField.check_ontology_allowed, True)
+        rule_field = Ruleset.RuleField("test", "text", "mandatory")
+        self.assertRaises(TypeError, rule_field.check_ontology_allowed, 12)
+        self.assertRaises(TypeError, rule_field.check_ontology_allowed, True)
 
     def test_rule_field(self):
         rule_field_1 = Ruleset.RuleField("test", "ontology_id", "recommended")
@@ -72,6 +80,17 @@ class TestRuleset(unittest.TestCase):
         self.assertEqual(rule_field_1.get_name(), "test")
         self.assertEqual(rule_field_1.get_multiple(), "no")
         self.assertFalse(rule_field_1.allow_multiple())
+        # test set allowed values/units
+        allowed_1 = ['first', 'second', 'third']
+        allowed_2 = ['red', 'blue', 'yellow']
+        self.assertEqual(len(rule_field_1.get_allowed_values()), 0)
+        rule_field_1.set_allowed_values(allowed_1)
+        self.assertEqual(len(rule_field_1.get_allowed_values()), 3)
+        rule_field_1.set_allowed_units(allowed_1)
+        self.assertEqual(rule_field_1.get_allowed_units()[0], "first")
+        rule_field_1.set_allowed_units(allowed_2)
+        self.assertEqual(rule_field_1.get_allowed_units()[2], "yellow")
+        # test max 2
         rule_field_2 = Ruleset.RuleField("test", "text", "mandatory", multiple='max 2')
         self.assertEqual(rule_field_2.get_required(), "mandatory")
         self.assertEqual(rule_field_2.get_name(), "test")
@@ -90,7 +109,7 @@ class TestRuleset(unittest.TestCase):
 
         rule_field_1.set_allowed_terms(data)
         # exact match, include self
-        self.assertTrue(rule_field_1.check_ontology_allowed("PATO_0000383"))
+        self.assertTrue(rule_field_1.check_ontology_allowed("PATO_0000384"))
         # child term
         self.assertTrue(rule_field_1.check_ontology_allowed("EFO_0001733"))
         # no allowed terms set, so false
@@ -101,14 +120,15 @@ class TestRuleset(unittest.TestCase):
         self.assertFalse(rule_field_1.check_ontology_allowed("EFO_0002012"))
         # the child term should be allowed
         self.assertTrue(rule_field_2.check_ontology_allowed("EFO_0001733"))
-        self.assertFalse(rule_field_1.check_ontology_allowed("NCBITaxon_9913"))
+        self.assertFalse(rule_field_1.check_ontology_allowed("NCBITaxon_28890"))
+        self.assertFalse(rule_field_1.check_ontology_allowed("NCBITaxon_9605"))
 
     def test_rule_section_types(self):
         self.assertRaises(TypeError, Ruleset.RuleSection, 12)
         self.assertRaises(TypeError, Ruleset.RuleSection, -12.34)
         self.assertRaises(TypeError, Ruleset.RuleSection, True)
-
-        self.assertRaises(TypeError, Ruleset.RuleSection.add_rule, "rule")
+        rule_section = Ruleset.RuleSection('test')
+        self.assertRaises(TypeError, rule_section.add_rule, "rule")
 
     def test_rule_section(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
@@ -121,6 +141,7 @@ class TestRuleset(unittest.TestCase):
         expected_conditions = {'role': 'warship'}
         self.assertDictEqual(warships_section.get_conditions(), expected_conditions)
         self.assertRaises(ValueError, warships_section.add_condition, 'role', 'second role')
+        self.assertRaises(ValueError, warships_section.add_rule, Ruleset.RuleField("weapon","limited value", 'mandatory'))
 
         rules = warships_section.get_rules()
         self.assertTrue('mandatory' in rules)
@@ -143,6 +164,9 @@ class TestRuleset(unittest.TestCase):
             exit(1)
         transport_data = data[0]
         warship_data = data[1]
+        self.assertRaises(TypeError, warships_section.meet_condition, 'dict')
+        self.assertRaises(TypeError, warships_section.meet_condition, 12)
+        self.assertRaises(KeyError, warships_section.meet_condition, transport_data['attributes'])
         self.assertFalse(warships_section.meet_condition(transport_data))
         self.assertTrue(warships_section.meet_condition(warship_data))
         standard_section = ruleset.get_section_by_name("standard")
@@ -150,14 +174,17 @@ class TestRuleset(unittest.TestCase):
         self.assertTrue(standard_section.meet_condition(transport_data))
 
     def test_rule_set_types(self):
-        self.assertRaises(TypeError, Ruleset.RuleSet.add_rule_section, "rule section")
-        self.assertRaises(TypeError, Ruleset.RuleSet.get_section_by_name, True)
-        self.assertRaises(TypeError, Ruleset.RuleSet.get_section_by_name, 12)
+        ruleset = Ruleset.RuleSet()
+        self.assertRaises(TypeError, ruleset.add_rule_section, "rule section")
+        self.assertRaises(TypeError, ruleset.get_section_by_name, True)
+        self.assertRaises(TypeError, ruleset.get_section_by_name, 12)
 
     def test_rule_set(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
-        section_names = ['standard', 'warships', 'transports']
+        section_names = ['standard', 'warships', 'transports', 'dummy transport']
         self.assertListEqual(ruleset.get_all_section_names(), section_names)
+
+        self.assertRaises(ValueError, ruleset.get_section_by_name, 'not existing')
         warships_section = ruleset.get_section_by_name('warships')
         self.assertEqual(warships_section.get_section_name(), "warships")
         # test add rule section

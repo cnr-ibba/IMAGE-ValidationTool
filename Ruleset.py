@@ -6,14 +6,13 @@ from typing import List, Dict
 import misc
 import ValidationResult
 import use_ontology
-
 logger = logging.getLogger(__name__)
 ontology_library = use_ontology.OntologyCache()
 
 
 class OntologyCondition:
 
-    def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True, iri=None):
+    def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True):
         if type(term) is not str:
             raise TypeError("The term parameter must be a string")
         if type(include_self) is not bool:
@@ -22,20 +21,12 @@ class OntologyCondition:
             raise TypeError("The only_leaf parameter must be a boolean")
         if type(include_descendant) is not bool:
             raise TypeError("The include_descendant parameter must be a boolean")
-        if iri is not None and type(iri) is not str:
-            raise TypeError("The iri parameter must be a string")
         self.term = term
         self.include_descendant = include_descendant
         self.only_leaf = only_leaf
         self.include_self = include_self
-        try:
-            if iri:
-                self.iri = iri
-            else:
-                ontology = ontology_library.get_ontology(term)
-                self.iri = ontology.get_iri()
-        except TypeError:
-            print(term)
+        ontology = ontology_library.get_ontology(term)
+        self.iri = ontology.get_iri()
 
     def __str__(self):
         return "Term: " + self.term + " include descendant: " + str(self.include_descendant) + " leaf only: " + \
@@ -55,6 +46,7 @@ class OntologyCondition:
             if self.only_leaf:  # the term needs to be leaf node
                 if not ontology_detail.is_leaf():
                     return False
+            # if can not be itself, check whether the same term
             if not self.include_self:  # if could not be itself
                 return self.iri != query_iri
             return True
@@ -98,14 +90,17 @@ class RuleField:
         self.allowed_terms: List[OntologyCondition] = []
 
     def set_allowed_values(self, values: List[str]):
+        self.allowed_values: List[str] = []
         for value in values:
             self.allowed_values.append(value)
 
     def set_allowed_units(self, units: List[str]):
+        self.allowed_units: List[str] = []
         for unit in units:
             self.allowed_units.append(unit)
 
     def set_allowed_terms(self, terms: List[Dict[str, str]]):
+        self.allowed_terms: List[OntologyCondition] = []
         for term in terms:
             descendant = False
             leaf = False

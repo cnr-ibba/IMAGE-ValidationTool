@@ -11,14 +11,15 @@
     "term_iri": "http://purl.obolibrary.org/obo/PATO_0000383",
     "ontology_name": "PATO",
     "include_root": 1,
-    "allow_descendants": 0
+    "allow_descendants": 1
   },
   {
     "term_iri": "http://purl.obolibrary.org/obo/EFO_0002012",
     "ontology_name": "EFO",
     "term": "EFO_0002012",
     "include_root": 0,
-    "allow_descendants": 1
+    "allow_descendants": 1,
+    "leaf_only": 1
   },
   {
     "term_iri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
@@ -26,6 +27,14 @@
     "term": "NCBITaxon_9606",
     "include_root": 1,
     "allow_descendants": 0,
+    "leaf_only": 1
+  },
+  {
+    "term_iri": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
+    "ontology_name": "NCBITaxon",
+    "term": "NCBITaxon_2759",
+    "include_root": 0,
+    "allow_descendants": 1,
     "leaf_only": 1
   }
 ]

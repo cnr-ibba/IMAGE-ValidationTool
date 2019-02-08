@@ -6,6 +6,12 @@
       "name": "standard",
       "rules": [
         {
+          "Name": "id",
+          "Type": "text",
+          "Required": "mandatory",
+          "Allow Multiple" : "no"
+        },
+        {
           "Name": "passenger_capacity",
           "Type": "number",
           "Required": "mandatory",
@@ -67,6 +73,23 @@
           "valid_units": [
             "kg"
           ]
+        }
+      ]
+    },
+    {
+      "name": "dummy transport",
+      "condition": {
+        "attribute_value_match": {
+          "role": "transport",
+          "driver": "robot"
+        }
+      },
+      "rules": [
+        {
+          "Name": "robot_model",
+          "Type": "text",
+          "Allow Multiple" : "no",
+          "Required": "mandatory"
         }
       ]
     }
