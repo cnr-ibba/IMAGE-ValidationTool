@@ -17,38 +17,31 @@ def read_in_ruleset(file: str):
         raise TypeError("File name must be a string")
     logger.info("read in ruleset")
     result = Ruleset.RuleSet()
-    try:
-        with open(file) as infile:
-            data = json.load(infile)
-            logger.info("Finished reading the ruleset JSON file")
-            for rule_group in data['rule_groups']:
-                rule_group_name = rule_group['name']
-                logger.debug("Parse rule group " + rule_group_name)
-                rule_section = Ruleset.RuleSection(rule_group_name)
-                rules = rule_group['rules']
-                for rule in rules:
-                    # field_name = rule['Name']
-                    rule_field = Ruleset.RuleField(rule['Name'], rule['Type'], rule['Required'],
-                                                   multiple=rule['Allow Multiple'])
-                    logger.debug("Add Rule " + rule['Name'])
-                    if "Valid values" in rule:
-                        rule_field.set_allowed_values(rule["Valid values"])
-                    if "Valid units" in rule:
-                        rule_field.set_allowed_units(rule["Valid units"])
-                    if "Valid terms" in rule:
-                        rule_field.set_allowed_terms(rule["Valid terms"])
-                    rule_section.add_rule(rule_field)
-                if 'condition' in rule_group and 'attribute_value_match' in rule_group['condition']:
-                    conditions = rule_group['condition']['attribute_value_match']
-                    for field in conditions.keys():
-                        rule_section.add_condition(field, conditions[field])
-                result.add_rule_section(rule_section)
-
-    except FileNotFoundError:
-        exit(1)
-
-    except json.decoder.JSONDecodeError as e:
-        exit(1)
+    with open(file) as infile:
+        data = json.load(infile)
+        logger.info("Finished reading the ruleset JSON file")
+        for rule_group in data['rule_groups']:
+            rule_group_name = rule_group['name']
+            logger.debug("Parse rule group " + rule_group_name)
+            rule_section = Ruleset.RuleSection(rule_group_name)
+            rules = rule_group['rules']
+            for rule in rules:
+                # field_name = rule['Name']
+                rule_field = Ruleset.RuleField(rule['Name'], rule['Type'], rule['Required'],
+                                               multiple=rule['Allow Multiple'])
+                logger.debug("Add Rule " + rule['Name'])
+                if "Valid values" in rule:
+                    rule_field.set_allowed_values(rule["Valid values"])
+                if "Valid units" in rule:
+                    rule_field.set_allowed_units(rule["Valid units"])
+                if "Valid terms" in rule:
+                    rule_field.set_allowed_terms(rule["Valid terms"])
+                rule_section.add_rule(rule_field)
+            if 'condition' in rule_group and 'attribute_value_match' in rule_group['condition']:
+                conditions = rule_group['condition']['attribute_value_match']
+                for field in conditions.keys():
+                    rule_section.add_condition(field, conditions[field])
+            result.add_rule_section(rule_section)
     return result
 
 
@@ -90,6 +83,9 @@ def check_usi_structure(sample: List[Dict]):
             result.append(error_prefix + "no taxonId field for record with alias as " + alias)
         if 'attributes' not in one:
             result.append(error_prefix + "no attributes for record with alias as " + alias)
+        # return when previous record has error or current record fails the check above
+        if result:
+            return result
         # check value of mandatory fields except type of alias
         # which is checked above and duplicate check outside this loop
         # taxonId must be an integer
@@ -251,3 +247,4 @@ def context_validation(record: Dict, existing_results: ValidationResult.Validati
     existing_results = coordinate_check(record, existing_results)
     # other context based validations
     return existing_results
+

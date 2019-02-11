@@ -3,7 +3,7 @@
     "alias" : "404-T-132-4FE274A",
     "title" : "404-T-132-4FE274A",
     "taxonId" : 8888,
-    "releaseDate" : "2404-01-01",
+    "releaseDate" : "2404-01",
     "entity_type" : "spacecraft",
     "attributes": {
       "id": [
@@ -45,7 +45,7 @@
     "alias" : "502-W-133-4FE274B",
     "title" : "502-W-133-4FE274B",
     "taxonId" : 8888,
-    "releaseDate" : "2502-01-01",
+    "releaseDate" : "13-01-2502",
     "entity_type" : "spacecraft",
     "attributes": {
       "id": [

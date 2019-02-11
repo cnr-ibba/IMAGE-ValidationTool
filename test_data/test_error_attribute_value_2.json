@@ -36,7 +36,16 @@
       "cargo_capacity": [
         {
           "value": 74797,
+          "type": "number",
           "units": "kg"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "France",
+          "terms": [
+            "http://purl.obolibrary.org/obo/NCIT_C16592"
+          ]
         }
       ]
     }

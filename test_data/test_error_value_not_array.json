@@ -17,17 +17,16 @@
           "units": "cabins"
         }
       ],
-      "passenger_capacity": [
-        {
+      "passenger_capacity": {
           "value": 18,
           "units": "people"
         }
-      ],
-      "class": [
+      ,
+      "class":
         {
           "value": "03-K64-Firefly"
         }
-      ],
+      ,
       "role": [
         {
           "value": "transport"
@@ -65,11 +64,11 @@
           "units": "people"
         }
       ],
-      "class": [
+      "class":
         {
           "value": "05-W64-SpitFire"
         }
-      ],
+      ,
       "role": [
         {
           "value": "warship"

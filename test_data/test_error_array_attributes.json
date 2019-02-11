@@ -5,7 +5,7 @@
     "taxonId" : 8888,
     "releaseDate" : "2404-01-01",
     "entity_type" : "spacecraft",
-    "attributes": {
+    "attributes": [{
       "id": [
         {
           "value": "404-T-132-4FE274A"
@@ -39,7 +39,7 @@
           "units": "kg"
         }
       ]
-    }
+    }]
   },
   {
     "alias" : "502-W-133-4FE274B",

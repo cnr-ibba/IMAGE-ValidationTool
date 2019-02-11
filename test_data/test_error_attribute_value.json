@@ -6,20 +6,12 @@
     "releaseDate" : "2404-01-01",
     "entity_type" : "spacecraft",
     "attributes": {
-      "id": [
-        {
-          "value": "404-T-132-4FE274A"
-        }
-      ],
+      "id": "404-T-132-4FE274A",
       "crew_capacity": [
-        {
-          "value": "5",
-          "units": "cabins"
-        }
+          "5"
       ],
       "passenger_capacity": [
         {
-          "value": 18,
           "units": "people"
         }
       ],
@@ -37,6 +29,12 @@
         {
           "value": 74797,
           "units": "kg"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "France",
+          "terms": "http://purl.obolibrary.org/obo/NCIT_C16592"
         }
       ]
     }
