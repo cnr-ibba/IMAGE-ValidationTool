@@ -34,9 +34,147 @@
           "Type": "limited value",
           "Required": "mandatory",
           "Allow Multiple" : "no",
-          "valid_values": [
+          "Valid values": [
             "transport",
             "warship"
+          ]
+        },
+        {
+          "Name": "manufacturer country",
+          "Type": "limited value",
+          "Required": "recommended",
+          "Allow Multiple": "no",
+          "Valid values": [
+            "France",
+            "Egypt",
+            "Colombia",
+            "Switzerland",
+            "Netherlands",
+            "Germany",
+            "Italy",
+            "Hungary",
+            "Morocco",
+            "Spain",
+            "Argentina",
+            "Sweden",
+            "United Kingdom",
+            "Poland",
+            "Portugal",
+            "Austria"
+          ],
+          "Valid terms": [
+            {
+              "ontology_name": "NCIT",
+              "term": "NCIT_C16592",
+              "include_root": 1,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16592",
+              "allow_descendants": 0
+            },
+            {
+              "ontology_name": "NCIT",
+              "include_root": 1,
+              "term": "NCIT_C16530",
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16530",
+              "allow_descendants": 0
+            },
+            {
+              "term": "NCIT_C16449",
+              "include_root": 1,
+              "ontology_name": "NCIT",
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16449"
+            },
+            {
+              "include_root": 1,
+              "term": "NCIT_C17181",
+              "ontology_name": "NCIT",
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17181"
+            },
+            {
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16903",
+              "ontology_name": "NCIT",
+              "term": "NCIT_C16903",
+              "include_root": 1
+            },
+            {
+              "ontology_name": "NCIT",
+              "include_root": 1,
+              "term": "NCIT_C16636",
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16636",
+              "allow_descendants": 0
+            },
+            {
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16761",
+              "allow_descendants": 0,
+              "ontology_name": "NCIT",
+              "include_root": 1,
+              "term": "NCIT_C16761"
+            },
+            {
+              "include_root": 1,
+              "term": "NCIT_C16699",
+              "ontology_name": "NCIT",
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16699",
+              "allow_descendants": 0
+            },
+            {
+              "include_root": 1,
+              "term": "NCIT_C16878",
+              "ontology_name": "NCIT",
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16878"
+            },
+            {
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17152",
+              "ontology_name": "NCIT",
+              "term": "NCIT_C17152",
+              "include_root": 1
+            },
+            {
+              "include_root": 1,
+              "term": "NCIT_C16305",
+              "ontology_name": "NCIT",
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16305"
+            },
+            {
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17180",
+              "allow_descendants": 0,
+              "include_root": 1,
+              "term": "NCIT_C17180",
+              "ontology_name": "NCIT"
+            },
+            {
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17233",
+              "allow_descendants": 0,
+              "include_root": 1,
+              "term": "NCIT_C17233",
+              "ontology_name": "NCIT"
+            },
+            {
+              "include_root": 1,
+              "term": "NCIT_C17002",
+              "ontology_name": "NCIT",
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17002"
+            },
+            {
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C17006",
+              "term": "NCIT_C17006",
+              "include_root": 1,
+              "ontology_name": "NCIT"
+            },
+            {
+              "allow_descendants": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16312",
+              "include_root": 1,
+              "term": "NCIT_C16312",
+              "ontology_name": "NCIT"
+            }
           ]
         }
       ]
@@ -70,7 +208,7 @@
           "Type": "number",
           "Allow Multiple" : "no",
           "Required": "mandatory",
-          "valid_units": [
+          "Valid units": [
             "kg"
           ]
         }

@@ -1,6 +1,8 @@
 import validation
 import unittest
 
+ruleset_file = "sample_ruleset_v1.3.json"
+
 
 class TestValidation(unittest.TestCase):
 
@@ -10,5 +12,6 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.read_in_ruleset, True)
 
     def test_read_in_ruleset(self):
+        ruleset = validation.read_in_ruleset(ruleset_file)
         pass
 

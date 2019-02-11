@@ -14,8 +14,6 @@ class TestRuleset(unittest.TestCase):
 
     def test_ontology_condition(self):
         filename = "test_data/ruleset_allowed_terms.json"
-        # not wrapped with try except statements which reduces the coverage
-        # also in the test environment the data files are somehow guaranteed to be there
         try:
             with open(filename) as infile:
                 data = json.load(infile)
@@ -141,7 +139,8 @@ class TestRuleset(unittest.TestCase):
         expected_conditions = {'role': 'warship'}
         self.assertDictEqual(warships_section.get_conditions(), expected_conditions)
         self.assertRaises(ValueError, warships_section.add_condition, 'role', 'second role')
-        self.assertRaises(ValueError, warships_section.add_rule, Ruleset.RuleField("weapon","limited value", 'mandatory'))
+        self.assertRaises(ValueError, warships_section.add_rule, Ruleset.RuleField("weapon",
+                                                                                   "limited value", 'mandatory'))
 
         rules = warships_section.get_rules()
         self.assertTrue('mandatory' in rules)
@@ -204,5 +203,4 @@ class TestRuleset(unittest.TestCase):
         except json.decoder.JSONDecodeError as e:
             exit(1)
         ruleset.validate(data[0], "id")
-
 
