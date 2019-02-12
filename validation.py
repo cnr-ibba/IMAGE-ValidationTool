@@ -208,8 +208,8 @@ def deal_with_validation_results(results: List[ValidationResult.ValidationResult
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
-        if overall != "Pass":
-            print(result.get_messages())
+        # if overall != "Pass":
+        #    print(result.get_messages())
     return count
 
 

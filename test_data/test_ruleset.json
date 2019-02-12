@@ -46,6 +46,16 @@
           "Allow Multiple" : "max 2"
         },
         {
+          "Name": "length",
+          "Type": "number",
+          "Required": "optional",
+          "Allow Multiple" : "no",
+          "Valid units": [
+            "km",
+            "m"
+          ]
+        },
+        {
           "Name": "manufacturer country",
           "Type": "limited value",
           "Required": "recommended",

@@ -218,8 +218,18 @@ class TestRuleset(unittest.TestCase):
                 'Warning: recommended field manufacturer country has empty value, '
                 'better remove the field (standard section) for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 1, 'Error': 1}"
+            ],
+            "units": [
+                'Error: One of km, m need to be present for the field length '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: g for field cargo_capacity is not in the valid units list (kg) '
+                '(transports section) for Record 404-T-132-4FE274A',
+                'Warning: No units required but people is used as unit for field crew_capacity '
+                '(standard section) for Record 502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 1, 'Error': 1}"
             ]
         }
+        self.maxDiff = None
         for error_type in expected_result.keys():
             filename = "test_data/test_error_rule_" + error_type + ".json"
             try:
@@ -242,4 +252,6 @@ class TestRuleset(unittest.TestCase):
             summary = validation.deal_with_validation_results(submission_result)
             summary_str = str(summary)
             actual_values.append(summary_str)
+            if error_type == "units":
+                print("VALUES:\n"+str(actual_values))
             self.assertListEqual(expected_result[error_type], actual_values)

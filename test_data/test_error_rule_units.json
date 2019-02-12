@@ -34,12 +34,17 @@
       "cargo_capacity": [
         {
           "value": 74797,
-          "units": "kg"
+          "units": "g"
         }
       ],
       "color": [
         {
           "value": "blue"
+        }
+      ],
+      "length": [
+        {
+          "value": 490
         }
       ]
     }
@@ -58,7 +63,8 @@
       ],
       "crew_capacity": [
         {
-          "value": 50
+          "value": 50,
+          "units": "people"
         }
       ],
       "passenger_capacity": [

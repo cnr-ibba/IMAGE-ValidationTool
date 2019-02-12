@@ -190,7 +190,7 @@ class RuleField:
                               + " is not in the valid units list (" + ', '.join(allowed_units) + ")"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 else:  # unit not required, but exists, raise a warning
-                    msg = "No units required but " + entry['units'] + " is used as unit"
+                    msg = "No units required but " + entry['units'] + " is used as unit for field "+self.name
                     results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
             else:
                 if allowed_units:
