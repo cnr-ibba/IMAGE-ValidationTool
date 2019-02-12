@@ -2,6 +2,8 @@ import Ruleset
 import validation
 import unittest
 import json
+import ValidationResult
+from typing import List, Dict
 
 
 class TestRuleset(unittest.TestCase):
@@ -204,3 +206,40 @@ class TestRuleset(unittest.TestCase):
             exit(1)
         ruleset.validate(data[0], "id")
 
+    def test_validate(self):
+        ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
+        expected_result: Dict[str, List[str]] = {
+            "cardinality": [
+                'Error: Multiple values supplied for field passenger_capacity which does not allow multiple values '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: Mandatory field crew_capacity has empty value (standard section) for Record 404-T-132-4FE274A',
+                'Error: Maximum of 2 values allowed for field color but 3 values provided (standard section)'
+                ' for Record 404-T-132-4FE274A',
+                'Warning: recommended field manufacturer country has empty value, '
+                'better remove the field (standard section) for Record 502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 1, 'Error': 1}"
+            ]
+        }
+        for error_type in expected_result.keys():
+            filename = "test_data/test_error_rule_" + error_type + ".json"
+            try:
+                with open(filename) as infile:
+                    data = json.load(infile)
+            except FileNotFoundError:
+                exit(1)
+            except json.decoder.JSONDecodeError as e:
+                exit(1)
+            submission_result: List[ValidationResult.ValidationResultRecord] = []
+            actual_values: List[str] = []
+            for record in data:
+                record_result = ruleset.validate(record, "id")
+                if record_result.is_empty():
+                    record_result.add_validation_result_column(
+                        ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
+                submission_result.append(record_result)
+                for msg in record_result.get_messages():
+                    actual_values.append(msg)
+            summary = validation.deal_with_validation_results(submission_result)
+            summary_str = str(summary)
+            actual_values.append(summary_str)
+            self.assertListEqual(expected_result[error_type], actual_values)

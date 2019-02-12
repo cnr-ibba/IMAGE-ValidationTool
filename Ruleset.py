@@ -153,12 +153,14 @@ class RuleField:
         if self.required == 'mandatory':
             mandatory = True
 
+        has_error = False
         # check cardinality
         entry_size: int = len(entries)
         if entry_size == 0:
             if mandatory:
                 msg = "Mandatory field " + self.name + " has empty value"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
             else:
                 msg = self.required + " field " + self.name + " has empty value, better remove the field"
                 results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
@@ -166,13 +168,15 @@ class RuleField:
             if not self.allow_multiple():
                 msg = "Multiple values supplied for field " + self.name + " which does not allow multiple values"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
             # multiple only be True (reaching here) when existing Allow Multiple, no need to check existence
             if entry_size > 2 and self.get_multiple() == 'max 2':
                 msg = "Maximum of 2 values allowed for field " \
                       + self.name + " but " + str(entry_size) + " values provided"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
         # the errors detected above mean that there is no need to validate the actual value(s)
-        if results:
+        if has_error:
             return results
 
         for entry in entries:

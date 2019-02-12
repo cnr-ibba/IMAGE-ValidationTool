@@ -109,4 +109,4 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.deal_with_errors, [12])
         self.assertRaises(TypeError, validation.deal_with_errors, [True])
         errors = ['1', '2']
-        validation.deal_with_errors(errors)
+        self.assertIsNone(validation.deal_with_errors(errors))

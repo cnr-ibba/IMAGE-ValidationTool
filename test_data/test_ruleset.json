@@ -24,7 +24,7 @@
           "Allow Multiple" : "no"
         },
         {
-          "Name": "class_id",
+          "Name": "class",
           "Type": "text",
           "Required": "mandatory",
           "Allow Multiple" : "no"
@@ -38,6 +38,12 @@
             "transport",
             "warship"
           ]
+        },
+        {
+          "Name": "color",
+          "Type": "text",
+          "Required": "optional",
+          "Allow Multiple" : "max 2"
         },
         {
           "Name": "manufacturer country",

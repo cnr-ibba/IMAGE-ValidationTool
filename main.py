@@ -44,6 +44,7 @@ for record in data:
             ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
     submission_result.append(record_result)
 # pprint.pprint(rules)
-validation.deal_with_validation_results(submission_result)
+summary = validation.deal_with_validation_results(submission_result)
+print(summary)
 
 logging.info("FINISH")
