@@ -174,7 +174,9 @@ def check_usi_structure(sample: List[Dict]):
 
 
 # not checking alias duplicates as alias is USI concept and dealt with within check_usi_structure
-def check_duplicates(sample: List) -> List[str]:
+def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str]:
+    if type(id_field) is not str:
+        raise TypeError("id_field parameter must be a string")
     logger.debug("Check duplicates")
     count = {}
     result = []
@@ -182,11 +184,10 @@ def check_duplicates(sample: List) -> List[str]:
         # as usi structure has been checked, it is safe to use one['attributes']
         one = one['attributes']
         # idField = locateDataSourceId(one)
-        id_field = 'Data source ID'
         if id_field not in one:
             result.append(
-                'At least one record does not have "Data source ID", maybe wrong case letter '
-                'used for "Data source ID", please double check')
+                'At least one record does not have "' + id_field + '" field, maybe wrong case letter '
+                'used, please double check')
             return result
         record_id = one[id_field][0]['value']
         if record_id in count:
@@ -196,7 +197,7 @@ def check_duplicates(sample: List) -> List[str]:
 
     for key in count.keys():
         if count[key] > 1:
-            result.append("There are more than one record having " + key + " as its data source id")
+            result.append("There are more than one record having " + key + " as its "+id_field)
     return result
 
 

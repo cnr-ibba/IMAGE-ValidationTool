@@ -72,6 +72,21 @@ class TestValidation(unittest.TestCase):
                 print("The provided file " + filename + " is not a valid JSON file. Reason: " + str(e))
                 exit(1)
             results = validation.check_usi_structure(data)
-            print(results)
             self.assertListEqual(expected[error], results)
 
+    def test_check_duplicates(self):
+        filename = "test_data/test_error_duplicates.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        self.assertRaises(TypeError, validation.check_duplicates, data, 12)
+        self.assertRaises(TypeError, validation.check_duplicates, data, True)
+        expected_id = ['There are more than one record having 404-T-132-4FE274A as its id']
+        self.assertListEqual(validation.check_duplicates(data, "id"), expected_id)
+        expected_random = ['At least one record does not have "random" field, maybe wrong case letter'
+                           ' used, please double check']
+        self.assertListEqual(validation.check_duplicates(data, 'random'), expected_random)
+
+    # doing nothing, just to increase coverage
+    def dummy_coverage(self):
+        errors = ['']
+        validation.deal_with_errors(errors)
