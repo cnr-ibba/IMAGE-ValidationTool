@@ -139,13 +139,13 @@ def check_usi_structure(sample: List[Dict]):
             relationships = one['sampleRelationships']
             if type(relationships) is not list:
                 result.append(
-                    "Wrong JSON structure: sampleRelationships field must have values within an array for record with "
+                    error_prefix + "sampleRelationships field must have values within an array for record with "
                     "alias " + alias)
             else:
                 for relationship in relationships:
                     if type(relationship) is not dict:
                         result.append(
-                            "Wrong JSON structure: relationship "
+                            error_prefix + "relationship "
                             "needs to be presented as a hash for record with alias " + alias)
                     else:
                         if len(relationship.keys()) == 2:
@@ -156,15 +156,15 @@ def check_usi_structure(sample: List[Dict]):
                                         relationship_nature != 'same as' and \
                                         relationship_nature != 'recurated from':
                                     result.append(
-                                        "Wrong JSON structure: Unrecognized relationship nature "
+                                        error_prefix + "Unrecognized relationship nature "
                                         + relationship_nature + " within record " + alias)
                             else:
                                 result.append(
-                                    "Wrong JSON structure: Unrecognized key used (only can be alias and "
+                                    error_prefix + "Unrecognized key used (only can be alias and "
                                     "relationshipNature) within one relationship. Affected record " + alias)
                         else:
                             result.append(
-                                "Wrong JSON structure: two and only two keys (alias and relationshipNature) must be "
+                                error_prefix + "two and only two keys (alias and relationshipNature) must be "
                                 "presented within every relationship. Affected record " + alias)
 
     for key in count.keys():
@@ -213,8 +213,10 @@ def deal_with_validation_results(results: List[ValidationResult.ValidationResult
     print(count)
 
 
-def deal_with_errors(errors) -> None:
+def deal_with_errors(errors: List[str]) -> None:
     for error in errors:
+        if type(error) is not str:
+            raise TypeError("Error message is not a string")
         print(error)
 
 

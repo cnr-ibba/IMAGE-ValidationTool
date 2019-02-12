@@ -31,6 +31,9 @@ class TestValidation(unittest.TestCase):
                 'Wrong JSON structure: no releaseDate field for record with alias as 404-T-132-4FE274A',
                 'Wrong JSON structure: no taxonId field for record with alias as 404-T-132-4FE274A'
             ],
+            'duplicate_alias': [
+                'There are more than one record having 404-T-132-4FE274A as its alias'
+            ],
             "no_attributes": ['Wrong JSON structure: no attributes for record with alias as 404-T-132-4FE274A'],
             "string_taxonId": ['Wrong JSON structure: taxonId value for record 404-T-132-4FE274A is not an integer'],
             "release_date": [
@@ -58,6 +61,21 @@ class TestValidation(unittest.TestCase):
                 'Wrong JSON structure: Unrecognized keyword type used in '
                 'attribute cargo_capacity in record 404-T-132-4FE274A',
                 'Wrong JSON structure: url not used as key for ontology term in record 404-T-132-4FE274A'
+            ],
+            "sample_relationship": [
+                'Wrong JSON structure: relationship needs to be presented as a hash for record with '
+                'alias 404-T-132-4FE274A',
+                'Wrong JSON structure: two and only two keys (alias and relationshipNature) must be presented '
+                'within every relationship. Affected record 404-T-132-4FE274A',
+                'Wrong JSON structure: Unrecognized relationship nature random within record 404-T-132-4FE274A',
+                'Wrong JSON structure: Unrecognized key used (only can be alias and relationshipNature) within one'
+                ' relationship. Affected record 404-T-132-4FE274A',
+                'Wrong JSON structure: Unrecognized key used (only can be alias and relationshipNature) within one'
+                ' relationship. Affected record 404-T-132-4FE274A'
+            ],
+            "sample_relationship_2": [
+                'Wrong JSON structure: sampleRelationships field must have values '
+                'within an array for record with alias 502-W-133-4FE274B'
             ]
         }
         for error in expected.keys():
@@ -75,7 +93,7 @@ class TestValidation(unittest.TestCase):
             self.assertListEqual(expected[error], results)
 
     def test_check_duplicates(self):
-        filename = "test_data/test_error_duplicates.json"
+        filename = "test_data/test_error_duplicate_id.json"
         with open(filename) as infile:
             data = json.load(infile)
         self.assertRaises(TypeError, validation.check_duplicates, data, 12)
@@ -88,5 +106,7 @@ class TestValidation(unittest.TestCase):
 
     # doing nothing, just to increase coverage
     def dummy_coverage(self):
-        errors = ['']
+        self.assertRaises(TypeError, validation.deal_with_errors, [12])
+        self.assertRaises(TypeError, validation.deal_with_errors, [True])
+        errors = ['1', '2']
         validation.deal_with_errors(errors)

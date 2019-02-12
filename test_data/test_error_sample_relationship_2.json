@@ -1,0 +1,94 @@
+[
+  {
+    "alias" : "404-T-132-4FE274A",
+    "title" : "404-T-132-4FE274A",
+    "taxonId" : 8888,
+    "releaseDate" : "2404-01-01",
+    "entity_type" : "spacecraft",
+    "attributes": {
+      "id": [
+        {
+          "value": "404-T-132-4FE274A"
+        }
+      ],
+      "crew_capacity": [
+        {
+          "value": "5",
+          "units": "cabins"
+        }
+      ],
+      "passenger_capacity": [
+        {
+          "value": 18,
+          "units": "people"
+        }
+      ],
+      "class": [
+        {
+          "value": "03-K64-Firefly"
+        }
+      ],
+      "role": [
+        {
+          "value": "transport"
+        }
+      ],
+      "cargo_capacity": [
+        {
+          "value": 74797,
+          "units": "kg"
+        }
+      ]
+    },
+    "sampleRelationships": [
+      {
+        "relationshipNature": "same as",
+        "alias": "502-W-133-4FE274B"
+      }
+    ]
+
+  },
+  {
+    "alias" : "502-W-133-4FE274B",
+    "title" : "502-W-133-4FE274B",
+    "taxonId" : 8888,
+    "releaseDate" : "2502-01-01",
+    "entity_type" : "spacecraft",
+    "attributes": {
+      "id": [
+        {
+          "value": "502-W-133-4FE274B"
+        }
+      ],
+      "crew_capacity": [
+        {
+          "value": 50,
+          "units": "people"
+        }
+      ],
+      "passenger_capacity": [
+        {
+          "value": 0,
+          "units": "people"
+        }
+      ],
+      "class": [
+        {
+          "value": "05-W64-SpitFire"
+        }
+      ],
+      "role": [
+        {
+          "value": "warship"
+        }
+      ],
+      "cargo_capacity": [
+        {
+          "value": 74797,
+          "units": "kg"
+        }
+      ]
+    },
+    "sampleRelationships": "none"
+  }
+]
