@@ -227,6 +227,23 @@ class TestRuleset(unittest.TestCase):
                 'Warning: No units required but people is used as unit for field crew_capacity '
                 '(standard section) for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 1, 'Error': 1}"
+            ],
+            "values": [
+                'Error: <None> of field Availability is neither "no longer available" nor a valid mailto URI '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: <UK> of field manufacturer country is not in the valid values list '
+                '(<France>, <Switzerland>, <Netherlands>, <Germany>, <Italy>, <Hungary>, <United Kingdom>)'
+                ' (standard section) for Record 502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 0, 'Error': 2}"
+            ],
+            "allowed_terms":[
+                'Error: Invalid URI value wrong url in field manufacturer country '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Warning: Ontology provided for field role however there is no requirement in the ruleset '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: Not valid ontology term PATO_0000383 in field manufacturer country'
+                ' (standard section) for Record 502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 0, 'Error': 2}"
             ]
         }
         self.maxDiff = None
@@ -252,6 +269,6 @@ class TestRuleset(unittest.TestCase):
             summary = validation.deal_with_validation_results(submission_result)
             summary_str = str(summary)
             actual_values.append(summary_str)
-            if error_type == "units":
-                print("VALUES:\n"+str(actual_values))
+            # if error_type == "units":
+            #    print("VALUES:\n"+str(actual_values))
             self.assertListEqual(expected_result[error_type], actual_values)
