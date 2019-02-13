@@ -244,6 +244,12 @@ class TestRuleset(unittest.TestCase):
                 'Error: Not valid ontology term PATO_0000383 in field manufacturer country'
                 ' (standard section) for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 0, 'Error': 2}"
+            ],
+            "extra_and_missing_field":[
+                'Error: Mandatory field passenger_capacity in standard section could not be found '
+                'for Record 404-T-132-4FE274A',
+                'Warning: Column extra could not be found in ruleset for Record 502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 1, 'Error': 1}"
             ]
         }
         self.maxDiff = None
