@@ -41,9 +41,14 @@
         },
         {
           "Name": "color",
-          "Type": "text",
+          "Type": "limited value",
           "Required": "optional",
-          "Allow Multiple" : "max 2"
+          "Allow Multiple" : "max 2",
+          "Valid values": [
+            "red",
+            "yellow",
+            "blue"
+          ]
         },
         {
           "Name": "length",
@@ -56,8 +61,14 @@
           ]
         },
         {
+          "Name": "instruction",
+          "Type": "doi",
+          "Required": "optional",
+          "Allow Multiple": "yes"
+        },
+        {
           "Name": "Availability",
-          "Type": "text",
+          "Type": "limited value",
           "Required": "recommended",
           "Allow Multiple": "no",
           "Example": "mailto:vdc-internal@ebi.ac.uk",
@@ -67,22 +78,30 @@
           ]
         },
         {
+          "Name": "video demo",
+          "Type": "uri",
+          "Required": "optional",
+          "Allow Multiple": "yes"
+        },
+        {
+          "Name": "production date",
+          "Type": "date",
+          "Required": "optional",
+          "Allow Multiple": "no",
+          "Valid units": [
+            "YYYY-MM-DD",
+            "YYYY-MM"
+          ]
+        },
+        {
           "Name": "manufacturer country",
-          "Type": "limited value",
+          "Type": "ontology_id",
           "Required": "recommended",
           "Allow Multiple": "no",
-          "Valid values": [
-            "France",
-            "Switzerland",
-            "Netherlands",
-            "Germany",
-            "Italy",
-            "Hungary",
-            "United Kingdom"
-          ],
           "Valid terms": [
             {
               "ontology_name": "NCIT",
+              "label": "France",
               "term": "NCIT_C16592",
               "include_root": 1,
               "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16592",
@@ -90,6 +109,7 @@
             },
             {
               "include_root": 1,
+              "label": "Switzerland",
               "term": "NCIT_C17181",
               "ontology_name": "NCIT",
               "allow_descendants": 0,
@@ -100,12 +120,14 @@
               "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16903",
               "ontology_name": "NCIT",
               "term": "NCIT_C16903",
+              "label": "Netherlands",
               "include_root": 1
             },
             {
               "ontology_name": "NCIT",
               "include_root": 1,
               "term": "NCIT_C16636",
+              "label": "Germany",
               "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16636",
               "allow_descendants": 0
             },
@@ -114,11 +136,13 @@
               "allow_descendants": 0,
               "ontology_name": "NCIT",
               "include_root": 1,
-              "term": "NCIT_C16761"
+              "term": "NCIT_C16761",
+              "label": "Italy"
             },
             {
               "include_root": 1,
               "term": "NCIT_C16699",
+              "label": "Hungary",
               "ontology_name": "NCIT",
               "term_iri": "http://purl.obolibrary.org/obo/NCIT_C16699",
               "allow_descendants": 0
@@ -128,6 +152,7 @@
               "allow_descendants": 0,
               "include_root": 1,
               "term": "NCIT_C17233",
+              "label": "United Kingdom",
               "ontology_name": "NCIT"
             }
           ]

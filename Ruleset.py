@@ -232,6 +232,8 @@ class RuleField:
                             msg = 'Not valid ontology term ' + term_id + ' in field ' + self.name
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
+            if results:
+                return results
 
             # check type
             # current allowed types:
@@ -241,13 +243,15 @@ class RuleField:
             if self.type == 'number':
                 if type(value) is not float and type(value) is not int:
                     msg = "For field " + self.name + " the provided value " + str(value) \
-                          + " is not of the expected type Number"
+                          + " is not represented as/of the expected type Number"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             else:  # textual types
                 if type(value) is not str:
                     msg = "For field " + self.name + " the provided value " + str(value) \
                           + " is not of the expected type " + self.type
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                    return results
+                # the following tests are based on the value is a string, so need to return above
                 if self.type == 'ontology_id':
                     if 'terms' not in entry:
                         msg = "No url found for the field " + self.name + " which has the type of ontology_id "
@@ -286,27 +290,25 @@ class RuleField:
                                 msg = 'Email address must have prefix "mailto:" in the field ' + self.name
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
-                            else:
-                                if value.find("mailto:") != 0:
-                                    msg = "Unrecognized mailto value in the field " + self.name
-                                    results.append(
-                                        ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                        else: # it is URL, but not email: could be a normal URL or wrong mailto: location
+                            if value.find("mailto:") > 0:
+                                msg = "mailto must be at position 1 to be a valid email value in the field " + self.name
+                                results.append(
+                                    ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'doi':
                     doi_result = misc.is_doi(value)
                     if not doi_result:
                         msg = "Invalid DOI value supplied in the field " + self.name
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'date':
-                    # there is always a format(unit) for the date type
-                    if 'units' not in entry:
-                        msg = "No date format found as unit in the field " + self.name
-                        results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
-                    else:
-                        date_format = entry['units']
-                        date_result = misc.get_matched_date(value, date_format)
-                        if date_result:
-                            results.append(
-                                ValidationResult.ValidationResultColumn("Error", date_result + section_info, record_id))
+                    # there is always a format(unit) for the date type (checked in the validation.read_in_ruleset)
+                    # therefore entry[units] existence should have already been
+                    # if 'units' not in entry:
+                    date_format = entry['units']
+                    date_result = misc.get_matched_date(value, date_format)
+                    if date_result:
+                        results.append(
+                            ValidationResult.ValidationResultColumn("Error", date_result + section_info, record_id))
 
             # it would be safer to skip the validations below as unmatched type detected
             if results:

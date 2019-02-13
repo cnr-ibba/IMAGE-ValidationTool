@@ -31,6 +31,14 @@
           "value": "transport"
         }
       ],
+      "video demo": [
+        {
+          "value": "test@google.com"
+        },
+        {
+          "value": "amailto:test@google.com"
+        }
+      ],
       "cargo_capacity": [
         {
           "value": 74797,
@@ -42,14 +50,9 @@
           "value": "blue"
         }
       ],
-      "Availability": [
+       "manufacturer country": [
         {
-          "value": "None"
-        }
-      ],
-      "manufacturer country": [
-        {
-          "value": "United Kingdom",
+          "value": "United kingdom",
           "terms": [
             {
               "url": "http://purl.obolibrary.org/obo/NCIT_C17233"
@@ -57,7 +60,7 @@
           ]
         }
       ]
-    }
+   }
   },
   {
     "alias" : "502-W-133-4FE274B",
@@ -91,6 +94,11 @@
           "value": "warship"
         }
       ],
+      "video demo": [
+        {
+          "value": "amailto:info@google.com"
+        }
+      ],
       "weapon": [
         {
           "value": "laser cannon"
@@ -102,12 +110,14 @@
           "value": "missile"
         }
       ],
-      "color": [
+       "manufacturer country": [
         {
-          "value": "red"
-        },
-        {
-          "value": "purple"
+          "value": "United Kingdom",
+          "terms": [
+            {
+              "url": "http://purl.obolibrary.org/obo/NCIT_C16699"
+            }
+          ]
         }
       ]
     }

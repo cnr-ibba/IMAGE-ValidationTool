@@ -231,9 +231,8 @@ class TestRuleset(unittest.TestCase):
             "values": [
                 'Error: <None> of field Availability is neither "no longer available" nor a valid mailto URI '
                 '(standard section) for Record 404-T-132-4FE274A',
-                'Error: <UK> of field manufacturer country is not in the valid values list '
-                '(<France>, <Switzerland>, <Netherlands>, <Germany>, <Italy>, <Hungary>, <United Kingdom>)'
-                ' (standard section) for Record 502-W-133-4FE274B',
+                'Error: <purple> of field color is not in the valid values list '
+                '(<red>, <yellow>, <blue>) (standard section) for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 0, 'Error': 2}"
             ],
             "allowed_terms":[
@@ -250,6 +249,40 @@ class TestRuleset(unittest.TestCase):
                 'for Record 404-T-132-4FE274A',
                 'Warning: Column extra could not be found in ruleset for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 1, 'Error': 1}"
+            ],
+            "types":[
+                'Error: For field crew_capacity the provided value 5 is not represented as/of the expected type Number '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: For field instruction the provided value 5 is not of the expected type doi '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: Invalid URI value wrong url for field video demo '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: The date value 15-07-2408 does not match to the format YYYY-MM-DD '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: No url found for the field manufacturer country which has the type of ontology_id  '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Error: Invalid DOI value supplied in the field instruction '
+                '(standard section) for Record 502-W-133-4FE274B',
+                'Error: One of YYYY-MM-DD, YYYY-MM need to be present for the field production date '
+                '(standard section) for Record 502-W-133-4FE274B',
+                'Warning: Provided iri http://wrong.iri.com/obo/NCIT_C17233 does not match '
+                'the iri retrieved from OLS in the field manufacturer country '
+                '(standard section) for Record 502-W-133-4FE274B',
+
+                "{'Pass': 0, 'Warning': 0, 'Error': 2}"
+            ],
+            "types2":[
+                'Error: Email address must have prefix "mailto:" in the field video demo '
+                '(standard section) for Record 404-T-132-4FE274A',
+                'Warning: Provided value United kingdom has different letter case to the term '
+                'referenced by http://purl.obolibrary.org/obo/NCIT_C17233 (standard section) '
+                'for Record 404-T-132-4FE274A',
+                'Error: mailto must be at position 1 to be a valid email value in the field video demo '
+                '(standard section) for Record 502-W-133-4FE274B',
+                'Error: Provided value United Kingdom does not match to the provided ontology '
+                'http://purl.obolibrary.org/obo/NCIT_C16699 (standard section) for Record '
+                '502-W-133-4FE274B',
+                "{'Pass': 0, 'Warning': 0, 'Error': 2}"
             ]
         }
         self.maxDiff = None
@@ -275,6 +308,4 @@ class TestRuleset(unittest.TestCase):
             summary = validation.deal_with_validation_results(submission_result)
             summary_str = str(summary)
             actual_values.append(summary_str)
-            # if error_type == "units":
-            #    print("VALUES:\n"+str(actual_values))
             self.assertListEqual(expected_result[error_type], actual_values)

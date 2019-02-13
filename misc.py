@@ -108,3 +108,4 @@ def extract_ontology_id_from_iri(url: str) -> str:
         return elmts[-1]
     else:
         return url
+

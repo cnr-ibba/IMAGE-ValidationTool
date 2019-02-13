@@ -44,6 +44,15 @@ def read_in_ruleset(file: str):
             result.add_rule_section(rule_section)
     return result
 
+# check on the integrity of ruleset
+# number and date types must have units
+# ontology_id must have allowed terms, but no allowed values
+# limited_value must have allowed values, but no allowed terms
+# text must not have allowed values
+def check_ruleset(ruleset: Ruleset.RuleSet):
+    if type(ruleset) is not Ruleset.RuleSet:
+        raise TypeError("The parameter must be of a RuleSet object")
+    pass
 
 # the samples are stored in the JSON format which is compatible with USI
 # details see https://drive.google.com/open?id=1OwSuusnPzIvF2wzSfPp6ElGgH_jr7qyDgBXb41zB3QY
