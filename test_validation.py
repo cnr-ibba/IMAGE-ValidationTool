@@ -79,7 +79,7 @@ class TestValidation(unittest.TestCase):
             ]
         }
         for error in expected.keys():
-            filename = "test_data/test_error_"+error+".json"
+            filename = "test_data/usi/test_error_"+error+".json"
             try:
                 with open(filename) as infile:
                     data = json.load(infile)

@@ -285,9 +285,8 @@ class TestRuleset(unittest.TestCase):
                 "{'Pass': 0, 'Warning': 0, 'Error': 2}"
             ]
         }
-        self.maxDiff = None
         for error_type in expected_result.keys():
-            filename = "test_data/test_error_rule_" + error_type + ".json"
+            filename = "test_data/data/test_error_rule_" + error_type + ".json"
             try:
                 with open(filename) as infile:
                     data = json.load(infile)
