@@ -224,7 +224,7 @@ class TestRuleset(unittest.TestCase):
                 '(standard section) for Record 404-T-132-4FE274A',
                 'Error: g for field cargo_capacity is not in the valid units list (kg) '
                 '(transports section) for Record 404-T-132-4FE274A',
-                'Warning: No units required but people is used as unit for field crew_capacity '
+                'Warning: No units required but person is used as unit for field id '
                 '(standard section) for Record 502-W-133-4FE274B',
                 "{'Pass': 0, 'Warning': 1, 'Error': 1}"
             ],
@@ -285,6 +285,7 @@ class TestRuleset(unittest.TestCase):
                 "{'Pass': 0, 'Warning': 0, 'Error': 2}"
             ]
         }
+        self.maxDiff = None
         for error_type in expected_result.keys():
             filename = "test_data/data/test_error_rule_" + error_type + ".json"
             try:

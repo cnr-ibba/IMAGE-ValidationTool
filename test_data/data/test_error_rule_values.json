@@ -13,13 +13,15 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": 5,
+          "units": "person"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
-        }
+          "value": 18,
+          "units": "person"
+       }
       ],
       "class": [
         {
@@ -73,12 +75,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 50
+          "value": 50,
+          "units": "person"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 0
+          "value": 0,
+          "units": "person"
         }
       ],
       "class": [

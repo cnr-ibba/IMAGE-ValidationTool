@@ -129,6 +129,9 @@ class RuleField:
     def get_name(self) -> str:
         return self.name
 
+    def get_type(self) -> str:
+        return self.type
+
     def get_multiple(self) -> str:
         return self.multiple
 

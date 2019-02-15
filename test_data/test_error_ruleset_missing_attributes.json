@@ -8,11 +8,9 @@
         {
           "Name": "id",
           "Type": "text",
-          "Required": "mandatory",
-          "Allow Multiple" : "no"
+          "Required": "mandatory"
         },
         {
-          "Name": "passenger_capacity",
           "Type": "number",
           "Required": "mandatory",
           "Allow Multiple" : "no",
@@ -24,10 +22,7 @@
           "Name": "crew_capacity",
           "Type": "number",
           "Required": "mandatory",
-          "Allow Multiple" : "no",
-          "Valid units": [
-            "person"
-          ]
+          "Allow Multiple" : "no"
         },
         {
           "Name": "class",

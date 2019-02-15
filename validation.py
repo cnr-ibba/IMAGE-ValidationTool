@@ -27,6 +27,9 @@ def read_in_ruleset(file: str):
             rules = rule_group['rules']
             for rule in rules:
                 # field_name = rule['Name']
+                if 'Name' not in rule or 'Type' not in rule or 'Required' not in rule or 'Allow Multiple' not in rule:
+                    raise KeyError("Each rule must have at least four attributes: Name, Type, "
+                                   "Required and Allow Multiple.")
                 rule_field = Ruleset.RuleField(rule['Name'], rule['Type'], rule['Required'],
                                                multiple=rule['Allow Multiple'])
                 logger.debug("Add Rule " + rule['Name'])
@@ -44,15 +47,68 @@ def read_in_ruleset(file: str):
             result.add_rule_section(rule_section)
     return result
 
+
 # check on the integrity of ruleset
 # number and date types must have units
 # ontology_id must have allowed terms, but no allowed values
 # limited_value must have allowed values, but no allowed terms
 # text must not have allowed values
+# type      values  units   terms
+# number    B       Y       N
+# text      N       N       N
+# limited   Y       N       N
+# ontology  N       N       Y
+# uri       B       N       N
+# doi       B       N       N
+# date      B       Y       N
+
 def check_ruleset(ruleset: Ruleset.RuleSet):
     if type(ruleset) is not Ruleset.RuleSet:
         raise TypeError("The parameter must be of a RuleSet object")
-    pass
+    # conditions
+    results: List[str] = []
+    for section_name in ruleset.get_all_section_names():
+        section_rule = ruleset.get_section_by_name(section_name)
+        rules_in_section = section_rule.get_rules()
+        for required in rules_in_section.keys():
+            for rule_name in rules_in_section[required].keys():
+                rule = rules_in_section[required][rule_name]
+                rule_type = rule.get_type()
+                if rule.get_allowed_values():  # allowed values provided
+                    if rule_type == "ontology_id" or rule_type == "text":
+                        msg = "Error: No valid values should be provided to field " + rule.get_name() + \
+                              " as being of " + rule_type + " type"
+                        results.append(msg)
+                else:  # no allowed values provided
+                    if rule_type == "limited value":
+                        msg = "Error: there is no allowed values for field " + rule.get_name() + \
+                              " being of " + rule_type + " type"
+                        results.append(msg)
+
+                if rule.get_allowed_units():  # units provided
+                    if rule_type != "number" and rule_type != "date":
+                        msg = "Error: valid units provided for field " + rule.get_name() + " having type as " + \
+                              rule_type + " which does not expect units"
+                        results.append(msg)
+                else:  # no units provided
+                    if rule_type == "number" or rule_type == "date":
+                        msg = "Error: field " + rule.get_name() + " has type as " + rule_type + \
+                              " but no valid units provided"
+                        results.append(msg)
+
+                if rule.get_allowed_terms():  # ontology terms provided
+                    if rule_type != "ontology_id":
+                        msg = "Warning: ontology terms are provided for field " + rule.get_name() + \
+                              ". Please re-consider whether it needs to change to ontology_id."
+                        results.append(msg)
+                else:  # no ontology provided
+                    if rule_type == "ontology_id":
+                        msg = "Error: No valid terms provided to field " + rule.get_name() + \
+                              " which is essential to be of ontology_id type"
+                        results.append(msg)
+
+    return results
+
 
 # the samples are stored in the JSON format which is compatible with USI
 # details see https://drive.google.com/open?id=1OwSuusnPzIvF2wzSfPp6ElGgH_jr7qyDgBXb41zB3QY

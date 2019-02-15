@@ -18,6 +18,42 @@ class TestValidation(unittest.TestCase):
     def test_read_in_ruleset(self):
         pass
 
+    def test_check_ruleset_type(self):
+        self.assertRaises(TypeError, validation.check_ruleset, 'ruleset')
+        self.assertRaises(TypeError, validation.check_ruleset, 12)
+        self.assertRaises(TypeError, validation.check_ruleset, True)
+
+    # number and date types must have units
+    # ontology_id must have allowed terms, but no allowed values
+    # limited_value must have allowed values, but no allowed terms
+    # text must not have allowed values
+
+    def test_check_ruleset(self):
+        filename = "test_data/test_error_ruleset_missing_attributes.json"
+        self.assertRaises(KeyError, validation.read_in_ruleset, filename)
+        expected: List[str] = [
+            "Error: valid units provided for field id having type as text which does not expect units",
+            'Error: field crew_capacity has type as number but no valid units provided',
+            "Error: No valid values should be provided to field class as being of text type",
+            "Warning: ontology terms are provided for field color. "
+            "Please re-consider whether it needs to change to ontology_id.",
+            "Error: No valid terms provided to field Fake which is essential to be of ontology_id type",
+            'Error: there is no allowed values for field Availability being of limited value type',
+            "Error: No valid values should be provided to field manufacturer country as being of ontology_id type"
+        ]
+        filename = "test_data/test_error_ruleset.json"
+        ruleset = validation.read_in_ruleset(filename)
+        results = validation.check_ruleset(ruleset)
+        print("RESULTS:\n")
+        print(results)
+        self.assertListEqual(expected, results)
+        expected = []
+        ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+        results = validation.check_ruleset(ruleset)
+        print("RESULTS:\n")
+        print(results)
+        self.assertListEqual(expected, results)
+
     def test_check_usi_structure(self):
         expected: Dict[str, List[str]] = {
             'not_array': ['Wrong JSON structure: all data need to be encapsulated in an array'],

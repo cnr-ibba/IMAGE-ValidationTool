@@ -14,7 +14,7 @@
             },
             {
                "Description" : "the other identifier used in the orignal data source, e.g. accession, secondary id etc.",
-               "Type" : "limited value",
+               "Type" : "text",
                "Allow Multiple" : "no",
                "Example" : "Siems_0722_393449",
                "Name" : "Alternative id",
@@ -36,7 +36,7 @@
                ],
                "Example" : "IMAGE",
                "Allow Multiple" : "no",
-               "Type" : "text",
+               "Type" : "limited value",
                "Description" : "All samples are stated to be part of the IMAGE project, while still belonging to each individual gene bank. This tag is required to identify them in public databases"
             },
             {
@@ -57,10 +57,6 @@
             },
             {
                "Name" : "Material",
-               "Valid values" : [
-                  "organism",
-                  "specimen from organism"
-               ],
                "Type" : "ontology_id",
                "Allow Multiple" : "no",
                "Required" : "mandatory",
@@ -71,11 +67,13 @@
                      "term_iri" : "http://purl.obolibrary.org/obo/OBI_0100026",
                      "allow_descendants" : 0,
                      "term" : "OBI_0100026",
+                     "label": "organism",
                      "include_root" : 1,
                      "ontology_name" : "OBI"
                   },
                   {
                      "term" : "OBI_0001479",
+                     "label": "specimen from organism",
                      "include_root" : 1,
                      "ontology_name" : "OBI",
                      "allow_descendants" : 0,
@@ -125,7 +123,7 @@
             },
             {
                "Required" : "mandatory",
-               "Type" : "text",
+               "Type" : "ontology_id",
                "Description" : "the role (type of the contribution) made by the person",
                "Example" : "Submitter",
                "Allow Multiple" : "yes",
@@ -167,29 +165,14 @@
             {
                "Name" : "Organization country",
                "Valid values" : [
-                  "France",
-                  "Egypt",
-                  "Colombia",
-                  "Switzerland",
-                  "Netherlands",
-                  "Germany",
-                  "Italy",
-                  "Hungary",
-                  "Morocco",
-                  "Spain",
-                  "Argentina",
-                  "Sweden",
-                  "United Kingdom",
-                  "Poland",
-                  "Portugal",
-                  "Austria"
                ],
                "Allow Multiple" : "yes",
-               "Type" : "text",
+               "Type" : "ontology_id",
                "Example" : "United Kingdom",
                "Valid terms" : [
                   {
                      "ontology_name" : "NCIT",
+                     "label": "France",
                      "term" : "NCIT_C16592",
                      "include_root" : 1,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16592",
@@ -199,11 +182,13 @@
                      "ontology_name" : "NCIT",
                      "include_root" : 1,
                      "term" : "NCIT_C16530",
+                     "label": "Egypt",
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16530",
                      "allow_descendants" : 0
                   },
                   {
                      "term" : "NCIT_C16449",
+                     "label": "Colombia",
                      "include_root" : 1,
                      "ontology_name" : "NCIT",
                      "allow_descendants" : 0,
@@ -212,6 +197,7 @@
                   {
                      "include_root" : 1,
                      "term" : "NCIT_C17181",
+                     "label": "Switzerland",
                      "ontology_name" : "NCIT",
                      "allow_descendants" : 0,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C17181"
@@ -221,12 +207,14 @@
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16903",
                      "ontology_name" : "NCIT",
                      "term" : "NCIT_C16903",
+                     "label": "Netherlands",
                      "include_root" : 1
                   },
                   {
                      "ontology_name" : "NCIT",
                      "include_root" : 1,
                      "term" : "NCIT_C16636",
+                     "label": "Germany",
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16636",
                      "allow_descendants" : 0
                   },
@@ -235,11 +223,13 @@
                      "allow_descendants" : 0,
                      "ontology_name" : "NCIT",
                      "include_root" : 1,
-                     "term" : "NCIT_C16761"
+                     "term" : "NCIT_C16761",
+                     "label": "Italy"
                   },
                   {
                      "include_root" : 1,
                      "term" : "NCIT_C16699",
+                     "label": "Hungary",
                      "ontology_name" : "NCIT",
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16699",
                      "allow_descendants" : 0
@@ -247,6 +237,7 @@
                   {
                      "include_root" : 1,
                      "term" : "NCIT_C16878",
+                     "label": "Morocco",
                      "ontology_name" : "NCIT",
                      "allow_descendants" : 0,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16878"
@@ -256,11 +247,13 @@
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C17152",
                      "ontology_name" : "NCIT",
                      "term" : "NCIT_C17152",
+                     "label": "Spain",
                      "include_root" : 1
                   },
                   {
                      "include_root" : 1,
                      "term" : "NCIT_C16305",
+                     "label": "Argentina",
                      "ontology_name" : "NCIT",
                      "allow_descendants" : 0,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16305"
@@ -270,6 +263,7 @@
                      "allow_descendants" : 0,
                      "include_root" : 1,
                      "term" : "NCIT_C17180",
+                     "label": "Sweden",
                      "ontology_name" : "NCIT"
                   },
                   {
@@ -277,11 +271,13 @@
                      "allow_descendants" : 0,
                      "include_root" : 1,
                      "term" : "NCIT_C17233",
+                     "label": "United Kingdom",
                      "ontology_name" : "NCIT"
                   },
                   {
                      "include_root" : 1,
                      "term" : "NCIT_C17002",
+                     "label": "Poland",
                      "ontology_name" : "NCIT",
                      "allow_descendants" : 0,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C17002"
@@ -290,6 +286,7 @@
                      "allow_descendants" : 0,
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C17006",
                      "term" : "NCIT_C17006",
+                     "label": "Portugal",
                      "include_root" : 1,
                      "ontology_name" : "NCIT"
                   },
@@ -298,6 +295,7 @@
                      "term_iri" : "http://purl.obolibrary.org/obo/NCIT_C16312",
                      "include_root" : 1,
                      "term" : "NCIT_C16312",
+                     "label": "Austria",
                      "ontology_name" : "NCIT"
                   }
                ],
@@ -339,30 +337,12 @@
             },
             {
                "Description" : "Country in which the gene bank resides, particularly important when different countries use the same database infrastructure, e.g. CryoWeb. The controlled vocabulary for countries is from INSDC http://www.insdc.org/documents/country-qualifier-vocabulary",
-               "Type" : "limited value",
+               "Type" : "ontology_id",
                "Example" : "Italy",
                "Allow Multiple" : "no",
                "Name" : "Gene bank country",
                "Required" : "mandatory",
-               "Valid values" : [
-                  "France",
-                  "Egypt",
-                  "Colombia",
-                  "Switzerland",
-                  "Netherlands",
-                  "Germany",
-                  "Italy",
-                  "Hungary",
-                  "Morocco",
-                  "Spain",
-                  "Argentina",
-                  "Sweden",
-                  "United Kingdom",
-                  "Poland",
-                  "Portugal",
-                  "Austria"
-               ],
-            "Valid terms" : [
+               "Valid terms" : [
                   {
                      "ontology_name" : "NCIT",
                      "term" : "NCIT_C16592",
@@ -787,7 +767,7 @@
                "Required" : "recommended",
                "Allow Multiple" : "no",
                "Example" : "mailto:vdc-internal@ebi.ac.uk",
-               "Type" : "text",
+               "Type" : "limited value",
                "Description" : "Either an e-mail address to contact about availability or a link to a web page giving information on who to contact. E-mail addresses should be prefixed with 'mailto:', e.g. 'mailto:samples@example.ac.uk'. In either case, long term support of the web page or e-mail address is necessary. Group e-mail addresses are preferable to indiviudal accounts.",
                "Name" : "Availability",
                "Valid values" : [
@@ -797,7 +777,7 @@
             },
             {
                "Description" : "How the sample was stored. Temperatures are in degree Celsius. 'Frozen, vapor phase' refers to storing samples above liquid nitrogen in the vapor",
-               "Type" : "text",
+               "Type" : "limited value",
                "Allow Multiple" : "no",
                "Valid values" : [
                   "ambient temperature",
@@ -829,7 +809,7 @@
                   "freeze dried"
                ],
                "Name" : "Sample storage processing",
-               "Type" : "text",
+               "Type" : "limited value",
                "Description" : "How the sample was prepared for storage",
                "Allow Multiple" : "no"
             },
