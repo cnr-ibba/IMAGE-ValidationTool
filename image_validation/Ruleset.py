@@ -4,7 +4,7 @@ from typing import List, Dict
 from . import misc
 from . import ValidationResult
 from . import use_ontology
-
+from . import static_parameters
 from . import validation
 
 logger = logging.getLogger(__name__)

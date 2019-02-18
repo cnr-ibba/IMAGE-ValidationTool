@@ -3,7 +3,7 @@ include CONTRIBUTING.rst
 include HISTORY.rst
 include LICENSE
 include README.rst
-include image_validation/sample_ruleset_v1.3.json
+include image_validation/sample_ruleset_v1.4.json
 
 recursive-include tests *
 recursive-exclude * __pycache__
