@@ -1,9 +1,10 @@
 import validation
 import unittest
 import json
+import static_parameters
 from typing import List, Dict
 
-ruleset_file = "sample_ruleset_v1.3.json"
+ruleset_file = "sample_ruleset_v1.3.1.json"
 
 
 class TestValidation(unittest.TestCase):
@@ -44,14 +45,10 @@ class TestValidation(unittest.TestCase):
         filename = "test_data/test_error_ruleset.json"
         ruleset = validation.read_in_ruleset(filename)
         results = validation.check_ruleset(ruleset)
-        print("RESULTS:\n")
-        print(results)
         self.assertListEqual(expected, results)
         expected = []
-        ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+        ruleset = validation.read_in_ruleset(static_parameters.ruleset_filename)
         results = validation.check_ruleset(ruleset)
-        print("RESULTS:\n")
-        print(results)
         self.assertListEqual(expected, results)
 
     def test_check_usi_structure(self):

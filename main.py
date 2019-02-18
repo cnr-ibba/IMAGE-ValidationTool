@@ -4,7 +4,10 @@ import json
 import validation
 import logging
 import ValidationResult
+import static_parameters
 from typing import List
+
+
 
 # logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -32,7 +35,11 @@ dup_result = validation.check_duplicates(data)
 validation.deal_with_errors(dup_result)
 logger.info("All sample records have unique data source ids")
 
-ruleset = validation.read_in_ruleset("sample_ruleset_v1.3.json")
+ruleset = validation.read_in_ruleset(static_parameters.ruleset_filename)
+ruleset_check = validation.check_ruleset(ruleset)
+if ruleset_check:
+    validation.deal_with_errors(ruleset_check)
+    exit()
 logger.info("Loaded the ruleset")
 submission_result: List[ValidationResult.ValidationResultRecord] = []
 for record in data:

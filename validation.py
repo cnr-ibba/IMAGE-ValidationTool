@@ -5,7 +5,7 @@ import misc
 import Ruleset
 import ValidationResult
 from typing import Dict, List
-import pprint
+
 
 logger = logging.getLogger(__name__)
 
@@ -268,13 +268,13 @@ def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str
 
 # example codes consuming the validation result
 # expected to be replaced by some codes displaying on the web pages
-def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord]) -> Dict:
+def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=True) -> Dict:
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
-        # if overall != "Pass":
-        #    print(result.get_messages())
+        if verbose and overall != "Pass":
+            print(result.get_messages())
     return count
 
 

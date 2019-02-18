@@ -5,9 +5,8 @@ import logging
 from typing import List, Dict
 import misc
 import ValidationResult
-import use_ontology
+import static_parameters
 logger = logging.getLogger(__name__)
-ontology_library = use_ontology.OntologyCache()
 
 
 class OntologyCondition:
@@ -25,7 +24,7 @@ class OntologyCondition:
         self.include_descendant = include_descendant
         self.only_leaf = only_leaf
         self.include_self = include_self
-        ontology = ontology_library.get_ontology(term)
+        ontology = static_parameters.ontology_library.get_ontology(term)
         self.iri = ontology.get_iri()
 
     def __str__(self):
@@ -36,10 +35,10 @@ class OntologyCondition:
         return self.only_leaf
 
     def is_allowed(self, query: str) -> bool:
-        ontology_detail = ontology_library.get_ontology(query)
+        ontology_detail = static_parameters.ontology_library.get_ontology(query)
         query_iri = ontology_detail.get_iri()
         if self.include_descendant:
-            is_child = ontology_library.has_parent(query, self.term)
+            is_child = static_parameters.ontology_library.has_parent(query, self.term)
             if not is_child:
                 return False
             # check for extra settings: leaf only, include_self
@@ -263,7 +262,7 @@ class RuleField:
                         for term in entry['terms']:
                             iri = term['url']
                             term = misc.extract_ontology_id_from_iri(iri)
-                            ontology = ontology_library.get_ontology(term)
+                            ontology = static_parameters.ontology_library.get_ontology(term)
                             if iri != ontology.get_iri():
                                 msg = "Provided iri " + iri + \
                                       " does not match the iri retrieved from OLS in the field " + self.name
