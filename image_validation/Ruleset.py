@@ -8,12 +8,11 @@ from . import use_ontology
 from . import validation
 
 logger = logging.getLogger(__name__)
-ontology_library = use_ontology.OntologyCache()
 
 
 class OntologyCondition:
 
-    def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True, iri=None):
+    def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True):
         if type(term) is not str:
             raise TypeError("The term parameter must be a string")
         if type(include_self) is not bool:
@@ -22,20 +21,12 @@ class OntologyCondition:
             raise TypeError("The only_leaf parameter must be a boolean")
         if type(include_descendant) is not bool:
             raise TypeError("The include_descendant parameter must be a boolean")
-        if iri is not None and type(iri) is not str:
-            raise TypeError("The iri parameter must be a string")
         self.term = term
         self.include_descendant = include_descendant
         self.only_leaf = only_leaf
         self.include_self = include_self
-        try:
-            if iri:
-                self.iri = iri
-            else:
-                ontology = ontology_library.get_ontology(term)
-                self.iri = ontology.get_iri()
-        except TypeError:
-            print(term)
+        ontology = static_parameters.ontology_library.get_ontology(term)
+        self.iri = ontology.get_iri()
 
     def __str__(self):
         return "Term: " + self.term + " include descendant: " + str(self.include_descendant) + " leaf only: " + \
@@ -45,16 +36,17 @@ class OntologyCondition:
         return self.only_leaf
 
     def is_allowed(self, query: str) -> bool:
-        ontology_detail = ontology_library.get_ontology(query)
+        ontology_detail = static_parameters.ontology_library.get_ontology(query)
         query_iri = ontology_detail.get_iri()
         if self.include_descendant:
-            is_child = ontology_library.has_parent(query, self.term)
+            is_child = static_parameters.ontology_library.has_parent(query, self.term)
             if not is_child:
                 return False
             # check for extra settings: leaf only, include_self
             if self.only_leaf:  # the term needs to be leaf node
                 if not ontology_detail.is_leaf():
                     return False
+            # if can not be itself, check whether the same term
             if not self.include_self:  # if could not be itself
                 return self.iri != query_iri
             return True
@@ -98,14 +90,17 @@ class RuleField:
         self.allowed_terms: List[OntologyCondition] = []
 
     def set_allowed_values(self, values: List[str]):
+        self.allowed_values: List[str] = []
         for value in values:
             self.allowed_values.append(value)
 
     def set_allowed_units(self, units: List[str]):
+        self.allowed_units: List[str] = []
         for unit in units:
             self.allowed_units.append(unit)
 
     def set_allowed_terms(self, terms: List[Dict[str, str]]):
+        self.allowed_terms: List[OntologyCondition] = []
         for term in terms:
             descendant = False
             leaf = False
@@ -134,6 +129,9 @@ class RuleField:
     def get_name(self) -> str:
         return self.name
 
+    def get_type(self) -> str:
+        return self.type
+
     def get_multiple(self) -> str:
         return self.multiple
 
@@ -158,12 +156,14 @@ class RuleField:
         if self.required == 'mandatory':
             mandatory = True
 
+        has_error = False
         # check cardinality
         entry_size: int = len(entries)
         if entry_size == 0:
             if mandatory:
                 msg = "Mandatory field " + self.name + " has empty value"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
             else:
                 msg = self.required + " field " + self.name + " has empty value, better remove the field"
                 results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
@@ -171,13 +171,15 @@ class RuleField:
             if not self.allow_multiple():
                 msg = "Multiple values supplied for field " + self.name + " which does not allow multiple values"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
             # multiple only be True (reaching here) when existing Allow Multiple, no need to check existence
             if entry_size > 2 and self.get_multiple() == 'max 2':
                 msg = "Maximum of 2 values allowed for field " \
                       + self.name + " but " + str(entry_size) + " values provided"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                has_error = True
         # the errors detected above mean that there is no need to validate the actual value(s)
-        if results:
+        if has_error:
             return results
 
         for entry in entries:
@@ -191,7 +193,7 @@ class RuleField:
                               + " is not in the valid units list (" + ', '.join(allowed_units) + ")"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 else:  # unit not required, but exists, raise a warning
-                    msg = "No units required but " + entry['units'] + " is used as unit"
+                    msg = "No units required but " + entry['units'] + " is used as unit for field "+self.name
                     results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
             else:
                 if allowed_units:
@@ -233,6 +235,8 @@ class RuleField:
                             msg = 'Not valid ontology term ' + term_id + ' in field ' + self.name
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
+            if results:
+                return results
 
             # check type
             # current allowed types:
@@ -242,13 +246,15 @@ class RuleField:
             if self.type == 'number':
                 if type(value) is not float and type(value) is not int:
                     msg = "For field " + self.name + " the provided value " + str(value) \
-                          + " is not of the expected type Number"
+                          + " is not represented as/of the expected type Number"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             else:  # textual types
                 if type(value) is not str:
                     msg = "For field " + self.name + " the provided value " + str(value) \
                           + " is not of the expected type " + self.type
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                    return results
+                # the following tests are based on the value is a string, so need to return above
                 if self.type == 'ontology_id':
                     if 'terms' not in entry:
                         msg = "No url found for the field " + self.name + " which has the type of ontology_id "
@@ -257,7 +263,7 @@ class RuleField:
                         for term in entry['terms']:
                             iri = term['url']
                             term = misc.extract_ontology_id_from_iri(iri)
-                            ontology = ontology_library.get_ontology(term)
+                            ontology = static_parameters.ontology_library.get_ontology(term)
                             if iri != ontology.get_iri():
                                 msg = "Provided iri " + iri + \
                                       " does not match the iri retrieved from OLS in the field " + self.name
@@ -287,27 +293,25 @@ class RuleField:
                                 msg = 'Email address must have prefix "mailto:" in the field ' + self.name
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
-                            else:
-                                if value.find("mailto:") != 0:
-                                    msg = "Unrecognized mailto value in the field " + self.name
-                                    results.append(
-                                        ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
+                        else: # it is URL, but not email: could be a normal URL or wrong mailto: location
+                            if value.find("mailto:") > 0:
+                                msg = "mailto must be at position 1 to be a valid email value in the field " + self.name
+                                results.append(
+                                    ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'doi':
                     doi_result = misc.is_doi(value)
                     if not doi_result:
                         msg = "Invalid DOI value supplied in the field " + self.name
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'date':
-                    # there is always a format(unit) for the date type
-                    if 'units' not in entry:
-                        msg = "No date format found as unit in the field " + self.name
-                        results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
-                    else:
-                        date_format = entry['units']
-                        date_result = misc.get_matched_date(value, date_format)
-                        if date_result:
-                            results.append(
-                                ValidationResult.ValidationResultColumn("Error", date_result + section_info, record_id))
+                    # there is always a format(unit) for the date type (checked in the validation.read_in_ruleset)
+                    # therefore entry[units] existence should have already been
+                    # if 'units' not in entry:
+                    date_format = entry['units']
+                    date_result = misc.get_matched_date(value, date_format)
+                    if date_result:
+                        results.append(
+                            ValidationResult.ValidationResultColumn("Error", date_result + section_info, record_id))
 
             # it would be safer to skip the validations below as unmatched type detected
             if results:

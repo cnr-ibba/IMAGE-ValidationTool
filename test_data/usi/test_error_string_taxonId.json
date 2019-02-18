@@ -2,7 +2,7 @@
   {
     "alias" : "404-T-132-4FE274A",
     "title" : "404-T-132-4FE274A",
-    "taxonId" : 8888,
+    "taxonId" : "8888",
     "releaseDate" : "2404-01-01",
     "entity_type" : "spacecraft",
     "attributes": {
@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": "5",
+          "units": "cabins"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "people"
         }
       ],
       "class": [
@@ -35,11 +37,6 @@
         {
           "value": 74797,
           "units": "kg"
-        }
-      ],
-      "color": [
-        {
-          "value": "blue"
         }
       ]
     }
@@ -59,13 +56,13 @@
       "crew_capacity": [
         {
           "value": 50,
-          "units": "person"
+          "units": "people"
         }
       ],
       "passenger_capacity": [
         {
           "value": 0,
-          "units": "person"
+          "units": "people"
         }
       ],
       "class": [
@@ -78,15 +75,10 @@
           "value": "warship"
         }
       ],
-      "weapon": [
+      "cargo_capacity": [
         {
-          "value": "laser cannon"
-        },
-        {
-          "value": "shield"
-        },
-        {
-          "value": "missile"
+          "value": 74797,
+          "units": "kg"
         }
       ]
     }

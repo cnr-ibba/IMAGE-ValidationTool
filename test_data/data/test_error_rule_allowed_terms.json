@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": 5,
+          "units": "person"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "person"
         }
       ],
       "class": [
@@ -28,7 +30,12 @@
       ],
       "role": [
         {
-          "value": "transport"
+          "value": "transport",
+          "terms": [
+            {
+              "url": "wrong url"
+            }
+          ]
         }
       ],
       "cargo_capacity": [
@@ -40,6 +47,16 @@
       "color": [
         {
           "value": "blue"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "United Kingdom",
+          "terms": [
+            {
+              "url": "wrong url"
+            }
+          ]
         }
       ]
     }
@@ -87,6 +104,16 @@
         },
         {
           "value": "missile"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "United Kingdom",
+          "terms": [
+            {
+              "url": "http://purl.obolibrary.org/obo/PATO_0000383"
+            }
+          ]
         }
       ]
     }

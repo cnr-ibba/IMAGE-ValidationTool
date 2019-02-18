@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": "5",
+          "units": "cabins"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "people"
         }
       ],
       "class": [
@@ -36,13 +38,27 @@
           "value": 74797,
           "units": "kg"
         }
-      ],
-      "color": [
-        {
-          "value": "blue"
-        }
       ]
-    }
+    },
+    "sampleRelationships": [
+      "wrong",
+      {
+        "alias": "502-W-133-4FE274B"
+      },
+      {
+        "alias": "502-W-133-4FE274B",
+        "relationshipNature": "random"
+      },
+      {
+        "id": "502-W-133-4FE274B",
+        "relationshipNature": "random"
+      },
+      {
+        "alias": "502-W-133-4FE274B",
+        "type": "random"
+      }
+    ]
+
   },
   {
     "alias" : "502-W-133-4FE274B",
@@ -59,13 +75,13 @@
       "crew_capacity": [
         {
           "value": 50,
-          "units": "person"
+          "units": "people"
         }
       ],
       "passenger_capacity": [
         {
           "value": 0,
-          "units": "person"
+          "units": "people"
         }
       ],
       "class": [
@@ -78,17 +94,13 @@
           "value": "warship"
         }
       ],
-      "weapon": [
+      "cargo_capacity": [
         {
-          "value": "laser cannon"
-        },
-        {
-          "value": "shield"
-        },
-        {
-          "value": "missile"
+          "value": 74797,
+          "units": "kg"
         }
       ]
-    }
+    },
+    "sampleRelationships": "none"
   }
 ]

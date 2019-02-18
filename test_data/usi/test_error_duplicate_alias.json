@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": "5",
+          "units": "cabins"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "people"
         }
       ],
       "class": [
@@ -36,16 +38,11 @@
           "value": 74797,
           "units": "kg"
         }
-      ],
-      "color": [
-        {
-          "value": "blue"
-        }
       ]
     }
   },
   {
-    "alias" : "502-W-133-4FE274B",
+    "alias" : "404-T-132-4FE274A",
     "title" : "502-W-133-4FE274B",
     "taxonId" : 8888,
     "releaseDate" : "2502-01-01",
@@ -59,13 +56,13 @@
       "crew_capacity": [
         {
           "value": 50,
-          "units": "person"
+          "units": "people"
         }
       ],
       "passenger_capacity": [
         {
           "value": 0,
-          "units": "person"
+          "units": "people"
         }
       ],
       "class": [
@@ -78,15 +75,10 @@
           "value": "warship"
         }
       ],
-      "weapon": [
+      "cargo_capacity": [
         {
-          "value": "laser cannon"
-        },
-        {
-          "value": "shield"
-        },
-        {
-          "value": "missile"
+          "value": 74797,
+          "units": "kg"
         }
       ]
     }

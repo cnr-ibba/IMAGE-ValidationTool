@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": "5",
+          "units": "cabins"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "people"
         }
       ],
       "class": [
@@ -34,12 +36,16 @@
       "cargo_capacity": [
         {
           "value": 74797,
+          "type": "number",
           "units": "kg"
         }
       ],
-      "color": [
+      "manufacturer country": [
         {
-          "value": "blue"
+          "value": "France",
+          "terms": [
+            "http://purl.obolibrary.org/obo/NCIT_C16592"
+          ]
         }
       ]
     }
@@ -59,13 +65,13 @@
       "crew_capacity": [
         {
           "value": 50,
-          "units": "person"
+          "units": "people"
         }
       ],
       "passenger_capacity": [
         {
           "value": 0,
-          "units": "person"
+          "units": "people"
         }
       ],
       "class": [
@@ -78,15 +84,10 @@
           "value": "warship"
         }
       ],
-      "weapon": [
+      "cargo_capacity": [
         {
-          "value": "laser cannon"
-        },
-        {
-          "value": "shield"
-        },
-        {
-          "value": "missile"
+          "value": 74797,
+          "units": "kg"
         }
       ]
     }

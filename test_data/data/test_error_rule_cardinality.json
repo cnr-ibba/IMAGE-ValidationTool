@@ -12,13 +12,15 @@
         }
       ],
       "crew_capacity": [
-        {
-          "value": 5
-        }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "person"
+        },
+        {
+          "value": 1,
+          "units": "person"
         }
       ],
       "class": [
@@ -39,7 +41,13 @@
       ],
       "color": [
         {
-          "value": "blue"
+          "value": "green"
+        },
+        {
+          "value": "yellow"
+        },
+        {
+          "value": "red"
         }
       ]
     }
@@ -60,6 +68,7 @@
         {
           "value": 50,
           "units": "person"
+
         }
       ],
       "passenger_capacity": [
@@ -87,6 +96,14 @@
         },
         {
           "value": "missile"
+        }
+      ],
+      "manufacturer country": [
+
+      ],
+      "color": [
+        {
+          "value": "blue"
         }
       ]
     }

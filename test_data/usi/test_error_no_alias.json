@@ -1,0 +1,42 @@
+[
+  {
+    "id" : "404-T-132-4FE274A",
+    "entity_type" : "spacecraft",
+    "attributes": {
+      "id": [
+        {
+          "value": "404-T-132-4FE274A"
+        }
+      ],
+      "crew_capacity": [
+        {
+          "value": "5",
+          "units": "cabins"
+        }
+      ],
+      "passenger_capacity": [
+        {
+          "value": 18,
+          "units": "people"
+        }
+      ],
+      "class": [
+        {
+          "value": "03-K64-Firefly"
+        }
+      ],
+      "role": [
+        {
+          "value": "transport"
+        }
+      ],
+      "cargo_capacity": [
+        {
+          "value": 74797,
+          "units": "kg"
+        }
+      ]
+    }
+  },
+  "id"
+]

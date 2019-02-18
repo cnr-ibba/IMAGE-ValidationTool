@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
-        }
+          "value": 5,
+           "units": "person"
+       }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "person"
         }
       ],
       "class": [
@@ -34,12 +36,17 @@
       "cargo_capacity": [
         {
           "value": 74797,
-          "units": "kg"
+          "units": "g"
         }
       ],
       "color": [
         {
           "value": "blue"
+        }
+      ],
+      "length": [
+        {
+          "value": 490
         }
       ]
     }
@@ -53,7 +60,8 @@
     "attributes": {
       "id": [
         {
-          "value": "502-W-133-4FE274B"
+          "value": "502-W-133-4FE274B",
+          "units": "person"
         }
       ],
       "crew_capacity": [

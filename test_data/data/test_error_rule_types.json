@@ -13,12 +13,14 @@
       ],
       "crew_capacity": [
         {
-          "value": 5
+          "value": "5",
+          "units": "person"
         }
       ],
       "passenger_capacity": [
         {
-          "value": 18
+          "value": 18,
+          "units": "person"
         }
       ],
       "class": [
@@ -31,15 +33,42 @@
           "value": "transport"
         }
       ],
+      "instruction": [
+        {
+          "value": 5
+        }
+      ],
+      "video demo": [
+        {
+          "value": "wrong url"
+        },
+        {
+          "value": "test@google.com"
+        },
+        {
+          "value": "amailto:test@google.com"
+        }
+      ],
       "cargo_capacity": [
         {
           "value": 74797,
           "units": "kg"
         }
       ],
+      "production date": [
+        {
+          "value": "15-07-2408",
+          "units": "YYYY-MM-DD"
+        }
+      ],
       "color": [
         {
           "value": "blue"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "United Kingdom"
         }
       ]
     }
@@ -78,6 +107,24 @@
           "value": "warship"
         }
       ],
+      "production date": [
+        {
+          "value": "2502-01-13"
+        }
+      ],
+      "video demo": [
+        {
+          "value": "https://www.youtube.com/watch?v=TvUHt54Ucrg"
+        },
+        {
+          "value": "mailto:test@google.com"
+        }
+      ],
+      "instruction": [
+        {
+          "value": "10.999/hige-clu"
+        }
+      ],
       "weapon": [
         {
           "value": "laser cannon"
@@ -87,6 +134,16 @@
         },
         {
           "value": "missile"
+        }
+      ],
+      "manufacturer country": [
+        {
+          "value": "United Kingdom",
+          "terms": [
+            {
+              "url": "http://wrong.iri.com/obo/NCIT_C17233"
+            }
+          ]
         }
       ]
     }

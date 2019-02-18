@@ -9,7 +9,10 @@
           "Name": "id",
           "Type": "text",
           "Required": "mandatory",
-          "Allow Multiple" : "no"
+          "Allow Multiple" : "no",
+          "Valid units": [
+            "non sense"
+          ]
         },
         {
           "Name": "passenger_capacity",
@@ -24,16 +27,16 @@
           "Name": "crew_capacity",
           "Type": "number",
           "Required": "mandatory",
-          "Allow Multiple" : "no",
-          "Valid units": [
-            "person"
-          ]
+          "Allow Multiple" : "no"
         },
         {
           "Name": "class",
           "Type": "text",
           "Required": "mandatory",
-          "Allow Multiple" : "no"
+          "Allow Multiple" : "no",
+          "Valid values": [
+            "warship"
+          ]
         },
         {
           "Name": "role",
@@ -54,6 +57,16 @@
             "red",
             "yellow",
             "blue"
+          ],
+          "Valid terms": [
+            {
+              "ontology_name": "NCIT",
+              "label": "Color",
+              "term": "NCIT_C37927",
+              "include_root": 0,
+              "term_iri": "http://purl.obolibrary.org/obo/NCIT_C37927",
+              "allow_descendants": 1
+            }
           ]
         },
         {
@@ -77,11 +90,7 @@
           "Type": "limited value",
           "Required": "recommended",
           "Allow Multiple": "no",
-          "Example": "mailto:vdc-internal@ebi.ac.uk",
-          "Valid values": [
-            "no longer available",
-            "mailto:a.valid@email"
-          ]
+          "Example": "mailto:vdc-internal@ebi.ac.uk"
         },
         {
           "Name": "video demo",
@@ -100,10 +109,20 @@
           ]
         },
         {
+          "Name": "Fake",
+          "Type": "ontology_id",
+          "Required": "optional",
+          "Allow Multiple": "no"
+        },
+        {
           "Name": "manufacturer country",
           "Type": "ontology_id",
           "Required": "recommended",
           "Allow Multiple": "no",
+          "Valid values": [
+            "France",
+            "United Kingdom"
+          ],
           "Valid terms": [
             {
               "ontology_name": "NCIT",
