@@ -3,12 +3,10 @@
 import os
 import json
 import logging
-import ValidationResult
-import static_parameters
+
 from typing import List
 
-import image_validation
-from image_validation import validation
+from image_validation import validation, ValidationResult, static_parameters
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s', level=logging.INFO)
