@@ -5,6 +5,7 @@ from typing import List, Dict
 
 from image_validation import validation
 from image_validation import static_parameters
+from image_validation import ValidationResult
 
 
 class TestValidation(unittest.TestCase):
@@ -138,8 +139,59 @@ class TestValidation(unittest.TestCase):
         self.assertListEqual(validation.check_duplicates(data, 'random'), expected_random)
 
     # doing nothing, just to increase coverage
-    def dummy_coverage(self):
+    def test_deal_with_errors(self):
         self.assertRaises(TypeError, validation.deal_with_errors, [12])
         self.assertRaises(TypeError, validation.deal_with_errors, [True])
-        errors = ['1', '2']
+        errors = ['dummy', 'test']
         self.assertIsNone(validation.deal_with_errors(errors))
+
+    def test_deal_with_validation_results(self):
+        submission_result = []
+        error = ValidationResult.ValidationResultRecord("record 1")
+        error.add_validation_result_column(
+            ValidationResult.ValidationResultColumn("Error", "coverage for deal with validation results", "record 1"))
+        submission_result.append(error)
+        validation.deal_with_validation_results(submission_result, True)
+
+    def test_coordinate_check_type(self):
+        self.assertRaises(TypeError, validation.coordinate_check, "String", ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.coordinate_check, True, ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.coordinate_check, {},
+                          ValidationResult.ValidationResultColumn("Pass", "", "id"))
+        self.assertRaises(TypeError, validation.coordinate_check, {}, "id")
+
+    def test_coordinate_check(self):
+        expected: List[List[str]] = [
+            [],  # animal, no, missing => correct
+            ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
+             'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
+            [],  # sample, italy, country level => correct,
+            ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
+             'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
+        ]
+        filename = "test_data/test_error_context_location_accuracy.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        data = data['sample']
+        for i, record in enumerate(data):
+            existing_results = ValidationResult.ValidationResultRecord(record['alias'])
+            existing_results = validation.coordinate_check(record['attributes'], existing_results)
+            self.assertListEqual(existing_results.get_messages(), expected[i])
+
+    def test_context_validation(self):
+        expected: List[List[str]] = [
+            [],  # animal, no, missing => correct
+            ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
+             'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
+            [],  # sample, italy, country level => correct,
+            ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
+             'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
+        ]
+        filename = "test_data/test_error_context_location_accuracy.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        data = data['sample']
+        for i, record in enumerate(data):
+            existing_results = ValidationResult.ValidationResultRecord(record['alias'])
+            existing_results = validation.context_validation(record['attributes'], existing_results)
+            self.assertListEqual(existing_results.get_messages(), expected[i])

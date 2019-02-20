@@ -289,6 +289,10 @@ def deal_with_errors(errors: List[str]) -> None:
 # check whether value used in place and place accuracy match
 def coordinate_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord)->\
         ValidationResult.ValidationResultRecord:
+    if type(record) is not dict:
+        raise TypeError("record needs to be a record represented as a Dict")
+    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+        raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
     material = record['Material'][0]['value']
     if material == "organism":
         place_field_name = "Birth location"

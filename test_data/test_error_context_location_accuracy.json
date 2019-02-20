@@ -1,0 +1,159 @@
+{
+  "sample": [
+    {
+      "alias": "animal_35",
+      "title": "ANIMAL:::ID:::CS05_1999",
+      "releaseDate": "2018-11-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "animal_42",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "unknown accuracy level"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "sample_256",
+      "title": "CS05_1999_IBBACNR_PTP_02.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_02.06.1999"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS05_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-02",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_257",
+      "title": "CS05_1999_IBBACNR_PTP_23.06.1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_23.06.1999"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "derived from"
+        }
+      ]
+    }
+  ]
+}
