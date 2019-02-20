@@ -139,11 +139,19 @@ class TestValidation(unittest.TestCase):
         self.assertListEqual(validation.check_duplicates(data, 'random'), expected_random)
 
     # doing nothing, just to increase coverage
-    def dummy_coverage(self):
+    def test_deal_with_errors(self):
         self.assertRaises(TypeError, validation.deal_with_errors, [12])
         self.assertRaises(TypeError, validation.deal_with_errors, [True])
-        errors = ['1', '2']
+        errors = ['dummy', 'test']
         self.assertIsNone(validation.deal_with_errors(errors))
+
+    def test_deal_with_validation_results(self):
+        submission_result = []
+        error = ValidationResult.ValidationResultRecord("record 1")
+        error.add_validation_result_column(
+            ValidationResult.ValidationResultColumn("Error", "coverage for deal with validation results", "record 1"))
+        submission_result.append(error)
+        validation.deal_with_validation_results(submission_result, True)
 
     def test_coordinate_check_type(self):
         self.assertRaises(TypeError, validation.coordinate_check, "String", ValidationResult.ValidationResultRecord("id"))
