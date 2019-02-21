@@ -1,5 +1,6 @@
 import unittest
-import ValidationResult
+
+from image_validation import ValidationResult
 
 
 class TestValidationResult(unittest.TestCase):

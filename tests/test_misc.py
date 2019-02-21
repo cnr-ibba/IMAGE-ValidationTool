@@ -1,9 +1,10 @@
-# import sys
-# sys.path.insert(0, '../IMAGE-ValidationTool')
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*
 
 import unittest
 import datetime
-import misc
+
+from image_validation import misc
 
 
 class TestMisc(unittest.TestCase):

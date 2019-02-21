@@ -1,11 +1,12 @@
 import logging
-# from . import misc
-# from . import ValidationResult
-# from . import use_ontology
 from typing import List, Dict
-import misc
-import ValidationResult
-import static_parameters
+
+from . import misc
+from . import ValidationResult
+from . import use_ontology
+from . import static_parameters
+from . import validation
+
 logger = logging.getLogger(__name__)
 
 

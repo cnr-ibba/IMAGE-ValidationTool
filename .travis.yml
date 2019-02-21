@@ -1,11 +1,21 @@
-language: python
-python:
-  - "3.6"
-cache: pip
-install: "pip install -r requirements.txt"
+# Config file for automatic testing at travis-ci.org
 
-script: coverage run --include="./*.py" --omit="./test_*.py" -m unittest test_*.py
+language: python
+matrix:
+    include:
+      - python: 3.6
+        env: TOXENV=py36
+      # disabling flake temporarily
+      # - python: 3.6
+      #   env: TOXENV=flake8
+      # python 3.7 is not supported by travis at the moment
+
+# Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install:
+  - pip install -U tox-travis coveralls
+
+# Command to run tests, e.g. python setup.py test
+script: tox
 
 after_success:
-  - coverage report --show-missing
   - coveralls

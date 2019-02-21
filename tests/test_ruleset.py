@@ -1,9 +1,10 @@
-import Ruleset
-import validation
 import unittest
 import json
-import ValidationResult
 from typing import List, Dict
+
+from image_validation import Ruleset
+from image_validation import validation
+from image_validation import ValidationResult
 
 
 class TestRuleset(unittest.TestCase):

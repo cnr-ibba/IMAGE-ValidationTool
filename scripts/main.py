@@ -1,22 +1,22 @@
 #!/usr/bin/python3
 
+import os
 import json
-import validation
 import logging
-import ValidationResult
-import static_parameters
+
 from typing import List
 
+from image_validation import validation, ValidationResult, static_parameters
 
-
-# logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s', level=logging.INFO)
 
 # read JSON into memory
 logger.info("START")
-filename = 'submission_example.json'
-# filename = 'exampleJSONfromUID.json'
+
+basedir = os.path.dirname(os.path.abspath(__file__))
+filename = os.path.join(basedir, 'submission_example.json')
+
 try:
     with open(filename) as infile:
         data = json.load(infile)

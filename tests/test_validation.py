@@ -1,11 +1,11 @@
-import validation
+
 import unittest
 import json
-import static_parameters
-import ValidationResult
 from typing import List, Dict
 
-ruleset_file = "sample_ruleset_v1.3.1.json"
+from image_validation import validation
+from image_validation import static_parameters
+from image_validation import ValidationResult
 
 
 class TestValidation(unittest.TestCase):
