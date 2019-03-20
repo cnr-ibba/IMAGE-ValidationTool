@@ -247,3 +247,7 @@ class TestUseOntology(unittest.TestCase):
         self.assertRaises(TypeError, cache.has_parent, True, "str")
         self.assertRaises(TypeError, cache.contains, 12)
         self.assertRaises(TypeError, cache.contains, True)
+
+
+if __name__ == '__main__':
+    unittest.main()
