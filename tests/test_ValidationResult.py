@@ -108,3 +108,6 @@ class TestValidationResult(unittest.TestCase):
         expected_include_warning.append('Warning: term not match for Record sample_1')
         self.assertListEqual(collection.get_messages(), expected_include_warning)
 
+
+if __name__ == '__main__':
+    unittest.main()

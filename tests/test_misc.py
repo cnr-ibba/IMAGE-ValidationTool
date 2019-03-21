@@ -131,3 +131,7 @@ class TestMisc(unittest.TestCase):
         self.assertRaises(TypeError, misc.extract_ontology_id_from_iri, 34)
         self.assertRaises(TypeError, misc.extract_ontology_id_from_iri, -12.34)
         self.assertRaises(TypeError, misc.extract_ontology_id_from_iri, True)
+
+
+if __name__ == '__main__':
+    unittest.main()
