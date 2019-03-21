@@ -112,15 +112,19 @@ class TestRuleset(unittest.TestCase):
         # exact match, include self
         self.assertTrue(rule_field_1.check_ontology_allowed("PATO_0000384"))
         # child term
-        self.assertTrue(rule_field_1.check_ontology_allowed("EFO_0001733"))
+        # EFO_0001733 is no longer leaf node
+        self.assertFalse(rule_field_1.check_ontology_allowed("EFO_0001733"))
+        self.assertTrue(rule_field_1.check_ontology_allowed("EFO_0009737"))
         # no allowed terms set, so false
         self.assertFalse(rule_field_2.check_ontology_allowed("EFO_0002012"))
         self.assertFalse(rule_field_2.check_ontology_allowed("EFO_0001733"))
+
         rule_field_2.set_allowed_terms(data)
         # after setting, but include self is no
         self.assertFalse(rule_field_1.check_ontology_allowed("EFO_0002012"))
         # the child term should be allowed
-        self.assertTrue(rule_field_2.check_ontology_allowed("EFO_0001733"))
+        self.assertFalse(rule_field_2.check_ontology_allowed("EFO_0001733"))
+        self.assertTrue(rule_field_2.check_ontology_allowed("EFO_0009737"))
         self.assertFalse(rule_field_1.check_ontology_allowed("NCBITaxon_28890"))
         self.assertFalse(rule_field_1.check_ontology_allowed("NCBITaxon_9605"))
 
