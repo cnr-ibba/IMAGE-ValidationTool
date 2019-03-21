@@ -310,3 +310,7 @@ class TestRuleset(unittest.TestCase):
             summary_str = str(summary)
             actual_values.append(summary_str)
             self.assertListEqual(expected_result[error_type], actual_values)
+
+
+if __name__ == '__main__':
+    unittest.main()

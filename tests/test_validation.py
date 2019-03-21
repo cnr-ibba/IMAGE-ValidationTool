@@ -195,3 +195,7 @@ class TestValidation(unittest.TestCase):
             existing_results = ValidationResult.ValidationResultRecord(record['alias'])
             existing_results = validation.context_validation(record['attributes'], existing_results)
             self.assertListEqual(existing_results.get_messages(), expected[i])
+
+
+if __name__ == '__main__':
+    unittest.main()
