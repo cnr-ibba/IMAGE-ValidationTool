@@ -132,6 +132,18 @@ class TestRuleset(unittest.TestCase):
         rule_section = Ruleset.RuleSection('test')
         self.assertRaises(TypeError, rule_section.add_rule, "rule")
 
+    def test_rule_section_serializer(self):
+        reference = {
+            'conditions': {},
+            'name': 'test',
+            'rule_names': {},
+            'rules': {}}
+
+        rule_section = Ruleset.RuleSection('test')
+        test = json.loads(rule_section.toJSON())
+
+        self.assertEqual(reference, test)
+
     def test_rule_section(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
         warships_section = ruleset.get_section_by_name('warships')
@@ -204,6 +216,11 @@ class TestRuleset(unittest.TestCase):
             data = json.load(infile)
 
         ruleset.validate(data[0], "id")
+
+    def test_rule_set_serializer(self):
+        ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
+        # test string serialization
+        self.assertIsInstance(ruleset.toJSON(), str)
 
     def test_validate(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
