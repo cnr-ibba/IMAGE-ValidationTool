@@ -16,8 +16,9 @@ logging.basicConfig(
 # read JSON into memory
 logger.info("START")
 
-basedir = os.path.dirname(os.path.abspath(__file__))
-filename = os.path.join(basedir, 'submission_example.json')
+# a-la django style
+basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+filename = os.path.join(basedir, 'test_data/submission_example.json')
 
 try:
     with open(filename) as infile:

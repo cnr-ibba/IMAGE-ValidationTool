@@ -9,7 +9,6 @@ from image_validation import ValidationResult
 
 
 class TestValidation(unittest.TestCase):
-    @classmethod
     def setUp(self):
         # to see all differences in assertEqual
         self.maxDiff = None
@@ -52,6 +51,7 @@ class TestValidation(unittest.TestCase):
         results = validation.check_ruleset(ruleset)
         self.assertListEqual(expected, results)
         expected = []
+
         ruleset = validation.read_in_ruleset(static_parameters.ruleset_filename)
         results = validation.check_ruleset(ruleset)
         self.assertListEqual(expected, results)
@@ -199,6 +199,38 @@ class TestValidation(unittest.TestCase):
             existing_results = ValidationResult.ValidationResultRecord(record['alias'])
             existing_results = validation.context_validation(record['attributes'], existing_results)
             self.assertListEqual(existing_results.get_messages(), expected[i])
+
+    def test_image_animal(self):
+        # get image test file
+        filename = "test_data/image_animal.json"
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            animal = json.load(infile)
+
+        # read ruleset
+        ruleset = validation.read_in_ruleset(
+                static_parameters.ruleset_filename)
+
+        # now check animal
+        result = ruleset.validate(animal).get_messages()
+        self.assertEqual(result, [])
+
+    def test_image_sample(self):
+        # get image test file
+        filename = "test_data/image_sample.json"
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            sample = json.load(infile)
+
+        # read ruleset
+        ruleset = validation.read_in_ruleset(
+                static_parameters.ruleset_filename)
+
+        # now check sample
+        result = ruleset.validate(sample).get_messages()
+        self.assertEqual(result, [])
 
 
 if __name__ == '__main__':
