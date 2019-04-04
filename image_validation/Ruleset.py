@@ -1,11 +1,10 @@
 import logging
+import json
 from typing import List, Dict
 
 from . import misc
 from . import ValidationResult
-from . import use_ontology
 from . import static_parameters
-from . import validation
 
 logger = logging.getLogger(__name__)
 
@@ -331,6 +330,11 @@ class RuleSection:
         # rules are organized by requirement first, so this serves as a shortcut
         self.rule_names: Dict[str, int] = {}
 
+    def toJSON(self):
+        return json.dumps(
+                self, default=lambda o: o.__dict__,
+                sort_keys=True, indent=2)
+
     def add_rule(self, rule: RuleField):
         if type(rule) is not RuleField:
             raise TypeError("The rule parameter must be a RuleField")
@@ -380,17 +384,28 @@ class RuleSection:
             raise TypeError("The parameter record must hold a Dict type")
         if 'attributes' not in record:
             raise KeyError("No attributes existing in the record")
+
         conditions = self.get_conditions()
         attributes = record['attributes']
+
         for field_name in conditions.keys():
             if field_name not in attributes:
+                logger.debug("%s not in attributes" % (field_name))
                 return False
+
+            else:
+                logger.debug("found %s in %s" % (field_name, conditions))
+
             actual_values = attributes[field_name]
+            logger.debug("actual_values is %s" % actual_values)
+
             found = False
+
             for value in actual_values:
                 if value['value'] == conditions[field_name]:
                     found = True
                     break
+
             if not found:
                 return False
         return True
@@ -429,6 +444,11 @@ class RuleSet:
     def __init__(self):
         self.rule_sections: Dict[str, RuleSection] = {}
 
+    def toJSON(self):
+        return json.dumps(
+                self, default=lambda o: o.__dict__,
+                sort_keys=True, indent=2)
+
     def add_rule_section(self, rule_section: RuleSection):
         if type(rule_section) is not RuleSection:
             raise TypeError("The rule section parameter must be a RuleSection object")
@@ -451,6 +471,9 @@ class RuleSet:
         return self.rule_sections.get(section_name)
 
     def validate(self, record: Dict, id_field: str = 'Data source ID') -> ValidationResult.ValidationResultRecord:
+        logger.debug(
+            "got record: {record}, id_field: {id_field}".format(
+                    record=record, id_field=id_field))
         attributes = record['attributes']
         record_id = attributes[id_field][0]['value']
         record_result = ValidationResult.ValidationResultRecord(record_id)
@@ -458,7 +481,9 @@ class RuleSet:
         unmapped = attributes.copy()  # create a copy and remove the ruleset-mapped columns
         del unmapped[id_field]
         for section_name in self.get_all_section_names():
+            logger.debug("Processing section_name: %s" % (section_name))
             section_rule = self.get_section_by_name(section_name)
+            # logger.debug("Got section_rule: %s" % (section_rule.toJSON()))
             if section_rule.meet_condition(record):
                 logger.debug("Applying "+section_name+" ruleset to record "+record_id)
                 section_results = section_rule.validate(attributes, record_id, id_field)
@@ -468,10 +493,24 @@ class RuleSet:
                 for field_name in section_rule.get_rule_names():
                     if field_name in unmapped:
                         del unmapped[field_name]
-        # unmapped column check can only be done here, not in section rule validation as all section rules need to apply
+
+            else:
+                logger.debug(
+                    "section_rule %s doesn't meet_condition" % section_name)
+
+        # unmapped column check can only be done here, not in section rule
+        # validation as all section rules need to apply
         if unmapped:
+            logger.debug("found those unmapped keys: %s" % (unmapped.keys()))
+
             for key in unmapped.keys():
                 record_result.add_validation_result_column(
                     ValidationResult.ValidationResultColumn(
-                        "Warning", "Column " + key + " could not be found in ruleset", record_id))
+                        "Warning",
+                        "Column " + key + " could not be found in ruleset",
+                        record_id))
+
+        else:
+            logger.debug("No unmapped columns left")
+
         return record_result

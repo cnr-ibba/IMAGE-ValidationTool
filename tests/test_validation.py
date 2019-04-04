@@ -9,6 +9,10 @@ from image_validation import ValidationResult
 
 
 class TestValidation(unittest.TestCase):
+    @classmethod
+    def setUp(self):
+        # to see all differences in assertEqual
+        self.maxDiff = None
 
     def test_read_in_ruleset_type(self):
         self.assertRaises(TypeError, validation.read_in_ruleset, 12)

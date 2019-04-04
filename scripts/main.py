@@ -9,7 +9,9 @@ from typing import List
 from image_validation import validation, ValidationResult, static_parameters
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s',
+    level=logging.INFO)
 
 # read JSON into memory
 logger.info("START")
@@ -20,11 +22,17 @@ filename = os.path.join(basedir, 'submission_example.json')
 try:
     with open(filename) as infile:
         data = json.load(infile)
+
 except FileNotFoundError:
     logger.critical("Could not find the file " + filename)
     exit(1)
+
 except json.decoder.JSONDecodeError as e:
-    logger.critical("The provided file " + filename + " is not a valid JSON file. Reason: " + str(e))
+    logger.critical(
+        "The provided file " +
+        filename +
+        " is not a valid JSON file. Reason: " +
+        str(e))
     exit(1)
 
 data = data['sample']
@@ -39,16 +47,19 @@ ruleset = validation.read_in_ruleset(static_parameters.ruleset_filename)
 ruleset_check = validation.check_ruleset(ruleset)
 if ruleset_check:
     validation.deal_with_errors(ruleset_check)
-    exit()
+    logger.error("Found errors in check_ruleset!")
+
 logger.info("Loaded the ruleset")
 submission_result: List[ValidationResult.ValidationResultRecord] = []
 for record in data:
-    logger.info("Validate record "+record['alias'])
+    logger.info("Validate record " + record['alias'])
     record_result = ruleset.validate(record)
-    record_result = validation.context_validation(record['attributes'], record_result)
+    record_result = validation.context_validation(
+        record['attributes'], record_result)
     if record_result.is_empty():
         record_result.add_validation_result_column(
-            ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
+            ValidationResult.ValidationResultColumn(
+                    "Pass", "", record_result.record_id))
     submission_result.append(record_result)
 # pprint.pprint(rules)
 summary = validation.deal_with_validation_results(submission_result)
