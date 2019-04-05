@@ -1,0 +1,139 @@
+{
+  "alias": "animal_35",
+  "attributes": {
+    "Alternative id": [
+      {
+        "value": "855"
+      }
+    ],
+    "Birth location accuracy": [
+      {
+        "value": "missing geographic information"
+      }
+    ],
+    "Data source ID": [
+      {
+        "value": "ANIMAL:::ID:::CS05_1999"
+      }
+    ],
+    "Data source type": [
+      {
+        "value": "CryoWeb"
+      }
+    ],
+    "Data source version": [
+      {
+        "value": "version 0.1"
+      }
+    ],
+    "EFABIS Breed country": [
+      {
+        "value": "Italy"
+      }
+    ],
+    "Gene bank country": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+          }
+        ],
+        "value": "Italy"
+      }
+    ],
+    "Gene bank name": [
+      {
+        "value": "CryoWeb Subset"
+      }
+    ],
+    "Material": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+          }
+        ],
+        "value": "organism"
+      }
+    ],
+    "Organization name": [
+      {
+        "value": "IBBA-CNR"
+      }
+    ],
+    "Organization role": [
+      {
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0001741"
+          }
+        ],
+        "value": "submitter"
+      }
+    ],
+    "Person affiliation": [
+      {
+        "value": "IBBA-CNR"
+      }
+    ],
+    "Person email": [
+      {
+        "value": "mailto:cozzi@ibba.cnr.it"
+      }
+    ],
+    "Person last name": [
+      {
+        "value": "Cozzi"
+      }
+    ],
+    "Person role": [
+      {
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0001741"
+          }
+        ],
+        "value": "submitter"
+      }
+    ],
+    "Project": [
+      {
+        "value": "IMAGE"
+      }
+    ],
+    "Sex": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+          }
+        ],
+        "value": "male"
+      }
+    ],
+    "Species": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+          }
+        ],
+        "value": "Sus scrofa"
+      }
+    ],
+    "Submission title": [
+      {
+        "value": "Italian Cryoweb Pigs"
+      }
+    ],
+    "Supplied breed": [
+      {
+        "value": "Cinta Senese"
+      }
+    ]
+  },
+  "releaseDate": "2018-11-09",
+  "sampleRelationships": [],
+  "taxonId": 9823,
+  "title": "ANIMAL:::ID:::CS05_1999"
+}

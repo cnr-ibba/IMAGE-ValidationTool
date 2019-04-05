@@ -8,6 +8,9 @@ from image_validation import ValidationResult
 
 
 class TestRuleset(unittest.TestCase):
+    def setUp(self):
+        # to see all differences in assertEqual
+        self.maxDiff = None
 
     def test_ontology_condition_types(self):
         self.assertRaises(TypeError, Ruleset.OntologyCondition, True, False, True, True)
@@ -17,13 +20,10 @@ class TestRuleset(unittest.TestCase):
 
     def test_ontology_condition(self):
         filename = "test_data/ruleset_allowed_terms.json"
-        try:
-            with open(filename) as infile:
-                data = json.load(infile)
-        except FileNotFoundError:
-            exit(1)
-        except json.decoder.JSONDecodeError as e:
-            exit(1)
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            data = json.load(infile)
 
         # using RuleField to test accessing attributes
         test_rule_field = Ruleset.RuleField("test", "ontology_id", "recommended")
@@ -100,13 +100,10 @@ class TestRuleset(unittest.TestCase):
 
         # test check_ontology_allowed while testing more complicated set_allowed_terms
         filename = "test_data/ruleset_allowed_terms.json"
-        try:
-            with open(filename) as infile:
-                data = json.load(infile)
-        except FileNotFoundError:
-            exit(1)
-        except json.decoder.JSONDecodeError as e:
-            exit(1)
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            data = json.load(infile)
 
         rule_field_1.set_allowed_terms(data)
         # exact match, include self
@@ -135,6 +132,18 @@ class TestRuleset(unittest.TestCase):
         rule_section = Ruleset.RuleSection('test')
         self.assertRaises(TypeError, rule_section.add_rule, "rule")
 
+    def test_rule_section_serializer(self):
+        reference = {
+            'conditions': {},
+            'name': 'test',
+            'rule_names': {},
+            'rules': {}}
+
+        rule_section = Ruleset.RuleSection('test')
+        test = json.loads(rule_section.toJSON())
+
+        self.assertEqual(reference, test)
+
     def test_rule_section(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
         warships_section = ruleset.get_section_by_name('warships')
@@ -161,15 +170,14 @@ class TestRuleset(unittest.TestCase):
 
         # test meet condition
         filename = "test_data/test_data.json"
-        try:
-            with open(filename) as infile:
-                data = json.load(infile)
-        except FileNotFoundError:
-            exit(1)
-        except json.decoder.JSONDecodeError as e:
-            exit(1)
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            data = json.load(infile)
+
         transport_data = data[0]
         warship_data = data[1]
+
         self.assertRaises(TypeError, warships_section.meet_condition, 'dict')
         self.assertRaises(TypeError, warships_section.meet_condition, 12)
         self.assertRaises(KeyError, warships_section.meet_condition, transport_data['attributes'])
@@ -202,14 +210,17 @@ class TestRuleset(unittest.TestCase):
         self.assertListEqual(ruleset.get_all_section_names(), section_names)
 
         filename = "test_data/test_data.json"
-        try:
-            with open(filename) as infile:
-                data = json.load(infile)
-        except FileNotFoundError:
-            exit(1)
-        except json.decoder.JSONDecodeError as e:
-            exit(1)
+
+        # NOTE: file are supposed to exists while testing
+        with open(filename) as infile:
+            data = json.load(infile)
+
         ruleset.validate(data[0], "id")
+
+    def test_rule_set_serializer(self):
+        ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
+        # test string serialization
+        self.assertIsInstance(ruleset.toJSON(), str)
 
     def test_validate(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
@@ -293,13 +304,11 @@ class TestRuleset(unittest.TestCase):
         self.maxDiff = None
         for error_type in expected_result.keys():
             filename = "test_data/data/test_error_rule_" + error_type + ".json"
-            try:
-                with open(filename) as infile:
-                    data = json.load(infile)
-            except FileNotFoundError:
-                exit(1)
-            except json.decoder.JSONDecodeError as e:
-                exit(1)
+
+            # NOTE: file are supposed to exists while testing
+            with open(filename) as infile:
+                data = json.load(infile)
+
             submission_result: List[ValidationResult.ValidationResultRecord] = []
             actual_values: List[str] = []
             for record in data:

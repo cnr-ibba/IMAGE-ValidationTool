@@ -1,0 +1,155 @@
+{
+  "alias": "sample_257",
+  "attributes": {
+    "Alternative id": [
+      {
+        "value": "1835"
+      }
+    ],
+    "Availability": [
+      {
+        "value": "no longer available"
+      }
+    ],
+    "Collection date": [
+      {
+        "units": "YYYY-MM-DD",
+        "value": "1999-06-23"
+      }
+    ],
+    "Collection place": [
+      {
+        "value": "Italy"
+      }
+    ],
+    "Collection place accuracy": [
+      {
+        "value": "missing geographic information"
+      }
+    ],
+    "Data source ID": [
+      {
+        "value": "CS05_1999_IBBACNR_PTP_23.06.1999"
+      }
+    ],
+    "Data source type": [
+      {
+        "value": "CryoWeb"
+      }
+    ],
+    "Data source version": [
+      {
+        "value": "version 0.1"
+      }
+    ],
+    "Derived from": [
+      {
+        "value": "ANIMAL:::ID:::CS05_1999"
+      }
+    ],
+    "Gene bank country": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/NCIT_C16761"
+          }
+        ],
+        "value": "Italy"
+      }
+    ],
+    "Gene bank name": [
+      {
+        "value": "CryoWeb Subset"
+      }
+    ],
+    "Material": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+          }
+        ],
+        "value": "specimen from organism"
+      }
+    ],
+    "Organism part": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
+          }
+        ],
+        "value": "semen"
+      }
+    ],
+    "Organization name": [
+      {
+        "value": "IBBA-CNR"
+      }
+    ],
+    "Organization role": [
+      {
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0001741"
+          }
+        ],
+        "value": "submitter"
+      }
+    ],
+    "Person affiliation": [
+      {
+        "value": "IBBA-CNR"
+      }
+    ],
+    "Person email": [
+      {
+        "value": "mailto:cozzi@ibba.cnr.it"
+      }
+    ],
+    "Person last name": [
+      {
+        "value": "Cozzi"
+      }
+    ],
+    "Person role": [
+      {
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0001741"
+          }
+        ],
+        "value": "submitter"
+      }
+    ],
+    "Project": [
+      {
+        "value": "IMAGE"
+      }
+    ],
+    "Species": [
+      {
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+          }
+        ],
+        "value": "Sus scrofa"
+      }
+    ],
+    "Submission title": [
+      {
+        "value": "Italian Cryoweb Pigs"
+      }
+    ]
+  },
+  "releaseDate": "2018-10-09",
+  "sampleRelationships": [
+    {
+      "alias": "animal_35",
+      "relationshipNature": "derived from"
+    }
+  ],
+  "taxonId": 9823,
+  "title": "CS05_1999_IBBACNR_PTP_23.06.1999"
+}
