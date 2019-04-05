@@ -183,7 +183,7 @@ class TestValidation(unittest.TestCase):
             self.assertListEqual(existing_results.get_messages(), expected[i])
 
     def test_context_validation(self):
-        expected: List[List[str]] = [
+        expected_place_accuracy: List[List[str]] = [
             [],  # animal, no, missing => correct
             ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
              'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
@@ -198,7 +198,12 @@ class TestValidation(unittest.TestCase):
         for i, record in enumerate(data):
             existing_results = ValidationResult.ValidationResultRecord(record['alias'])
             existing_results = validation.context_validation(record['attributes'], existing_results)
-            self.assertListEqual(existing_results.get_messages(), expected[i])
+            self.assertListEqual(existing_results.get_messages(), expected_place_accuracy[i])
+
+        expected_breed_species: List[List[str]] = [
+            [],
+            ['Error: The provide breed Holstein is a Bos taurus breed, but the provided species is Sus Scrofa']
+        ]
 
     def test_image_animal(self):
         # get image test file

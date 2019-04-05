@@ -17,11 +17,11 @@ class TestMisc(unittest.TestCase):
         self.assertEqual(str(today)[:10], misc.get_today())
 
     def test_to_lower_camel_case(self):
-        self.assertEqual(misc.to_lower_camel_case('country'),'country')
-        self.assertEqual(misc.to_lower_camel_case('Disease'),'disease')
-        self.assertEqual(misc.to_lower_camel_case('Physiological status'),'physiologicalStatus')
-        self.assertEqual(misc.to_lower_camel_case('test__string'),'testString')
-        self.assertEqual(misc.to_lower_camel_case('test _1'),'test1')
+        self.assertEqual(misc.to_lower_camel_case('country'), 'country')
+        self.assertEqual(misc.to_lower_camel_case('Disease'), 'disease')
+        self.assertEqual(misc.to_lower_camel_case('Physiological status'), 'physiologicalStatus')
+        self.assertEqual(misc.to_lower_camel_case('test__string'), 'testString')
+        self.assertEqual(misc.to_lower_camel_case('test _1'), 'test1')
 
     def test_to_lower_camel_case_types(self):
         self.assertRaises(TypeError, misc.to_lower_camel_case, 34)

@@ -28,8 +28,8 @@ class OntologyCondition:
         self.iri = ontology.get_iri()
 
     def __str__(self):
-        return "Term: " + self.term + " include descendant: " + str(self.include_descendant) + " leaf only: " + \
-               str(self.only_leaf) + " self included: " + str(self.include_self) + " iri: " + self.iri
+        return f"Term: {self.term} include descendant: {str(self.include_descendant)} leaf only: {str(self.only_leaf)} " \
+            f"self included: {str(self.include_self)} iri: {self.iri}"
 
     def is_leaf_only(self) -> bool:
         return self.only_leaf
@@ -71,13 +71,14 @@ class RuleField:
             raise TypeError("The description parameter must be a string")
 
         if required not in RuleField.allowed_required:
-            raise ValueError(
-                "The provided value " + required + " is not one of " + ", ".join(RuleField.allowed_required))
+            allowed_required = ", ".join(RuleField.allowed_required)
+            raise ValueError(f"The provided value {required} is not one of {allowed_required}")
         if field_type not in RuleField.allowed_type:
-            raise ValueError("The provided value " + field_type + " is not one of " + ", ".join(RuleField.allowed_type))
+            allowed_types = ", ".join(RuleField.allowed_type)
+            raise ValueError(f"The provided value {field_type} is not one of {allowed_types}")
         if multiple not in RuleField.allowed_multiple:
-            raise ValueError(
-                "The provided value " + multiple + " is not one of " + ", ".join(RuleField.allowed_multiple))
+            allowed_multiples = ", ".join(RuleField.allowed_multiple)
+            raise ValueError(f"The provided value {multiple} is not one of {allowed_multiples}")
 
         self.name: str = name
         self.type: str = field_type
@@ -160,21 +161,20 @@ class RuleField:
         entry_size: int = len(entries)
         if entry_size == 0:
             if mandatory:
-                msg = "Mandatory field " + self.name + " has empty value"
+                msg = f"Mandatory field {self.name} has empty value"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 has_error = True
             else:
-                msg = self.required + " field " + self.name + " has empty value, better remove the field"
+                msg = f"{self.required} field {self.name} has empty value, better remove the field"
                 results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
         elif entry_size > 1:
             if not self.allow_multiple():
-                msg = "Multiple values supplied for field " + self.name + " which does not allow multiple values"
+                msg = f"Multiple values supplied for field {self.name} which does not allow multiple values"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 has_error = True
             # multiple only be True (reaching here) when existing Allow Multiple, no need to check existence
             if entry_size > 2 and self.get_multiple() == 'max 2':
-                msg = "Maximum of 2 values allowed for field " \
-                      + self.name + " but " + str(entry_size) + " values provided"
+                msg = f"Maximum of 2 values allowed for field {self.name} but {str(entry_size)} values provided"
                 results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 has_error = True
         # the errors detected above mean that there is no need to validate the actual value(s)
@@ -185,18 +185,19 @@ class RuleField:
             value = entry['value']
             # check units
             allowed_units = self.get_allowed_units()
+            allowed_units_str = ', '.join(allowed_units)
             if 'units' in entry:
                 if allowed_units:
                     if entry['units'] not in allowed_units:
-                        msg = entry['units'] + " for field " + self.name \
-                              + " is not in the valid units list (" + ', '.join(allowed_units) + ")"
+                        msg = f"{entry['units']} for field {self.name} is not " \
+                            f"in the valid units list ({allowed_units_str})"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 else:  # unit not required, but exists, raise a warning
-                    msg = "No units required but " + entry['units'] + " is used as unit for field "+self.name
+                    msg = f"No units required but {entry['units']} is used as unit for field {self.name}"
                     results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
             else:
                 if allowed_units:
-                    msg = "One of " + ', '.join(allowed_units) + " need to be present for the field " + self.name
+                    msg = f"One of {allowed_units_str} need to be present for the field {self.name}"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             # check allowed values
             allowed_values = self.get_allowed_values()
@@ -205,33 +206,32 @@ class RuleField:
                     if self.name == "Availability":
                         # available valid values include example@a.com and no longer available, needs to check for email
                         if not misc.is_email(value):
-                            msg = '<' + value + '> of field Availability is ' \
-                                                'neither "no longer available" nor a valid mailto URI'
+                            msg = f'<{value}> of field Availability is neither "no longer available" nor a valid mailto URI'
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
                     else:  # not availability
-                        msg = "<" + value + "> of field " + self.name + \
-                              " is not in the valid values list (<" + '>, <'.join(allowed_values) + ">)"
+                        allowed_values_str = '>, <'.join(allowed_values)
+                        msg = f"<{value}> of field {self.name} is not in the valid values list (<{allowed_values_str}>)"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             if results:
                 return results
 
             if 'terms' in entry:
                 if not self.get_allowed_terms():  # allowed conditions empty
-                    msg = "Ontology provided for field " + self.name + " however there is no requirement in the ruleset"
+                    msg = f"Ontology provided for field {self.name} however there is no requirement in the ruleset"
                     results.append(ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
                 else:
                     for term in entry['terms']:
                         iri = term['url']
                         if not misc.is_uri(iri):
-                            msg = "Invalid URI value " + iri + " in field " + self.name
+                            msg = f"Invalid URI value {iri} in field {self.name}"
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
                             continue
 
                         term_id = misc.extract_ontology_id_from_iri(iri)
                         if not self.check_ontology_allowed(term_id):
-                            msg = 'Not valid ontology term ' + term_id + ' in field ' + self.name
+                            msg = f"Not valid ontology term {term_id} in field {self.name}"
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
             if results:
@@ -244,19 +244,19 @@ class RuleField:
             # number type requires a unit, which is covered in the units check above
             if self.type == 'number':
                 if type(value) is not float and type(value) is not int:
-                    msg = "For field " + self.name + " the provided value " + str(value) \
-                          + " is not represented as/of the expected type Number"
+                    msg = f"For field {self.name} the provided value {str(value)} is not represented " \
+                        f"as/of the expected type Number"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
             else:  # textual types
                 if type(value) is not str:
-                    msg = "For field " + self.name + " the provided value " + str(value) \
-                          + " is not of the expected type " + self.type
+                    msg = f"For field {self.name} the provided value {str(value)} " \
+                        f"is not of the expected type {self.type}"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                     return results
                 # the following tests are based on the value is a string, so need to return above
                 if self.type == 'ontology_id':
                     if 'terms' not in entry:
-                        msg = "No url found for the field " + self.name + " which has the type of ontology_id "
+                        msg = f"No url found for the field {self.name} which has the type of ontology_id"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                     else:
                         for term in entry['terms']:
@@ -264,43 +264,43 @@ class RuleField:
                             term = misc.extract_ontology_id_from_iri(iri)
                             ontology = static_parameters.ontology_library.get_ontology(term)
                             if iri != ontology.get_iri():
-                                msg = "Provided iri " + iri + \
-                                      " does not match the iri retrieved from OLS in the field " + self.name
+                                msg = f"Provided iri {iri} does not match the iri " \
+                                    f"retrieved from OLS in the field {self.name}"
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id))
                             if not ontology.label_match_ontology(value):
                                 if ontology.label_match_ontology(value, False):
-                                    msg = "Provided value " + value + \
-                                          " has different letter case to the term referenced by " + iri
+                                    msg = f"Provided value {value} has different letter case" \
+                                        f" to the term referenced by {iri}"
                                     results.append(ValidationResult.ValidationResultColumn("Warning",
                                                                                            msg + section_info,
                                                                                            record_id))
                                 else:
-                                    msg = "Provided value " + value + " does not match to the provided ontology " + iri
+                                    msg = f"Provided value {value} does not match to the provided ontology {iri}"
                                     results.append(
                                         ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == "uri":
                     uri_result = misc.is_uri(value)
                     if not uri_result:
-                        msg = "Invalid URI value " + value + " for field " + self.name
+                        msg = f"Invalid URI value {value} for field {self.name}"
                         results.append(
                             ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                     else:  # is in URI
                         # in image ruleset, when email provided, it must begin with mailto:
                         if misc.is_email(value):
                             if misc.is_email(value, True):  # the whole value of value is an email, which is wrong
-                                msg = 'Email address must have prefix "mailto:" in the field ' + self.name
+                                msg = f'Email address must have prefix "mailto:" in the field {self.name}'
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                         else: # it is URL, but not email: could be a normal URL or wrong mailto: location
                             if value.find("mailto:") > 0:
-                                msg = "mailto must be at position 1 to be a valid email value in the field " + self.name
+                                msg = f"mailto must be at position 1 to be a valid email value in the field {self.name}"
                                 results.append(
                                     ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'doi':
                     doi_result = misc.is_doi(value)
                     if not doi_result:
-                        msg = "Invalid DOI value supplied in the field " + self.name
+                        msg = f"Invalid DOI value supplied in the field {self.name}"
                         results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id))
                 elif self.type == 'date':
                     # there is always a format(unit) for the date type (checked in the validation.read_in_ruleset)
@@ -420,8 +420,7 @@ class RuleSection:
                 if field_name == id_field:
                     continue
                 if field_name not in attributes:
-                    msg = "Mandatory field " + field_name + " in " + self.get_section_name() \
-                          + " section could not be found"
+                    msg = f"Mandatory field {field_name} in {self.get_section_name()} section could not be found"
                     results.append(ValidationResult.ValidationResultColumn("Error", msg, record_id))
             if results:
                 return results
@@ -430,7 +429,6 @@ class RuleSection:
             rules = self.rules[required]
             for field_name in rules.keys():
                 if field_name in attributes:
-
                     one_field_result = rules[field_name].validate(attributes[field_name], self.get_section_name(),
                                                                   record_id)
                     for tmp in one_field_result:
@@ -471,9 +469,7 @@ class RuleSet:
         return self.rule_sections.get(section_name)
 
     def validate(self, record: Dict, id_field: str = 'Data source ID') -> ValidationResult.ValidationResultRecord:
-        logger.debug(
-            "got record: {record}, id_field: {id_field}".format(
-                    record=record, id_field=id_field))
+        logger.debug(f"got record: {record}, id_field: {id_field}")
         attributes = record['attributes']
         record_id = attributes[id_field][0]['value']
         record_result = ValidationResult.ValidationResultRecord(record_id)

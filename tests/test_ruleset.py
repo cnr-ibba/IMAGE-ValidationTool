@@ -275,7 +275,7 @@ class TestRuleset(unittest.TestCase):
                 '(standard section) for Record 404-T-132-4FE274A',
                 'Error: The date value 15-07-2408 does not match to the format YYYY-MM-DD '
                 '(standard section) for Record 404-T-132-4FE274A',
-                'Error: No url found for the field manufacturer country which has the type of ontology_id  '
+                'Error: No url found for the field manufacturer country which has the type of ontology_id '
                 '(standard section) for Record 404-T-132-4FE274A',
                 'Error: Invalid DOI value supplied in the field instruction '
                 '(standard section) for Record 502-W-133-4FE274B',
