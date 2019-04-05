@@ -77,11 +77,13 @@
           "Type": "limited value",
           "Required": "recommended",
           "Allow Multiple": "no",
-          "Example": "mailto:vdc-internal@ebi.ac.uk",
-          "Valid values": [
+          "Description" : "Either a link to a web page giving information on who to contact or providing access of the data or an e-mail address to contact about availability. E-mail addresses should be prefixed with 'mailto:', e.g. 'mailto:samples@example.ac.uk'. In either case, long term support of the web page or e-mail address is necessary. Group e-mail addresses are preferable to indiviudal accounts. If neither available, please use the value no longer available",
+          "Valid values" : [
             "no longer available",
-            "mailto:a.valid@email"
-          ]
+            "mailto:a.valid@email",
+            "https://a.valid.weblink"
+          ],
+          "Example" : "mailto:vdc-internal@ebi.ac.uk, https://crb-anim.fr/access-to-collection/"
         },
         {
           "Name": "video demo",

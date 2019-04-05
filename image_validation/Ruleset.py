@@ -205,8 +205,8 @@ class RuleField:
                 if value not in allowed_values:
                     if self.name == "Availability":
                         # available valid values include example@a.com and no longer available, needs to check for email
-                        if not misc.is_email(value):
-                            msg = f'<{value}> of field Availability is neither "no longer available" nor a valid mailto URI'
+                        if not misc.is_uri(value):
+                            msg = f'<{value}> of field Availability is neither "no longer available" nor a valid URI'
                             results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
                                                                                    record_id))
                     else:  # not availability

@@ -245,7 +245,7 @@ class TestRuleset(unittest.TestCase):
                 "{'Pass': 0, 'Warning': 1, 'Error': 1}"
             ],
             "values": [
-                'Error: <None> of field Availability is neither "no longer available" nor a valid mailto URI '
+                'Error: <None> of field Availability is neither "no longer available" nor a valid URI '
                 '(standard section) for Record 404-T-132-4FE274A',
                 'Error: <purple> of field color is not in the valid values list '
                 '(<red>, <yellow>, <blue>) (standard section) for Record 502-W-133-4FE274B',
