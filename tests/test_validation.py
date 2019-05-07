@@ -159,7 +159,7 @@ class TestValidation(unittest.TestCase):
         validation.deal_with_validation_results(submission_result, True)
 
     def test_coordinate_check_type(self):
-        self.assertRaises(TypeError, validation.coordinate_check, "String", ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.coordinate_check, "str", ValidationResult.ValidationResultRecord("id"))
         self.assertRaises(TypeError, validation.coordinate_check, True, ValidationResult.ValidationResultRecord("id"))
         self.assertRaises(TypeError, validation.coordinate_check, {},
                           ValidationResult.ValidationResultColumn("Pass", "", "id", ""))
@@ -183,6 +183,19 @@ class TestValidation(unittest.TestCase):
             existing_results = validation.coordinate_check(record['attributes'], existing_results)
             self.assertListEqual(existing_results.get_messages(), expected[i])
 
+    def test_animal_sample_check_type(self):
+        self.assertRaises(TypeError, validation.animal_sample_check, "str", {},
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.animal_sample_check, True, {},
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.animal_sample_check, {}, "str",
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.animal_sample_check, {}, True,
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.animal_sample_check, {}, {},
+                          ValidationResult.ValidationResultColumn("Pass", "", "id"))
+        self.assertRaises(TypeError, validation.animal_sample_check, {}, {}, "id")
+
     def test_context_validation(self):
         expected_place_accuracy: List[List[str]] = [
             [],  # animal, no, missing => correct
@@ -198,7 +211,7 @@ class TestValidation(unittest.TestCase):
         data = data['sample']
         for i, record in enumerate(data):
             existing_results = ValidationResult.ValidationResultRecord(record['alias'])
-            existing_results = validation.context_validation(record['attributes'], existing_results)
+            existing_results = validation.context_validation(record, existing_results)
             self.assertListEqual(existing_results.get_messages(), expected_place_accuracy[i])
 
         expected_breed_species: List[List[str]] = [

@@ -314,9 +314,28 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
     return existing_results
 
 
-# do validation based on context, i.e. value in one field affects allowed values in another field
-def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
+def animal_sample_check(animal: Dict, sample: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
-    existing_results = coordinate_check(record, existing_results)
+    if type(animal) is not dict:
+        raise TypeError("Animal record needs to be represented as a Dict")
+    if type(sample) is not dict:
+        raise TypeError("Sample record needs to be represented as a Dict")
+    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+        raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
+    return existing_results
+
+
+# do validation based on context, i.e. value in one field affects allowed values in another field
+def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord, related: List = None) \
+        -> ValidationResult.ValidationResultRecord:
+    existing_results = coordinate_check(record['attributes'], existing_results)
+    if related:
+        material = record['attributes']['Material'][0]['value']
+        if material == "organism":
+            # child of check
+            pass
+        else:
+            if related[0]['attributes']['Material'][0]['value'] == "organism":
+                existing_results = animal_sample_check(record, related[0], existing_results)
     # other context based validations
     return existing_results

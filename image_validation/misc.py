@@ -1,7 +1,6 @@
 import re
 import datetime
 import dateutil.parser
-import logging
 
 
 def get_today() -> str:

@@ -56,7 +56,7 @@ for record in data:
     logger.info("Validate record " + record['alias'])
     record_result = ruleset.validate(record)
     record_result = validation.context_validation(
-        record['attributes'], record_result)
+        record, record_result)
     if record_result.is_empty():
         record_result.add_validation_result_column(
             ValidationResult.ValidationResultColumn(
