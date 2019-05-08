@@ -57,6 +57,23 @@ class TestValidationResult(unittest.TestCase):
         self.assertEqual(self.column_warning.get_status(), "Warning")
         self.assertEqual(self.column_error.get_status(), "Error")
 
+    def test_equal_ValidationResultColumn(self):
+        self.assertNotEqual(self.column_pass, self.column_error)
+        self.assertEqual(self.column_pass,
+                         ValidationResult.ValidationResultColumn("pass", "message", "record", "field"))
+        # different sample id, different field name, message same => equal
+        self.assertEqual(self.column_error,
+                         ValidationResult.ValidationResultColumn(
+                             'ERROR', 'value used in field b is not allowed', 'sample_2', 'error field 2'))
+
+    def test_equal_ValidationResultColumn_type(self):
+        self.assertNotEqual(self.column_pass, 'pass')
+
+    def test_hash_ValidationResultColumn(self):
+        self.assertEqual(hash(self.column_pass), 1)
+        self.assertNotEqual(hash(self.column_error), hash('error'))
+        self.assertNotEqual(hash(self.column_error), hash(self.column_error.message))
+
     def test_ValidationResultRecord(self):
         self.assertRaises(TypeError, ValidationResult.ValidationResultRecord, 12)
         self.assertRaises(TypeError, ValidationResult.ValidationResultRecord, -12.34)

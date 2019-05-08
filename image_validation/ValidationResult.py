@@ -56,6 +56,18 @@ class ValidationResultColumn:
         else:
             return "Warning"
 
+    def __eq__(self, other):
+        if not isinstance(other, ValidationResultColumn):
+            return NotImplemented
+        if self.status_id == 1 and other.status_id == 1:
+            return True
+        return self.status_id == other.status_id and self.message == other.message
+
+    def __hash__(self):
+        if self.status_id == 1:
+            return 1
+        return hash((self.status_id, self.message))
+
 
 class ValidationResultRecord:
     result_set: List[ValidationResultColumn]
