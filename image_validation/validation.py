@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Read in the ruleset from a file
 # return a dict which has key as section name and value as another dict (required level as key)
-def read_in_ruleset(file: str):
+def read_in_ruleset(file: str) -> Ruleset.RuleSet:
     if type(file) is not str:
         raise TypeError("File name must be a string")
     logger.info("read in ruleset")
@@ -287,7 +287,7 @@ def deal_with_errors(errors: List[str]) -> None:
 
 
 # check whether value used in place and place accuracy match
-def coordinate_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord)->\
+def coordinate_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
     if type(record) is not dict:
         raise TypeError("record needs to be a record represented as a Dict")
@@ -304,21 +304,19 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
             msg = "No value provided for field " + place_field_name + " but value in field " + \
                   place_accuracy_field_name + " is not missing geographic information"
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id))
+                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id, place_field_name))
     else:
         if record[place_accuracy_field_name][0]['value'] == "missing geographic information":
             msg = "Value " + record[place_field_name][0]['value'] + " provided for field " + place_field_name + \
                   " but value in field " + place_accuracy_field_name + " is missing geographic information"
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id))
+                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id, place_field_name))
     return existing_results
 
 
 # do validation based on context, i.e. value in one field affects allowed values in another field
-def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord)->\
+def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
     existing_results = coordinate_check(record, existing_results)
     # other context based validations
     return existing_results
-
-

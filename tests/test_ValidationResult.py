@@ -4,25 +4,31 @@ from image_validation import ValidationResult
 
 
 class TestValidationResult(unittest.TestCase):
-    column_pass = ValidationResult.ValidationResultColumn('pass', 'redundant', 'sample_1')
-    column_warning = ValidationResult.ValidationResultColumn('Warning', 'term not match', 'sample_1')
-    column_warning_2 = ValidationResult.ValidationResultColumn('Warning', 'recommended to have value for field a',
-                                                             'sample_2')
-    column_error = ValidationResult.ValidationResultColumn('ERROR', 'value used in field b is not allowed', 'sample_1')
+    column_pass = ValidationResult.ValidationResultColumn('pass', 'redundant', 'sample_1', 'id')
+    column_warning = ValidationResult.ValidationResultColumn('Warning', 'term not match', 'sample_1', 'id')
+    column_warning_2 = ValidationResult.ValidationResultColumn(
+        'Warning', 'recommended to have value for field a', 'sample_2', 'id')
+    column_error = ValidationResult.ValidationResultColumn(
+        'ERROR', 'value used in field b is not allowed', 'sample_1', 'error field')
 
     def test_ValidationResultColumn_types(self):
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 12, 'message', 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, -12.34, 'message', 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, True, 'message', 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 12, 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', -12.34, 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', False, 'record id')
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 12)
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', -12.34)
-        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', True)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 12, 'message', 'record id', 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, -12.34, 'message', 'record id', 'field')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, True, 'message', 'record id', 'field')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 12, 'record id', 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', -12.34, 'record id', 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', False, 'record id', 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 12, 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', -12.34, 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', True, 'field name')
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', 12)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', -12.34)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', True)
 
+    # test status must be one of three options
     def test_ValidationResultColumn_values(self):
-            self.assertRaises(ValueError, ValidationResult.ValidationResultColumn, 'something', 'another thing', 'record')
+        self.assertRaises(ValueError, ValidationResult.ValidationResultColumn,
+                          'something', 'another thing', 'record', 'field')
 
     def test_str(self):
         self.assertEqual(str(self.column_pass), "")
@@ -34,6 +40,11 @@ class TestValidationResult(unittest.TestCase):
         self.assertEqual(self.column_pass.get_record_id(), "sample_1")
         self.assertEqual(self.column_warning_2.get_record_id(), "sample_2")
         self.assertEqual(self.column_error.get_record_id(), "sample_1")
+
+    def test_get_field_name(self):
+        self.assertEqual(self.column_pass.get_field_name(), "id")
+        self.assertNotEqual(self.column_warning.get_field_name(), "warning")
+        self.assertEqual(self.column_error.get_field_name(), "error field")
 
     def test_get_message(self):
         self.assertEqual(self.column_pass.get_message(), "")

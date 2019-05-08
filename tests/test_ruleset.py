@@ -140,7 +140,7 @@ class TestRuleset(unittest.TestCase):
             'rules': {}}
 
         rule_section = Ruleset.RuleSection('test')
-        test = json.loads(rule_section.toJSON())
+        test = json.loads(rule_section.to_json())
 
         self.assertEqual(reference, test)
 
@@ -220,7 +220,7 @@ class TestRuleset(unittest.TestCase):
     def test_rule_set_serializer(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
         # test string serialization
-        self.assertIsInstance(ruleset.toJSON(), str)
+        self.assertIsInstance(ruleset.to_json(), str)
 
     def test_validate(self):
         ruleset = validation.read_in_ruleset("test_data/test_ruleset.json")
@@ -315,7 +315,7 @@ class TestRuleset(unittest.TestCase):
                 record_result = ruleset.validate(record, "id")
                 if record_result.is_empty():
                     record_result.add_validation_result_column(
-                        ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id))
+                        ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id, ""))
                 submission_result.append(record_result)
                 for msg in record_result.get_messages():
                     actual_values.append(msg)

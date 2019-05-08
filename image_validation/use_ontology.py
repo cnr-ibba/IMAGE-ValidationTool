@@ -1,7 +1,6 @@
 import requests
 import logging
 from . import misc
-import json
 from typing import Dict, List
 
 logger = logging.getLogger(__name__)
@@ -127,7 +126,7 @@ def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str,
         ontology['text'] = 'buffalo breed'
         ontology['ontologyTerms'] = 'http://purl.obolibrary.org/obo/LBO_0001042'
     else:
-        return None
+        return dict()
     return ontology
 
 
@@ -169,7 +168,7 @@ class Ontology:
     def __eq__(self, other):
         return self.get_short_term() == other.get_short_term()
 
-    def get_short_term(self)->str:
+    def get_short_term(self) -> str:
         if not self.found:
             logger.warning("No ontology found on OLS, just return the given short term")
         return self.short_term
@@ -235,7 +234,7 @@ class OntologyCache:
         self.cache = {}
         logger.debug("Initializing ontology cache")
 
-    def contains(self, short_term: str)->bool:
+    def contains(self, short_term: str) -> bool:
         if type(short_term) is not str:
             raise TypeError("The method only take string as its input")
         return short_term in self.cache
@@ -263,15 +262,14 @@ class OntologyCache:
 
     # the method should not be here, but have not got a solution to retrieve ontology from cache
     # while not wanting to maintain checked parent-children relationship
-    def has_parent(self, child_term: str, parent_term: str)->bool:
+    def has_parent(self, child_term: str, parent_term: str) -> bool:
         if type(child_term) is not str:
             raise TypeError("The method only take string as child term parameter")
         if type(parent_term) is not str:
             raise TypeError("The method only take string as parent term parameter")
         if child_term not in self.children_checked:
-            # self.add_ontology(Ontology(child_term))
             self.get_ontology(child_term)
-        if parent_term not in self.children_checked[child_term]: # not checked parent relation before
+        if parent_term not in self.children_checked[child_term]:  # not checked parent relation before
             child_detail = self.get_ontology(child_term)
             parent_detail = self.get_ontology(parent_term)
             host = "https://www.ebi.ac.uk/ols/api/search?q=" + child_detail.get_iri()\

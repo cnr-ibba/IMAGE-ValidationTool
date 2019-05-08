@@ -60,7 +60,7 @@ for record in data:
     if record_result.is_empty():
         record_result.add_validation_result_column(
             ValidationResult.ValidationResultColumn(
-                    "Pass", "", record_result.record_id))
+                    "Pass", "", record_result.record_id, ""))
     submission_result.append(record_result)
 # pprint.pprint(rules)
 summary = validation.deal_with_validation_results(submission_result)

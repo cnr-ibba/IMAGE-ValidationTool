@@ -153,7 +153,8 @@ class TestValidation(unittest.TestCase):
         submission_result = []
         error = ValidationResult.ValidationResultRecord("record 1")
         error.add_validation_result_column(
-            ValidationResult.ValidationResultColumn("Error", "coverage for deal with validation results", "record 1"))
+            ValidationResult.ValidationResultColumn(
+                "Error", "coverage for deal with validation results", "record 1", "field"))
         submission_result.append(error)
         validation.deal_with_validation_results(submission_result, True)
 
@@ -161,8 +162,8 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.coordinate_check, "String", ValidationResult.ValidationResultRecord("id"))
         self.assertRaises(TypeError, validation.coordinate_check, True, ValidationResult.ValidationResultRecord("id"))
         self.assertRaises(TypeError, validation.coordinate_check, {},
-                          ValidationResult.ValidationResultColumn("Pass", "", "id"))
-        self.assertRaises(TypeError, validation.coordinate_check, {}, "id")
+                          ValidationResult.ValidationResultColumn("Pass", "", "id", ""))
+        self.assertRaises(TypeError, validation.coordinate_check, {}, "id", "")
 
     def test_coordinate_check(self):
         expected: List[List[str]] = [

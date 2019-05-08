@@ -7,13 +7,15 @@ logger = logging.getLogger(__name__)
 class ValidationResultColumn:
     status_id: int = -1
 
-    def __init__(self, status: str, message: str, record_id: str):
+    def __init__(self, status: str, message: str, record_id: str, field_name: str):
         if type(status) is not str:
             raise TypeError("Status must be a string")
         if type(message) is not str:
             raise TypeError("Message must be a string")
         if type(record_id) is not str:
             raise TypeError("Record id must be a string")
+        if type(field_name) is not str:
+            raise TypeError("Field name must be a string")
 
         self.status = status.lower()
         if self.status == "pass":
@@ -26,22 +28,27 @@ class ValidationResultColumn:
             raise ValueError('invalid status value %s which can only be pass, error or warning' % status)
         self.message = message
         self.record_id = record_id
+        self.field_name = field_name
 
-    def __str__(self)-> str:
+    # self.field_name is contained in the self.message
+    def __str__(self) -> str:
         if self.status_id != 1:
-            return self.status.capitalize() + ": " + self.message + " for Record " + self.record_id
+            return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
         return ""
 
     def get_record_id(self):
         return self.record_id
 
-    def get_message(self)-> str:
+    def get_field_name(self):
+        return self.field_name
+
+    def get_message(self) -> str:
         if self.status_id == 1:
             return ""
         else:
             return self.message
 
-    def get_status(self)-> str:
+    def get_status(self) -> str:
         if self.status_id == 1:
             return "Pass"
         elif self.status_id == 0:
