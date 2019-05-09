@@ -57,6 +57,12 @@ class TestValidationResult(unittest.TestCase):
         self.assertEqual(self.column_warning.get_status(), "Warning")
         self.assertEqual(self.column_error.get_status(), "Error")
 
+    def test_get_comparable_str(self):
+        self.assertEqual(self.column_pass.get_comparable_str(), "")
+        self.assertEqual(self.column_error.get_comparable_str(), "Error: value used in field b is not allowed")
+        self.assertNotEqual(self.column_warning.get_comparable_str(), "WARNING: term not match")
+        self.assertNotEqual(self.column_warning_2.get_comparable_str(), "recommended to have value for field a")
+
     def test_equal_ValidationResultColumn(self):
         self.assertNotEqual(self.column_pass, self.column_error)
         self.assertEqual(self.column_pass,

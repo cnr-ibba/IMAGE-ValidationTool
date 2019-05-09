@@ -56,6 +56,11 @@ class ValidationResultColumn:
         else:
             return "Warning"
 
+    def get_comparable_str(self) -> str:
+        if self.status_id != 1:
+            return f"{self.status.capitalize()}: {self.message}"
+        return ""
+
     def __eq__(self, other):
         if not isinstance(other, ValidationResultColumn):
             return NotImplemented

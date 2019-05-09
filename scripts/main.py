@@ -66,6 +66,6 @@ for record in data:
 summary, vrc_summary = validation.deal_with_validation_results(list(submission_result.values()))
 logger.info(str(summary))
 for vrc in vrc_summary.keys():
-    logger.info(f"{str(vrc)}   {vrc_summary[vrc]}")
+    logger.info(f"{vrc.get_comparable_str()}   {vrc_summary[vrc]}")
 
 logging.info("FINISH")
