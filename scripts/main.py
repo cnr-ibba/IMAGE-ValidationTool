@@ -3,7 +3,7 @@
 import os
 import json
 import logging
-
+import requests
 from typing import Dict
 
 from image_validation import validation, ValidationResult, static_parameters
@@ -52,9 +52,51 @@ if ruleset_check:
 
 logger.info("Loaded the ruleset")
 submission_result: Dict[str, ValidationResult.ValidationResultRecord] = {}
+# the data needs to be scanned twice, first time to validate individual record
+# second time to validate anything involving with more than one record e.g. relationships and context validation
+# first scan
+# meanwhile split data according to material type for relationship checking
+data_by_material: Dict[str, Dict[str, Dict]] = {}
 for record in data:
     logger.info("Validate record " + record['alias'])
     record_result = ruleset.validate(record)
+    submission_result[record['alias']] = record_result
+    try:
+        material = record['attributes']['Material'][0]['value'].lower()
+        data_by_material.setdefault(material, {})
+        data_by_material[material][record['alias']] = record
+    except KeyError:
+        # missing material value or wrong structure etc, already been dealt with by validate
+        pass
+
+for record in data:
+    # if the record is with status Error, no more validation will be done
+    if submission_result[record['alias']].get_overall_status() == "Error":
+        continue
+    record_result = submission_result[record['alias']]
+    record_id = record['attributes']['Data source ID'][0]['value']
+    # check relationship
+    relationships = record.get('sampleRelationships', None)
+    for relationship in relationships:
+        target:str = relationship['alias']
+        if target.startswith("SAM"):  # BioSamples data
+            url = f"https://www.ebi.ac.uk/biosamples/samples/{target}"
+            response = requests.get(url)
+            status = response.status_code
+            if status != 200:
+                record_result.add_validation_result_column(
+                    ValidationResult.ValidationResultColumn(
+                        "Warning", f"Fail to retrieve record {target} from BioSamples as required in the relationship",
+                        record_id, 'sampleRelationships'))
+        else:
+            if target not in submission_result:
+                record_result.add_validation_result_column(
+                    ValidationResult.ValidationResultColumn(
+                        "Error", f"The alias {target} could not be found in the data",
+                        record_id, 'sampleRelationships'))
+
+    if submission_result[record['alias']].get_overall_status() == "Error":
+        continue
     record_result = validation.context_validation(
         record, record_result)
     if record_result.is_empty():
