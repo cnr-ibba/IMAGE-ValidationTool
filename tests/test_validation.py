@@ -193,7 +193,7 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.animal_sample_check, {}, True,
                           ValidationResult.ValidationResultRecord("id"))
         self.assertRaises(TypeError, validation.animal_sample_check, {}, {},
-                          ValidationResult.ValidationResultColumn("Pass", "", "id"))
+                          ValidationResult.ValidationResultColumn("Pass", "", "id", "field"))
         self.assertRaises(TypeError, validation.animal_sample_check, {}, {}, "id")
 
     def test_context_validation(self):
