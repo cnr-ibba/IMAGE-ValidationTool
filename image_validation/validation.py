@@ -271,12 +271,17 @@ def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str
 # expected to be replaced by some codes displaying on the web pages
 def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=True) -> Dict:
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
+    vrc_summary: Dict[ValidationResult.ValidationResultColumn, int] = {}
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
         if verbose and overall != "Pass":
             print(result.get_messages())
-    return count
+
+        for vrc in result.get_specific_result_type("error") + result.get_specific_result_type("warning"):
+            vrc_summary.setdefault(vrc, 0)
+            vrc_summary[vrc] += 1
+    return count, vrc_summary
 
 
 def deal_with_errors(errors: List[str]) -> None:

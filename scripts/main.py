@@ -4,7 +4,7 @@ import os
 import json
 import logging
 
-from typing import List
+from typing import Dict
 
 from image_validation import validation, ValidationResult, static_parameters
 
@@ -51,7 +51,7 @@ if ruleset_check:
     logger.error("Found errors in check_ruleset!")
 
 logger.info("Loaded the ruleset")
-submission_result: List[ValidationResult.ValidationResultRecord] = []
+submission_result: Dict[str, ValidationResult.ValidationResultRecord] = {}
 for record in data:
     logger.info("Validate record " + record['alias'])
     record_result = ruleset.validate(record)
@@ -60,10 +60,12 @@ for record in data:
     if record_result.is_empty():
         record_result.add_validation_result_column(
             ValidationResult.ValidationResultColumn(
-                    "Pass", "", record_result.record_id, ""))
-    submission_result.append(record_result)
+                    "Pass", "", record_result.record_id))
+    submission_result[record['alias']] = record_result
 # pprint.pprint(rules)
-summary = validation.deal_with_validation_results(submission_result)
-print(summary)
+summary, vrc_summary = validation.deal_with_validation_results(list(submission_result.values()))
+logger.info(str(summary))
+for vrc in vrc_summary.keys():
+    logger.info(f"{str(vrc)}   {vrc_summary[vrc]}")
 
 logging.info("FINISH")
