@@ -196,28 +196,50 @@ class TestValidation(unittest.TestCase):
                           ValidationResult.ValidationResultColumn("Pass", "", "id", "field"))
         self.assertRaises(TypeError, validation.animal_sample_check, {}, {}, "id")
 
-    def test_context_validation(self):
-        expected_place_accuracy: List[List[str]] = [
-            [],  # animal, no, missing => correct
-            ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
-             'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
-            [],  # sample, italy, country level => correct,
-            ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
-             'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
-        ]
-        filename = "test_data/test_error_context_location_accuracy.json"
+    def test_animal_sample_check_and_species_check(self):
+        filename = "test_data/test_error_context_animal_sample_relationship.json"
         with open(filename) as infile:
             data = json.load(infile)
         data = data['sample']
-        for i, record in enumerate(data):
-            existing_results = ValidationResult.ValidationResultRecord(record['alias'])
-            existing_results = validation.context_validation(record, existing_results)
-            self.assertListEqual(existing_results.get_messages(), expected_place_accuracy[i])
+        cache = dict()
+        for record in data:
+            cache[record['alias']] = record
+        results_correct = ValidationResult.ValidationResultRecord('sample_257')
+        results_wrong = ValidationResult.ValidationResultRecord('sample_256')
+        results_correct = validation.animal_sample_check(cache['sample_257'], cache['animal_35'], results_correct)
+        results_wrong = validation.animal_sample_check(cache['sample_256'], cache['animal_35'], results_wrong)
+        self.assertListEqual(results_correct.get_messages(), [])
+        self.assertListEqual(results_wrong.get_messages(),
+                             ['Error: The Species of sample (Bos taurus) does not match to the Species of '
+                              'related animal (Sus scrofa) for Record sample_256'])
 
-        expected_breed_species: List[List[str]] = [
-            [],
-            ['Error: The provide breed Holstein is a Bos taurus breed, but the provided species is Sus Scrofa']
-        ]
+        results = validation.species_check(cache['sample_257'], results_correct)
+        self.assertListEqual(results.get_messages(),
+                             ['Error: taxonId 9913 does not match ontology term used in species '
+                              'http://purl.obolibrary.org/obo/NCBITaxon_9823 for Record sample_257'])
+
+    # def test_context_validation(self):
+    #     expected_place_accuracy: List[List[str]] = [
+    #         [],  # animal, no, missing => correct
+    #         ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
+    #          'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
+    #         [],  # sample, italy, country level => correct,
+    #         ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
+    #          'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
+    #     ]
+    #     filename = "test_data/test_error_context_location_accuracy.json"
+    #     with open(filename) as infile:
+    #         data = json.load(infile)
+    #     data = data['sample']
+    #     for i, record in enumerate(data):
+    #         existing_results = ValidationResult.ValidationResultRecord(record['alias'])
+    #         existing_results = validation.context_validation(record, existing_results)
+    #         self.assertListEqual(existing_results.get_messages(), expected_place_accuracy[i])
+    #
+    #     expected_breed_species: List[List[str]] = [
+    #         [],
+    #         ['Error: The provide breed Holstein is a Bos taurus breed, but the provided species is Sus Scrofa']
+    #     ]
 
     def test_image_animal(self):
         # get image test file

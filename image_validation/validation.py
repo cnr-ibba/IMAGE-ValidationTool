@@ -269,14 +269,14 @@ def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str
 
 # example codes consuming the validation result
 # expected to be replaced by some codes displaying on the web pages
-def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=True) -> Dict:
+def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=False) -> Dict:
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
     vrc_summary: Dict[ValidationResult.ValidationResultColumn, int] = {}
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
         if verbose and overall != "Pass":
-            print(result.get_messages())
+            logger.info(result.get_messages())
 
         for vrc in result.get_specific_result_type("error") + result.get_specific_result_type("warning"):
             vrc_summary.setdefault(vrc, 0)
@@ -319,28 +319,88 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
     return existing_results
 
 
-def animal_sample_check(animal: Dict, sample: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
+def species_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
+    taxon_id = record['taxonId']
+    url = record['attributes']['Species'][0]['terms'][0]['url']
+    if not url.endswith(str(taxon_id)):
+        existing_results.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Error", f"taxonId {taxon_id} does not match ontology term used in species {url}",
+                existing_results.record_id, ""))
+    return existing_results
+
+
+def check_value_equal(source, target, existing_results, field):
+    target_field_value = target['attributes'][field][0]['value']
+    source_field_value = source['attributes'][field][0]['value']
+    source_label = 'sample'
+    target_label = 'related animal'
+    if source['attributes']['Material'][0]['value'] == 'organism':
+        source_label = 'child'
+        target_label = 'parent'
+
+    if target_field_value != source_field_value:
+        record_id = existing_results.record_id
+        existing_results.add_validation_result_column(ValidationResult.ValidationResultColumn(
+            "Error", f"The {field} of {source_label} ({source_field_value}) does not "
+            f"match to the {field} of {target_label} ({target_field_value})", record_id, field))
+    return existing_results
+
+
+def animal_sample_check(sample: Dict, animal: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
+        ValidationResult.ValidationResultRecord:
+    """
+    For now, only check whether sample and animal have the same species
+    :param animal:
+    :param sample:
+    :param existing_results:
+    :return:
+    """
     if type(animal) is not dict:
         raise TypeError("Animal record needs to be represented as a Dict")
     if type(sample) is not dict:
         raise TypeError("Sample record needs to be represented as a Dict")
     if type(existing_results) is not ValidationResult.ValidationResultRecord:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
+
+    existing_results = check_value_equal(sample, animal, existing_results, 'Species')
+    return existing_results
+
+
+def child_of_check(animal: Dict, parents: List, existing_results: ValidationResult.ValidationResultRecord) -> \
+        ValidationResult.ValidationResultRecord:
+    if type(animal) is not dict:
+        raise TypeError("Animal record needs to be represented as a Dict")
+    if type(parents) is not list:
+        raise TypeError("Parent records need to be represented as a List")
+    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+        raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
+    for parent in parents:
+        existing_results = check_value_equal(animal, parent, existing_results, 'Species')
+        existing_results = check_value_equal(animal, parent, existing_results, 'Sex')
+
     return existing_results
 
 
 # do validation based on context, i.e. value in one field affects allowed values in another field
+# or involve more than one record
 def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord, related: List = None) \
         -> ValidationResult.ValidationResultRecord:
     existing_results = coordinate_check(record['attributes'], existing_results)
+    existing_results = species_check(record, existing_results)
+    record_id = existing_results.record_id
+    # existing related records, i.e. having relationships
     if related:
         material = record['attributes']['Material'][0]['value']
         if material == "organism":
-            # child of check
-            pass
+            existing_results = child_of_check(record, related, existing_results)
         else:
-            if related[0]['attributes']['Material'][0]['value'] == "organism":
+            if len(related) != 1:
+                existing_results.add_validation_result_column(
+                    ValidationResult.ValidationResultColumn(
+                        "Error", "Specimen can only derive from one animal", record_id, "sampleRelationships"))
+            else:
                 existing_results = animal_sample_check(record, related[0], existing_results)
-    # other context based validations
+
     return existing_results

@@ -4,7 +4,7 @@ import os
 import json
 import logging
 import requests
-from typing import Dict
+from typing import List, Dict
 
 from image_validation import validation, ValidationResult, static_parameters
 
@@ -77,8 +77,9 @@ for record in data:
     record_id = record['attributes']['Data source ID'][0]['value']
     # check relationship
     relationships = record.get('sampleRelationships', None)
+    related: List[Dict] = []
     for relationship in relationships:
-        target:str = relationship['alias']
+        target: str = relationship['alias']
         if target.startswith("SAM"):  # BioSamples data
             url = f"https://www.ebi.ac.uk/biosamples/samples/{target}"
             response = requests.get(url)
@@ -94,19 +95,25 @@ for record in data:
                     ValidationResult.ValidationResultColumn(
                         "Error", f"The alias {target} could not be found in the data",
                         record_id, 'sampleRelationships'))
+            else:
+                # in the current ruleset, derived from only from organism to specimen, so safe to only check organism
+                if target in data_by_material['organism']:
+                    related.append(dict(data_by_material['organism'][target]))
 
     if submission_result[record['alias']].get_overall_status() == "Error":
         continue
-    record_result = validation.context_validation(
-        record, record_result)
+
+    record_result = validation.context_validation(record, record_result, related)
+
     if record_result.is_empty():
         record_result.add_validation_result_column(
-            ValidationResult.ValidationResultColumn(
-                    "Pass", "", record_result.record_id, ""))
+            ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id, ""))
     submission_result[record['alias']] = record_result
 # pprint.pprint(rules)
 summary, vrc_summary = validation.deal_with_validation_results(list(submission_result.values()))
+logger.info("Summary of records validation result")
 logger.info(str(summary))
+logger.info("Validation result details:")
 for vrc in vrc_summary.keys():
     logger.info(f"{vrc.get_comparable_str()}   {vrc_summary[vrc]}")
 
