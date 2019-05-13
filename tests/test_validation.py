@@ -218,28 +218,72 @@ class TestValidation(unittest.TestCase):
                              ['Error: taxonId 9913 does not match ontology term used in species '
                               'http://purl.obolibrary.org/obo/NCBITaxon_9823 for Record sample_257'])
 
-    # def test_context_validation(self):
-    #     expected_place_accuracy: List[List[str]] = [
-    #         [],  # animal, no, missing => correct
-    #         ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
-    #          'missing geographic information for Record animal_42'],  # animal, no, unknown accuracy => wrong
-    #         [],  # sample, italy, country level => correct,
-    #         ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
-    #          'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
-    #     ]
-    #     filename = "test_data/test_error_context_location_accuracy.json"
-    #     with open(filename) as infile:
-    #         data = json.load(infile)
-    #     data = data['sample']
-    #     for i, record in enumerate(data):
-    #         existing_results = ValidationResult.ValidationResultRecord(record['alias'])
-    #         existing_results = validation.context_validation(record, existing_results)
-    #         self.assertListEqual(existing_results.get_messages(), expected_place_accuracy[i])
-    #
-    #     expected_breed_species: List[List[str]] = [
-    #         [],
-    #         ['Error: The provide breed Holstein is a Bos taurus breed, but the provided species is Sus Scrofa']
-    #     ]
+    def test_child_of_check_type(self):
+        self.assertRaises(TypeError, validation.child_of_check, "str", [],
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.child_of_check, True, [],
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.child_of_check, {}, "str",
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.child_of_check, {}, True,
+                          ValidationResult.ValidationResultRecord("id"))
+        self.assertRaises(TypeError, validation.child_of_check, {}, [],
+                          ValidationResult.ValidationResultColumn("Pass", "", "id", "field"))
+        self.assertRaises(TypeError, validation.child_of_check, {}, [], "id")
+
+    def test_child_of_check(self):
+        filename = "test_data/test_error_context_animal_child_of.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        data = data['sample']
+        cache = dict()
+        for record in data:
+            cache[record['alias']] = record
+
+        results_correct = ValidationResult.ValidationResultRecord('animal_355')
+        results_wrong = ValidationResult.ValidationResultRecord('animal_428')
+        results_correct = validation.child_of_check(cache['animal_355'], [cache['animal_35']], results_correct)
+        results_wrong = validation.child_of_check(cache['animal_428'], [cache['animal_42']], results_wrong)
+        self.assertListEqual(results_correct.get_messages(), [])
+        self.assertListEqual(results_wrong.get_messages(),
+                             ['Error: The Species of child (Bos taurus) does not match to the Species of '
+                              'parent (Sus scrofa) for Record animal_428'])
+
+
+    def test_context_validation(self):
+        expected_results: List[List[str]] = [
+            [],
+            ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
+             'missing geographic information for Record animal_42'],
+            [],
+            ['Error: The Species of child (Bos taurus) does not match to the Species '
+             'of parent (Sus scrofa) for Record animal_428'],
+            ['Error: The Species of sample (Bos taurus) does not match to the Species '
+             'of related animal (Sus scrofa) for Record sample_256'],
+            ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
+             'is missing geographic information for Record sample_257',
+             'Error: taxonId 9913 does not match ontology term used in species '
+             'http://purl.obolibrary.org/obo/NCBITaxon_9823 for Record sample_257'],
+            ['Error: Specimen can only derive from one animal for Record sample_777']
+        ]
+        filename = "test_data/test_error_context_all.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        data = data['sample']
+
+        cache = dict()
+        for record in data:
+            cache[record['alias']] = record
+
+        for i, record in enumerate(data):
+            existing_results = ValidationResult.ValidationResultRecord(record['alias'])
+            related = list()
+            relationships = record.get('sampleRelationships', [])
+            for relationship in relationships:
+                target: str = relationship['alias']
+                related.append(cache[target])
+            existing_results = validation.context_validation(record, existing_results, related)
+            self.assertListEqual(existing_results.get_messages(), expected_results[i])
 
     def test_image_animal(self):
         # get image test file

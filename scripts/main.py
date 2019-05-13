@@ -76,7 +76,7 @@ for record in data:
     record_result = submission_result[record['alias']]
     record_id = record['attributes']['Data source ID'][0]['value']
     # check relationship
-    relationships = record.get('sampleRelationships', None)
+    relationships = record.get('sampleRelationships', [])
     related: List[Dict] = []
     for relationship in relationships:
         target: str = relationship['alias']

@@ -373,13 +373,13 @@ def child_of_check(animal: Dict, parents: List, existing_results: ValidationResu
     if type(animal) is not dict:
         raise TypeError("Animal record needs to be represented as a Dict")
     if type(parents) is not list:
+        print(type(parents))
         raise TypeError("Parent records need to be represented as a List")
     if type(existing_results) is not ValidationResult.ValidationResultRecord:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
     for parent in parents:
         existing_results = check_value_equal(animal, parent, existing_results, 'Species')
-        existing_results = check_value_equal(animal, parent, existing_results, 'Sex')
-
+        # TODO breed check
     return existing_results
 
 
