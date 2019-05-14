@@ -132,17 +132,22 @@ def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str,
 
 class Ontology:
     found: bool = False
-
-    # According to Simon's reply in ols-support #317084
-    # It is best if you have the IRI. but the short id is highly likely to be unique too
-    # so you are safe to lookup on the /terms endpoint using the short id.
-    # You just have to be aware that the response will be a list and
-    # you may have the same id approving in multiple ontologies
-    # So you need to look for the term with "is_defining_ontology : true”
-    # to find the description of the term in the source ontology.
-    # e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
-    # the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
+    """
+    According to Simon's reply in ols-support #317084
+    It is best if you have the IRI. but the short id is highly likely to be unique too
+    so you are safe to lookup on the /terms endpoint using the short id.
+    You just have to be aware that the response will be a list and
+    you may have the same id approving in multiple ontologies
+    So you need to look for the term with "is_defining_ontology : true”
+    to find the description of the term in the source ontology.
+    e.g. https://www.ebi.ac.uk/ols/api/terms?id=UBERON_0001037 has 12 entries,
+    the 3rd in the list is has is_defining_ontology : true and that is the correct term in Uberon.
+    """
     def __init__(self, short_term: str):
+        """
+        constructor of Ontology class
+        :param short_term: could be either short term (LBO_0000002) or iri (http://purl.obolibrary.org/obo/LBO_0000002)
+        """
         if type(short_term) is not str:
             raise TypeError("The ontology object can only be initialzed with a string value")
         self.short_term = short_term

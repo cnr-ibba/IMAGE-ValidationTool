@@ -63,6 +63,21 @@
               }
             ]
           }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Duroc"
+          }
+        ],
+        "Mapped breed": [
+          {
+            "value": "Duroc",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/LBO_0000358"
+              }
+            ]
+          }
         ]
       }
     },
@@ -96,8 +111,12 @@
               }
             ]
           }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Randomed pig breed"
+          }
         ]
-
       },
       "sampleRelationships": [
         {
@@ -133,6 +152,21 @@
             "terms": [
               {
                 "url": "http://purl.obolibrary.org/obo/NCBITaxon_9913"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Duroc"
+          }
+        ],
+        "Mapped breed": [
+          {
+            "value": "Duroc",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/LBO_0000358"
               }
             ]
           }

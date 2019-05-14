@@ -231,7 +231,7 @@ class TestValidation(unittest.TestCase):
                           ValidationResult.ValidationResultColumn("Pass", "", "id", "field"))
         self.assertRaises(TypeError, validation.child_of_check, {}, [], "id")
 
-    def test_child_of_check(self):
+    def test_child_of_check_and_species_breed_check(self):
         filename = "test_data/test_error_context_animal_child_of.json"
         with open(filename) as infile:
             data = json.load(infile)
@@ -241,20 +241,30 @@ class TestValidation(unittest.TestCase):
             cache[record['alias']] = record
 
         results_correct = ValidationResult.ValidationResultRecord('animal_355')
-        results_wrong = ValidationResult.ValidationResultRecord('animal_428')
         results_correct = validation.child_of_check(cache['animal_355'], [cache['animal_35']], results_correct)
+        results_correct = validation.species_breed_check(cache['animal_355'], results_correct)
+
+        results_wrong = ValidationResult.ValidationResultRecord('animal_428')
         results_wrong = validation.child_of_check(cache['animal_428'], [cache['animal_42']], results_wrong)
-        self.assertListEqual(results_correct.get_messages(), [])
+        results_wrong = validation.species_breed_check(cache['animal_428'], results_wrong)
+
+        self.assertListEqual(results_correct.get_messages(),
+                             ['Warning: No check has been carried out on whether Randomed pig breed is a Sus scrofa '
+                              'breed as no mapped breed provided for Record animal_355'
+                              ])
         self.assertListEqual(results_wrong.get_messages(),
                              ['Error: The Species of child (Bos taurus) does not match to the Species of '
-                              'parent (Sus scrofa) for Record animal_428'])
-
+                              'parent (Sus scrofa) for Record animal_428',
+                              'Error: The mapped breed http://purl.obolibrary.org/obo/LBO_0000358 does not match '
+                              'the given species Bos taurus for Record animal_428'
+                              ])
 
     def test_context_validation(self):
         expected_results: List[List[str]] = [
             [],
             ['Error: No value provided for field Birth location but value in field Birth location accuracy is not '
              'missing geographic information for Record animal_42'],
+            [],
             [],
             ['Error: The Species of child (Bos taurus) does not match to the Species '
              'of parent (Sus scrofa) for Record animal_428'],
@@ -264,7 +274,8 @@ class TestValidation(unittest.TestCase):
              'is missing geographic information for Record sample_257',
              'Error: taxonId 9913 does not match ontology term used in species '
              'http://purl.obolibrary.org/obo/NCBITaxon_9823 for Record sample_257'],
-            ['Error: Specimen can only derive from one animal for Record sample_777']
+            ['Error: Specimen can only derive from one animal for Record sample_777'],
+            ['Error: Having more than 2 parents defined in sampleRelationships for Record animal_555']
         ]
         filename = "test_data/test_error_context_all.json"
         with open(filename) as infile:

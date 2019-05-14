@@ -6,7 +6,10 @@ from typing import Dict, List
 from . import misc
 from . import Ruleset
 from . import ValidationResult
+from . import use_ontology
+from . import static_parameters
 
+SPECIES = 'Species'
 
 logger = logging.getLogger(__name__)
 
@@ -322,7 +325,7 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
 def species_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
     taxon_id = record['taxonId']
-    url = record['attributes']['Species'][0]['terms'][0]['url']
+    url = record['attributes'][SPECIES][0]['terms'][0]['url']
     if not url.endswith(str(taxon_id)):
         existing_results.add_validation_result_column(
             ValidationResult.ValidationResultColumn(
@@ -364,7 +367,7 @@ def animal_sample_check(sample: Dict, animal: Dict, existing_results: Validation
     if type(existing_results) is not ValidationResult.ValidationResultRecord:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
 
-    existing_results = check_value_equal(sample, animal, existing_results, 'Species')
+    existing_results = check_value_equal(sample, animal, existing_results, SPECIES)
     return existing_results
 
 
@@ -378,8 +381,43 @@ def child_of_check(animal: Dict, parents: List, existing_results: ValidationResu
     if type(existing_results) is not ValidationResult.ValidationResultRecord:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
     for parent in parents:
-        existing_results = check_value_equal(animal, parent, existing_results, 'Species')
+        existing_results = check_value_equal(animal, parent, existing_results, SPECIES)
         # TODO breed check
+    return existing_results
+
+
+def species_breed_check(animal: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
+        ValidationResult.ValidationResultRecord:
+    """
+    check whether mapped breed (recommended) matches species
+    if mapped breed not found, gives a warning saying no check has been carried out on supplied breed (mandatory)
+    :param animal: the animal record to be validated
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
+    attrs = animal['attributes']
+    # get root breed ontology term based on given species
+    species = attrs[SPECIES][0]['value']
+    general_breed_from_species: str = use_ontology.get_general_breed_by_species(species)
+    general_breed_term = general_breed_from_species['ontologyTerms'].rsplit("/", 1)[1]
+    if 'Mapped breed' in attrs:
+        mapped_breed = attrs['Mapped breed'][0]['terms'][0]['url']
+        match = static_parameters.ontology_library.has_parent(mapped_breed, general_breed_term)
+        if not match:
+            general_crossbreed_from_species = use_ontology.get_general_breed_by_species(species, cross=True)
+            general_crossbreed_term = general_crossbreed_from_species['ontologyTerms'].rsplit("/", 1)[1]
+            match = static_parameters.ontology_library.has_parent(mapped_breed, general_crossbreed_term)
+            if not match:
+                existing_results.add_validation_result_column(
+                    ValidationResult.ValidationResultColumn(
+                        "Error", f"The mapped breed {mapped_breed} does not match the given species {species}",
+                        existing_results.record_id, "Mapped breed"))
+    else:
+        existing_results.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Warning", f"No check has been carried out on whether "
+                f"{attrs['Supplied breed'][0]['value']} is a {species} breed as no mapped breed provided",
+                existing_results.record_id, "Supplied breed"))
     return existing_results
 
 
@@ -394,7 +432,13 @@ def context_validation(record: Dict, existing_results: ValidationResult.Validati
     if related:
         material = record['attributes']['Material'][0]['value']
         if material == "organism":
-            existing_results = child_of_check(record, related, existing_results)
+            if len(related) > 2:
+                existing_results.add_validation_result_column(
+                    ValidationResult.ValidationResultColumn(
+                        "Error", "Having more than 2 parents defined in sampleRelationships",
+                        existing_results.record_id, "sampleRelationships"))
+            else:
+                existing_results = child_of_check(record, related, existing_results)
         else:
             if len(related) != 1:
                 existing_results.add_validation_result_column(

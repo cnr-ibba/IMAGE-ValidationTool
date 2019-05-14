@@ -77,6 +77,59 @@
       }
     },
     {
+      "alias": "animal_66",
+      "title": "ANIMAL:::ID:::CS12_2009",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Duroc"
+          }
+        ],
+        "Mapped breed": [
+          {
+            "value": "Duroc",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/LBO_0000358"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ]
+      }
+    },
+    {
       "alias": "animal_355",
       "title": "ANIMAL:::ID:::CS12_1999",
       "releaseDate": "2018-10-09",
@@ -338,6 +391,73 @@
         {
           "alias": "animal_42",
           "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "animal_555",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Duroc"
+          }
+        ],
+        "Mapped breed": [
+          {
+            "value": "Duroc",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/LBO_0000358"
+              }
+            ]
+          }
+        ],
+        "Birth location accuracy": [
+          {
+            "value": "missing geographic information"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_35",
+          "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_66",
+          "relationshipNature": "child of"
         }
       ]
     }

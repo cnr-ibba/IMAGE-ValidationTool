@@ -3,7 +3,7 @@ IMAGE ruleset represented as JSON"""
 
 __author__ = """Jun Fan"""
 __email__ = 'junf@ebi.ac.uk'
-__version__ = '1.2.1'
+__version__ = '1.3.0'
 
 from . import misc
 from . import use_ontology
