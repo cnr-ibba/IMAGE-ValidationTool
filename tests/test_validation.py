@@ -174,7 +174,7 @@ class TestValidation(unittest.TestCase):
             ['Error: Value Italy provided for field Collection place but value in field Collection place accuracy '
              'is missing geographic information for Record sample_257']  # sample, italy, missing => wrong
         ]
-        filename = "test_data/test_error_context_location_accuracy.json"
+        filename = "test_data/context/test_error_context_location_accuracy.json"
         with open(filename) as infile:
             data = json.load(infile)
         data = data['sample']
@@ -197,7 +197,7 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.animal_sample_check, {}, {}, "id")
 
     def test_animal_sample_check_and_species_check(self):
-        filename = "test_data/test_error_context_animal_sample_relationship.json"
+        filename = "test_data/context/test_error_context_animal_sample_relationship.json"
         with open(filename) as infile:
             data = json.load(infile)
         data = data['sample']
@@ -232,7 +232,7 @@ class TestValidation(unittest.TestCase):
         self.assertRaises(TypeError, validation.child_of_check, {}, [], "id")
 
     def test_child_of_check_and_species_breed_check(self):
-        filename = "test_data/test_error_context_animal_child_of.json"
+        filename = "test_data/context/test_error_context_animal_child_of.json"
         with open(filename) as infile:
             data = json.load(infile)
         data = data['sample']
@@ -259,6 +259,34 @@ class TestValidation(unittest.TestCase):
                               'the given species Bos taurus for Record animal_428'
                               ])
 
+    def test_parents_sex_check(self):
+        filename = "test_data/context/test_error_context_animal_parent_sex.json"
+        with open(filename) as infile:
+            data = json.load(infile)
+        data = data['sample']
+        cache = dict()
+        for record in data:
+            cache[record['alias']] = record
+
+        results_correct = ValidationResult.ValidationResultRecord('animal_428')
+        related = [cache['animal_42'], cache['animal_35']]
+        results_correct = validation.parents_sex_check(related, results_correct)
+        self.assertListEqual(results_correct.get_messages(), [])
+
+        results_wrong = ValidationResult.ValidationResultRecord('animal_355')
+        related = [cache['animal_36'], cache['animal_35']]
+        results_wrong = validation.parents_sex_check(related, results_wrong)
+        self.assertListEqual(results_wrong.get_messages(),
+                             ["Error: Two parents could not have same sex for Record animal_355"])
+
+        results_unknown = ValidationResult.ValidationResultRecord('animal_555')
+        related = [cache['animal_66'], cache['animal_35']]
+        results_unknown = validation.parents_sex_check(related, results_unknown)
+        self.assertListEqual(results_unknown.get_messages(),
+                             ["Warning: At least one parent has unknown value for sex, "
+                              "thus could not be checked for Record animal_555"])
+
+
     def test_context_validation(self):
         expected_results: List[List[str]] = [
             [],
@@ -277,7 +305,7 @@ class TestValidation(unittest.TestCase):
             ['Error: Specimen can only derive from one animal for Record sample_777'],
             ['Error: Having more than 2 parents defined in sampleRelationships for Record animal_555']
         ]
-        filename = "test_data/test_error_context_all.json"
+        filename = "test_data/context/test_error_context_all.json"
         with open(filename) as infile:
             data = json.load(infile)
         data = data['sample']

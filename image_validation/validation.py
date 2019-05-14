@@ -421,10 +421,33 @@ def species_breed_check(animal: Dict, existing_results: ValidationResult.Validat
     return existing_results
 
 
-# do validation based on context, i.e. value in one field affects allowed values in another field
-# or involve more than one record
+def parents_sex_check(related, existing_results):
+    one_sex: str = related[0]['attributes']['Sex'][0]['value']
+    another_sex: str = related[1]['attributes']['Sex'][0]['value']
+    unknown_flag = False
+    if "unknown sex" in one_sex.lower() or "unknown sex" in another_sex.lower():
+        unknown_flag = True
+        existing_results.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Warning", "At least one parent has unknown value for sex, thus could not be checked",
+                existing_results.record_id, "parents sex"))
+    if not unknown_flag and one_sex == another_sex:
+        existing_results.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Error", "Two parents could not have same sex", existing_results.record_id, "parents sex"))
+    return existing_results
+
+
 def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord, related: List = None) \
         -> ValidationResult.ValidationResultRecord:
+    """
+    do validation based on context, i.e. value in one field affects allowed values in another field
+    or involve more than one record
+    :param record: the record data
+    :param existing_results: the existing validation result
+    :param related: list of the related records either parents or related animal, could be empty list
+    :return: updated validation result
+    """
     existing_results = coordinate_check(record['attributes'], existing_results)
     existing_results = species_check(record, existing_results)
     record_id = existing_results.record_id
@@ -439,6 +462,8 @@ def context_validation(record: Dict, existing_results: ValidationResult.Validati
                         existing_results.record_id, "sampleRelationships"))
             else:
                 existing_results = child_of_check(record, related, existing_results)
+                if len(related) == 2:
+                    existing_results = parents_sex_check(related, existing_results)
         else:
             if len(related) != 1:
                 existing_results.add_validation_result_column(

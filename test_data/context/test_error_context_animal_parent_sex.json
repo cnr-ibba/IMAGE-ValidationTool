@@ -1,0 +1,280 @@
+{
+  "sample": [
+    {
+      "alias": "animal_35",
+      "title": "ANIMAL:::ID:::CS05_1999",
+      "releaseDate": "2018-11-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ],
+            "value": "male"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "animal_36",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ],
+            "value": "male"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "animal_42",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000383"
+              }
+            ],
+            "value": "female"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "animal_66",
+      "title": "ANIMAL:::ID:::CS12_2009",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0000858"
+              }
+            ],
+            "value": "record of unknown sex"
+          }
+        ]
+      }
+    },
+    {
+      "alias": "animal_355",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Supplied breed": [
+          {
+            "value": "Randomed pig breed"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_35",
+          "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_36",
+          "relationshipNature": "child of"
+        }
+      ]
+    },
+    {
+      "alias": "animal_428",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_35",
+          "relationshipNature": "child of"
+        }
+      ]
+    },
+    {
+      "alias": "animal_555",
+      "title": "ANIMAL:::ID:::CS12_1999",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_66",
+          "relationshipNature": "child of"
+        }
+      ]
+    }
+  ]
+}

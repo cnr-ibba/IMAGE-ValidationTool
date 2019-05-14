@@ -31,6 +31,16 @@
             ]
           }
         ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ],
+            "value": "male"
+          }
+        ],
         "Birth location accuracy": [
           {
             "value": "missing geographic information"
@@ -67,6 +77,16 @@
                 "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
               }
             ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000383"
+              }
+            ],
+            "value": "female"
           }
         ],
         "Birth location accuracy": [
@@ -170,6 +190,10 @@
         {
           "alias": "animal_35",
           "relationshipNature": "child of"
+        },
+        {
+          "alias": "animal_42",
+          "relationshipNature": "child of"
         }
       ]
     },
@@ -212,7 +236,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "animal_42",
+          "alias": "animal_35",
           "relationshipNature": "child of"
         }
       ]
