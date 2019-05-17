@@ -42,11 +42,118 @@
     },
     "sampleRelationships": [
       {
-        "relationshipNature": "same as",
+        "relationshipNature": "child of",
         "alias": "502-W-133-4FE274B"
+      },
+      {
+        "relationshipNature": "derived from",
+        "alias": "502-W-133-4FE274B-1"
       }
     ]
-
+  },
+  {
+    "alias" : "504-Y-133-25ED74B",
+    "title" : "504-Y-133-25ED74B",
+    "taxonId" : 8888,
+    "releaseDate" : "2508-01-01",
+    "entity_type" : "spacecraft",
+    "attributes": {
+      "id": [
+        {
+          "value": "504-Y-133-25ED74B"
+        }
+      ],
+      "crew_capacity": [
+        {
+          "value": 70,
+          "units": "people"
+        }
+      ],
+      "passenger_capacity": [
+        {
+          "value": 0,
+          "units": "people"
+        }
+      ],
+      "class": [
+        {
+          "value": "05-W64-SpitFire-Plus"
+        }
+      ],
+      "role": [
+        {
+          "value": "warship"
+        }
+      ],
+      "cargo_capacity": [
+        {
+          "value": 99999,
+          "units": "kg"
+        }
+      ]
+    },
+    "sampleRelationships": [
+      {
+        "alias": "502-W-133-4FE274B",
+        "relationshipNature" : "derived from"
+      },
+      {
+        "alias": "502-W-133-4FE274B",
+        "relationshipNature" : "same as"
+      }
+    ]
+  },
+  {
+    "alias" : "504-Y-133-25ED74E",
+    "title" : "504-Y-133-25ED74E",
+    "taxonId" : 8888,
+    "releaseDate" : "2508-01-01",
+    "entity_type" : "spacecraft",
+    "attributes": {
+      "id": [
+        {
+          "value": "504-Y-133-25ED74E"
+        }
+      ],
+      "crew_capacity": [
+        {
+          "value": 70,
+          "units": "people"
+        }
+      ],
+      "passenger_capacity": [
+        {
+          "value": 0,
+          "units": "people"
+        }
+      ],
+      "class": [
+        {
+          "value": "05-W64-SpitFire-Plus"
+        }
+      ],
+      "role": [
+        {
+          "value": "warship"
+        }
+      ],
+      "cargo_capacity": [
+        {
+          "value": 99999,
+          "units": "kg"
+        }
+      ]
+    },
+    "sampleRelationships": [
+      {
+        "alias": "502-W-133-4FE274B",
+        "relationshipNature" : "derived from"
+      },
+      {
+        "alias": "502-W-133-4FE274B",
+        "relationshipNature" : "derived from"
+      }
+    ]
   },
   {
     "alias" : "502-W-133-4FE274B",

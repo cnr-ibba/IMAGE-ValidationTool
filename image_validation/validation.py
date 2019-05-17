@@ -1,6 +1,5 @@
 import json
 import logging
-
 from typing import Dict, List
 
 from . import misc
@@ -10,6 +9,7 @@ from . import use_ontology
 from . import static_parameters
 
 SPECIES = 'Species'
+ALLOWED_RELATIONSHIP_NATURE = ['derived from', 'child of', 'same as', 'recurated from']
 
 logger = logging.getLogger(__name__)
 
@@ -127,34 +127,40 @@ def check_usi_structure(sample: List[Dict]):
         result.append(error_prefix + "all data need to be encapsulated in an array")
         return result
     for one in sample:
-        # check existence of mandatory fields
+        # check the structure, if wrong, could not continue, so directly skip to next record
+        # rather than setting error flag
         if type(one) is not dict:
             result.append(error_prefix + "some records are not represented as hashes")
-            return result
+            continue
         if 'alias' not in one:
             result.append(error_prefix + 'some records do not have alias which is mandatory '
                                          'and used to identify record')
-            return result
+            continue
         else:
+            # check existence of mandatory fields
             alias = one['alias']
             if type(alias) is list or type(alias) is dict:
                 result.append(error_prefix + "alias can only be a string")
-                return result
-            if alias in count:
-                count[alias] = count[alias] + 1
-            else:
-                count[alias] = 1
+                continue
+            count.setdefault(alias, 0)
+            count[alias] = count[alias] + 1
+
+        error_flag = False
         if 'title' not in one:
             result.append(error_prefix + "no title field for record with alias as " + alias)
+            error_flag = True
         if 'releaseDate' not in one:
             result.append(error_prefix + "no releaseDate field for record with alias as " + alias)
+            error_flag = True
         if 'taxonId' not in one:
             result.append(error_prefix + "no taxonId field for record with alias as " + alias)
+            error_flag = True
         if 'attributes' not in one:
             result.append(error_prefix + "no attributes for record with alias as " + alias)
+            error_flag = True
         # return when previous record has error or current record fails the check above
-        if result:
-            return result
+        if error_flag:
+            continue
         # check value of mandatory fields except type of alias
         # which is checked above and duplicate check outside this loop
         # taxonId must be an integer
@@ -163,7 +169,7 @@ def check_usi_structure(sample: List[Dict]):
         # releaseDate needs to be in YYYY-MM-DD
         date_check = misc.get_matched_date(one['releaseDate'], "YYYY-MM-DD")
         if date_check:
-            result.append(error_prefix + date_check + " for record with alias value " + alias)
+            result.append(f"{error_prefix}{date_check} for record with alias value {alias}")
         # attributes is a list of attributes, represented as dict
         attrs = one['attributes']
         if type(attrs) is not dict:
@@ -204,6 +210,8 @@ def check_usi_structure(sample: List[Dict]):
                                                 "url not used as key for ontology term in record " + alias)
 
         # optional field
+        existing_relationships: Dict[str, str] = dict()
+        existing_keyword: str = ''
         if 'sampleRelationships' in one:
             relationships = one['sampleRelationships']
             if type(relationships) is not list:
@@ -217,16 +225,28 @@ def check_usi_structure(sample: List[Dict]):
                             error_prefix + "relationship "
                             "needs to be presented as a hash for record with alias " + alias)
                     else:
-                        if len(relationship.keys()) == 2:
+                        if len(relationship.keys()) == 2:  # relationship must have two and only two elements
                             if 'alias' in relationship and 'relationshipNature' in relationship:
                                 relationship_nature = relationship['relationshipNature']
-                                if relationship_nature != 'derived from' and \
-                                        relationship_nature != 'child of' and \
-                                        relationship_nature != 'same as' and \
-                                        relationship_nature != 'recurated from':
+                                if relationship_nature not in ALLOWED_RELATIONSHIP_NATURE:
                                     result.append(
                                         error_prefix + "Unrecognized relationship nature "
                                         + relationship_nature + " within record " + alias)
+                                else:
+                                    if relationship_nature != 'same as' and relationship_nature != 'recurated from' \
+                                            and existing_keyword != relationship_nature \
+                                            and existing_keyword != 'same as'\
+                                            and existing_keyword != 'recurated from':
+                                        if len(existing_keyword) == 0:
+                                            existing_keyword = relationship_nature
+                                        else:
+                                            result.append(f"{error_prefix}More than one relationship natures found "
+                                                          f"within record {alias}")
+                                    target = relationship['alias']
+                                    if target in existing_relationships:  # already found this in
+                                        result.append(f"Duplicated relationship {relationship_nature} with {target} "
+                                                      f"for record {alias}")
+                                    existing_relationships[target] = relationship['relationshipNature']
                             else:
                                 result.append(
                                     error_prefix + "Unrecognized key used (only can be alias and "
@@ -291,7 +311,7 @@ def deal_with_errors(errors: List[str]) -> None:
     for error in errors:
         if type(error) is not str:
             raise TypeError("Error message is not a string")
-        print(error)
+        logger.info(error)
 
 
 # check whether value used in place and place accuracy match

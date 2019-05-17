@@ -37,44 +37,5 @@
         }
       ]
     }
-  },
-  {
-    "alias" : "502-W-133-4FE274B",
-    "entity_type" : "spacecraft",
-    "attributes": {
-      "id": [
-        {
-          "value": "502-W-133-4FE274B"
-        }
-      ],
-      "crew_capacity": [
-        {
-          "value": 50,
-          "units": "people"
-        }
-      ],
-      "passenger_capacity": [
-        {
-          "value": 0,
-          "units": "people"
-        }
-      ],
-      "class": [
-        {
-          "value": "05-W64-SpitFire"
-        }
-      ],
-      "role": [
-        {
-          "value": "warship"
-        }
-      ],
-      "cargo_capacity": [
-        {
-          "value": 74797,
-          "units": "kg"
-        }
-      ]
-    }
   }
 ]

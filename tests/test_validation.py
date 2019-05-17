@@ -1,4 +1,3 @@
-
 import unittest
 import json
 from typing import List, Dict
@@ -112,6 +111,9 @@ class TestValidation(unittest.TestCase):
                 ' relationship. Affected record 404-T-132-4FE274A'
             ],
             "sample_relationship_2": [
+                'Wrong JSON structure: More than one relationship natures found within record 404-T-132-4FE274A',
+                'Duplicated relationship same as with 502-W-133-4FE274B for record 504-Y-133-25ED74B',
+                'Duplicated relationship derived from with 502-W-133-4FE274B for record 504-Y-133-25ED74E',
                 'Wrong JSON structure: sampleRelationships field must have values '
                 'within an array for record with alias 502-W-133-4FE274B'
             ]
