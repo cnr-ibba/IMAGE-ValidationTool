@@ -8,7 +8,7 @@ from image_validation import use_ontology
 class TestUseOntology(unittest.TestCase):
 
     # this test is more about how to use zooma properly, the function itself is like a by-product
-    def test_use_ontology(self):
+    def test_use_zooma(self):
         # category: species
         # organism in gxa datasource with high, disallow any datasource, good
         expected = {
@@ -211,6 +211,7 @@ class TestUseOntology(unittest.TestCase):
 
         self.assertFalse(correct_hair.__eq__(correct_human))
         self.assertTrue(correct_hair == correct_hair)
+        self.assertNotEqual(correct_hair, "hair")
 
         self.assertRaises(TypeError, use_ontology.Ontology, 12)
         self.assertRaises(TypeError, use_ontology.Ontology, -12.34)

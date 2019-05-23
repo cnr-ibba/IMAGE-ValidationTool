@@ -1,3 +1,11 @@
+"""
+the ruleset has four levels:
+1. the ruleset in the file containing several sections
+2. the ruleset section is composed of several rulesets for fields/columns
+3. the ruleset for one field which may contains several ontology conditions
+    which define which ontology terms are allowed
+4. the ontology condition
+"""
 import logging
 import json
 from typing import List, Dict
@@ -10,8 +18,17 @@ logger = logging.getLogger(__name__)
 
 
 class OntologyCondition:
-
+    """
+    the class represents conditions to be a valid ontology for the field with ontology_id type
+    """
     def __init__(self, term, include_descendant=False, only_leaf=False, include_self=True):
+        """
+        constructor method
+        :param term: ontology short term
+        :param include_descendant: indicate whether allow descendants
+        :param only_leaf: indicate whether must be a leaf node (i.e. no child)
+        :param include_self: indicate whether to include the term itself
+        """
         if type(term) is not str:
             raise TypeError("The term parameter must be a string")
         if type(include_self) is not bool:
@@ -28,13 +45,25 @@ class OntologyCondition:
         self.iri = ontology.get_iri()
 
     def __str__(self):
+        """
+        Overwrite the method how to construct a string when str(obj) is called
+        :return: the representation string of the object
+        """
         return f"Term: {self.term} include descendant: {str(self.include_descendant)} " \
             f"leaf only: {str(self.only_leaf)} self included: {str(self.include_self)} iri: {self.iri}"
 
     def is_leaf_only(self) -> bool:
+        """
+        :return: whether only leaf node is allowed
+        """
         return self.only_leaf
 
     def is_allowed(self, query: str) -> bool:
+        """
+        Check whether the query term meets the condition
+        :param query: ontology short term
+        :return: True if meets the condition
+        """
         ontology_detail = static_parameters.ontology_library.get_ontology(query)
         query_iri = ontology_detail.get_iri()
         if self.include_descendant:
@@ -54,11 +83,22 @@ class OntologyCondition:
 
 
 class RuleField:
+    """
+    The class represent a field in the ruleset
+    """
     allowed_required = ['mandatory', 'recommended', 'optional']
     allowed_multiple = ['yes', 'max 2', 'no']
     allowed_type = ['number', 'text', 'limited value', 'ontology_id', 'uri', 'doi', 'date']
 
     def __init__(self, name: str, field_type: str, required: str, multiple: str = 'no', description: str = ""):
+        """
+        constructor method
+        :param name: the field name
+        :param field_type: the field type
+        :param required: the requirement of the field
+        :param multiple: the cardinality of the field
+        :param description: the description of the filed, optional
+        """
         if type(name) is not str:
             raise TypeError("The name parameter must be a string")
         if type(field_type) is not str:
@@ -89,17 +129,29 @@ class RuleField:
         self.allowed_units: List[str] = []
         self.allowed_terms: List[OntologyCondition] = []
 
-    def set_allowed_values(self, values: List[str]):
+    def set_allowed_values(self, values: List[str]) -> None:
+        """
+        Set the allowed values
+        :param values: the list of allowed values
+        """
         self.allowed_values: List[str] = []
         for value in values:
             self.allowed_values.append(value)
 
-    def set_allowed_units(self, units: List[str]):
+    def set_allowed_units(self, units: List[str]) -> None:
+        """
+        Set the allowed units
+        :param units: the list of allowed units
+        """
         self.allowed_units: List[str] = []
         for unit in units:
             self.allowed_units.append(unit)
 
-    def set_allowed_terms(self, terms: List[Dict[str, str]]):
+    def set_allowed_terms(self, terms: List[Dict[str, str]]) -> None:
+        """
+        Set the allowed ontology terms
+        :param terms: the list of allowed ontology terms
+        """
         self.allowed_terms: List[OntologyCondition] = []
         for term in terms:
             descendant = False
@@ -115,33 +167,70 @@ class RuleField:
             self.allowed_terms.append(condition)
 
     def get_allowed_values(self) -> List[str]:
+        """
+        Get the list of allowed values
+        :return: the list of allowed values
+        """
         return self.allowed_values
 
     def get_allowed_units(self) -> List[str]:
+        """
+        Get the list of allowed units
+        :return: the list of allowed units
+        """
         return self.allowed_units
 
     def get_allowed_terms(self) -> List[OntologyCondition]:
+        """
+        Get the list of allowed ontology terms
+        :return: the list of allowed ontology terms
+        """
         return self.allowed_terms
 
     def get_required(self) -> str:
+        """
+        Get the requirement of the field
+        :return: the requirement level
+        """
         return self.required
 
     def get_name(self) -> str:
+        """
+        Get the name of the field
+        :return: field name
+        """
         return self.name
 
     def get_type(self) -> str:
+        """
+        Get the type of the field
+        :return: the field type
+        """
         return self.type
 
     def get_multiple(self) -> str:
+        """
+        Get the cardinality of the field in the string format
+        :return: the field cardinality
+        """
         return self.multiple
 
     def allow_multiple(self) -> bool:
+        """
+        Get whether the field allow multiple values
+        :return: True when allowed
+        """
         multiple = self.multiple.lower()
         if multiple == 'yes' or multiple == 'max 2':
             return True
         return False
 
     def check_ontology_allowed(self, short_term: str) -> bool:
+        """
+        Check whether given ontology term is allowed for the field
+        :param short_term: ontology term
+        :return: True if allowed
+        """
         if type(short_term) is not str:
             raise TypeError("The short_term parameter must be a string")
         for allowed in self.allowed_terms:
@@ -150,6 +239,13 @@ class RuleField:
         return False
 
     def validate(self, entries, section_name: str, record_id: str):
+        """
+        Validate values of one field against the ruleset for that field
+        :param entries: field data
+        :param section_name: the section the field belong to
+        :param record_id: the id of the record
+        :return: list of validation result represented as validation column result list
+        """
         results: List[ValidationResult.ValidationResultColumn] = []
         section_info: str = " (" + section_name + " section)"
         mandatory = False
@@ -338,22 +434,39 @@ class RuleField:
 
 
 class RuleSection:
-
+    """
+    The class represent a section of rulesets which may only apply to a subset of data or to all data records
+    depending on the conditions
+    """
     def __init__(self, section_name: str):
+        """
+        Constructor method
+        :param section_name: the name of the section
+        """
         if type(section_name) is not str:
             raise TypeError("The section_name parameter must be a string")
         self.name = section_name
+        # the field ruleset collection organized by the requirement of the field
         self.rules: Dict[str, Dict[str, RuleField]] = {}
+        # the conditions when to apply this section of rulesets
         self.conditions: Dict[str, str] = {}
         # rules are organized by requirement first, so this serves as a shortcut
         self.rule_names: Dict[str, int] = {}
 
     def to_json(self):
+        """
+        Export as json format
+        :return: json representation
+        """
         return json.dumps(
                 self, default=lambda o: o.__dict__,
                 sort_keys=True, indent=2)
 
-    def add_rule(self, rule: RuleField):
+    def add_rule(self, rule: RuleField) -> None:
+        """
+        Add one field rule to the section
+        :param rule: the rule for one field
+        """
         if type(rule) is not RuleField:
             raise TypeError("The rule parameter must be a RuleField")
         required = rule.get_required()
@@ -365,19 +478,36 @@ class RuleSection:
         self.rules[required][name] = rule
         self.rule_names[name] = 1
 
-    def get_rules(self):
+    def get_rules(self) -> Dict:
+        """
+        Get all field rules in the section
+        :return: all field rules
+        """
         return self.rules
 
-    def get_rule_names(self):
+    def get_rule_names(self) -> List[str]:
+        """
+        Get the list of field names
+        :return: the list of field names
+        """
         names: List[str] = []
         for name in self.rule_names.keys():
             names.append(name)
         return names
 
     def get_section_name(self):
+        """
+        Get the section name
+        :return: the name of the section
+        """
         return self.name
 
-    def add_condition(self, field, value):
+    def add_condition(self, field, value) -> None:
+        """
+        Add condition to the section
+        :param field: the field on which the condition is checked
+        :param value: the value of the field to trigger the condition
+        """
         if type(field) is not str:
             raise TypeError("The field parameter must be a string")
         if type(value) is not str:
@@ -387,17 +517,32 @@ class RuleSection:
         self.conditions[field] = value
 
     def get_conditions(self):
+        """
+        Get the conditions which determine when the rulesets from the section will be applied
+        :return: the conditions
+        """
         return self.conditions
 
     def check_contain_rule_for_field(self, field: str) -> bool:
+        """
+        Check whether the field existing in the section (based on the assumption every field has the corresponding rule)
+        :param field: field name to be checked
+        :return: True whether the field exists in the section
+        """
         if type(field) is not str:
             raise TypeError("The field parameter must be a string")
         if field in self.rule_names:
             return True
         return False
 
-    # based on the assumption that record meet the USI data format
     def meet_condition(self, record: Dict) -> bool:
+        """
+        Check whether the record value meets the conditions
+        This function is based on that the record meets the USI data format
+
+        :param record: the record data
+        :return: True if the record meets the conditions
+        """
         if type(record) is not dict:
             raise TypeError("The parameter record must hold a Dict type")
         if 'attributes' not in record:
@@ -429,6 +574,13 @@ class RuleSection:
 
     def validate(self, attributes: Dict, record_id: str, id_field: str) -> \
             List[ValidationResult.ValidationResultColumn]:
+        """
+        Validate the record using all field rules in the section
+        :param attributes: the record attribute values
+        :param record_id: the id of the record
+        :param id_field: the name of the id field
+        :return: list of field validaitn results
+        """
         results: List[ValidationResult.ValidationResultColumn] = []
         # all mandatory fields must be there, not checking details in this step
         if 'mandatory' in self.rules:
@@ -455,16 +607,30 @@ class RuleSection:
 
 
 class RuleSet:
-
+    """
+    The full set of rules
+    """
     def __init__(self):
+        """
+        Constructor method
+        """
         self.rule_sections: Dict[str, RuleSection] = {}
 
     def to_json(self):
+        """
+        Export as json format
+        :return: json representation
+        """
         return json.dumps(
                 self, default=lambda o: o.__dict__,
                 sort_keys=True, indent=2)
 
-    def add_rule_section(self, rule_section: RuleSection):
+    def add_rule_section(self, rule_section: RuleSection) -> None:
+        """
+        Add a rule section to the set
+        :param rule_section: rule section
+        :return:
+        """
         if type(rule_section) is not RuleSection:
             raise TypeError("The rule section parameter must be a RuleSection object")
         section_name = rule_section.get_section_name()
@@ -473,12 +639,21 @@ class RuleSet:
         self.rule_sections[section_name] = rule_section
 
     def get_all_section_names(self) -> List[str]:
+        """
+        Get names of all sections
+        :return: list of section names
+        """
         names: List[str] = []
         for key in self.rule_sections.keys():
             names.append(key)
         return names
 
     def get_section_by_name(self, section_name: str) -> RuleSection:
+        """
+        Get rule section by its name
+        :param section_name: section name
+        :return: the corresponding rule section
+        """
         if type(section_name) is not str:
             raise TypeError("The section name must be a string")
         if section_name not in self.rule_sections:
@@ -486,6 +661,12 @@ class RuleSet:
         return self.rule_sections.get(section_name)
 
     def validate(self, record: Dict, id_field: str = 'Data source ID') -> ValidationResult.ValidationResultRecord:
+        """
+        Validate the record with the full ruleset
+        :param record: the record data
+        :param id_field: the name of the id field, in IMAGE ruleset it is Data source ID
+        :return: the validation result
+        """
         logger.debug(f"got record: {record}, id_field: {id_field}")
         attributes = record['attributes']
         record_id = attributes[id_field][0]['value']

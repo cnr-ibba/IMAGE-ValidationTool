@@ -1,3 +1,6 @@
+"""
+encapsulate everything related to ontology
+"""
 import requests
 import logging
 from . import misc
@@ -8,6 +11,12 @@ logger = logging.getLogger(__name__)
 
 # search against zooma and return the matched ontology
 def use_zooma(term: str, category: str) -> Dict[str, str]:
+    """
+    Map the term to an ontology using Zooma
+    :param term: the given term, for example pig
+    :param category: the category which the term should be searched within, for example species
+    :return: the mapped ontology term with high or good confidence
+    """
     if type(term) is not str:
         raise TypeError("The method only take string for term parameter")
     if type(category) is not str:
@@ -73,6 +82,12 @@ def use_zooma(term: str, category: str) -> Dict[str, str]:
 
 
 def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str, str]:
+    """
+    Get the general breed ontology (the root term of all breed ontology from the same species) based on the species
+    :param species: the species
+    :param cross: indicate whether it is a crossbreed (True) or not (False)
+    :return: the general breed
+    """
     if type(species) is not str:
         raise TypeError("The method only take string for species parameter")
     if type(cross) is not bool:
@@ -133,6 +148,7 @@ def get_general_breed_by_species(species: str, cross: bool = False) -> Dict[str,
 class Ontology:
     found: bool = False
     """
+    The class for ontology term and related basic functions
     According to Simon's reply in ols-support #317084
     It is best if you have the IRI. but the short id is highly likely to be unique too
     so you are safe to lookup on the /terms endpoint using the short id.
@@ -171,14 +187,29 @@ class Ontology:
             logger.error("Could not find information for " + short_term)
 
     def __eq__(self, other):
+        """
+        Override the equal function which compares two objects to see them are equal
+        :param other: another Ontology object
+        :return: True if this object is equal to the another object
+        """
+        if not isinstance(other, Ontology):
+            return NotImplemented
         return self.get_short_term() == other.get_short_term()
 
     def get_short_term(self) -> str:
+        """
+        Get the short term of the ontology, for example PATO_0000384
+        :return: short term
+        """
         if not self.found:
             logger.warning("No ontology found on OLS, just return the given short term")
         return self.short_term
 
     def get_ontology_name(self) -> str:
+        """
+        Get the name of ontology library which the ontology belongs to, for example PATO
+        :return: the ontology library name
+        """
         if self.found:
             return self.detail['ontology_name']
         else:
@@ -186,6 +217,10 @@ class Ontology:
             return ""
 
     def get_iri(self) -> str:
+        """
+        Get the iri of the ontology, for example http://purl.obolibrary.org/obo/PATO_0000384
+        :return: the IRI
+        """
         if self.found:
             return self.detail['iri']
         else:
@@ -193,6 +228,10 @@ class Ontology:
             return ""
 
     def get_label(self) -> str:
+        """
+        Get the label of the ontology, for example male
+        :return: the label
+        """
         if self.found:
             return self.detail['label']
         else:
@@ -200,10 +239,18 @@ class Ontology:
             return ""
 
     def is_leaf(self) -> bool:
+        """
+        Check whether the ontology is the leaf node
+        :return: True if leaf node
+        """
         if self.found:
             return not self.detail['has_children']
 
     def get_labels_and_synonyms(self) -> List[str]:
+        """
+        Get all descriptions used for the ontology
+        :return: list of labels and synonyms
+        """
         result: List[str] = []
         if self.found:
             result.append(self.get_label())
@@ -212,8 +259,13 @@ class Ontology:
                     result.append(synonym)
         return result
 
-    # check whether provided label appears in the provided ontology label and synonyms
     def label_match_ontology(self, label: str, case_sensitive: bool = True) -> bool:
+        """
+        check whether provided label appears in the provided ontology label and synonyms
+        :param label: provided label
+        :param case_sensitive: determine whether compares case sensitive or not
+        :return: True if the given label matches the ontology term
+        """
         if type(label) is not str:
             raise TypeError("The method only take string for label parameter")
         if type(case_sensitive) is not bool:
@@ -231,20 +283,35 @@ class Ontology:
 
 
 class OntologyCache:
+    """
+    The cache of ontologies retrieved from OLS to avoid checking with OLS every time
+    """
     cache: Dict[str, Ontology]
     children_checked: Dict[str, Dict[str, bool]] = {}
     # parents_checked: Dict[str, Dict[str, bool]] = {}
 
     def __init__(self):
+        """
+        Consturctor class of ontology cache
+        """
         self.cache = {}
         logger.debug("Initializing ontology cache")
 
     def contains(self, short_term: str) -> bool:
+        """
+        Check whether the cache contain ontology with given short term
+        :param short_term: the ontology to be checked
+        :return: True if already existing in the cache
+        """
         if type(short_term) is not str:
             raise TypeError("The method only take string as its input")
         return short_term in self.cache
 
     def add_ontology(self, ontology: Ontology) -> None:
+        """
+        Add ontology to the cache
+        :param ontology: the ontology to be added
+        """
         if type(ontology) is not Ontology:
             raise TypeError("The method only take Ontology type as its input")
         short_term = ontology.get_short_term()
@@ -253,6 +320,13 @@ class OntologyCache:
             self.children_checked[short_term] = {}
 
     def get_ontology(self, short_term: str) -> Ontology:
+        """
+        Get the ontology based on the short term
+        If already existing, return the one in the cache
+        if not, retrieve the ontology, return it while saving it into the cache
+        :param short_term: the short term
+        :return: the corresponding ontology
+        """
         if type(short_term) is not str:
             raise TypeError("The method only take string as its input")
         if short_term in self.cache:
@@ -268,10 +342,17 @@ class OntologyCache:
     # the method should not be here, but have not got a solution to retrieve ontology from cache
     # while not wanting to maintain checked parent-children relationship
     def has_parent(self, child_term: str, parent_term: str) -> bool:
+        """
+        check whether two ontology terms have parent-child relationship
+        :param child_term: the child term
+        :param parent_term: the parent term
+        :return: True if the child term is actually a child of the parent term
+        """
         if type(child_term) is not str:
             raise TypeError("The method only take string as child term parameter")
         if type(parent_term) is not str:
             raise TypeError("The method only take string as parent term parameter")
+        # not in, means not in the cache
         if child_term not in self.children_checked:
             self.get_ontology(child_term)
         if parent_term not in self.children_checked[child_term]:  # not checked parent relation before

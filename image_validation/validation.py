@@ -1,3 +1,9 @@
+"""
+The class does all actual validation work
+The results are represented in two types: strings and ValidationResult objects
+The ValidationResult objects are for record values validated against ruleset
+All other errors are represented as strings, e.g. ruleset error
+"""
 import json
 import logging
 from typing import Dict, List
@@ -17,6 +23,11 @@ logger = logging.getLogger(__name__)
 # Read in the ruleset from a file
 # return a dict which has key as section name and value as another dict (required level as key)
 def read_in_ruleset(file: str) -> Ruleset.RuleSet:
+    """
+    Read in the ruleset stored in the file
+    :param file: the ruleset name
+    :return: the ruleset in the memory
+    """
     if type(file) is not str:
         raise TypeError("File name must be a string")
     logger.info("read in ruleset")
@@ -66,7 +77,12 @@ def read_in_ruleset(file: str) -> Ruleset.RuleSet:
 # doi       B       N       N
 # date      B       Y       N
 
-def check_ruleset(ruleset: Ruleset.RuleSet):
+def check_ruleset(ruleset: Ruleset.RuleSet) -> List[str]:
+    """
+    Validate the ruleset itself is a valid ruleset
+    :param ruleset: the ruleset to be validated
+    :return: the list of errors, if ruleset is valid, the list is empty
+    """
     if type(ruleset) is not Ruleset.RuleSet:
         raise TypeError("The parameter must be of a RuleSet object")
     # conditions
@@ -118,7 +134,14 @@ def check_ruleset(ruleset: Ruleset.RuleSet):
 # details see https://drive.google.com/open?id=1OwSuusnPzIvF2wzSfPp6ElGgH_jr7qyDgBXb41zB3QY
 # this function checks for USI JSON format only, nothing to do with the IMAGE ruleset
 # therefore not using ValidationResultRecord class
-def check_usi_structure(sample: List[Dict]):
+def check_usi_structure(sample: List[Dict]) -> List[str]:
+    """
+    Check whether the record values are represented in the format which can be submitted via USI
+    This also guarantees that the following validation does not need to worry about how the data is represented
+    This function also checks whether more than one record use the same alias (USI requirement)
+    :param sample: the records represented in JSON
+    :return: the list of error messages
+    """
     logger.debug("Check whether data meets USI data format standard")
     count: Dict[str, int] = {}
     result: List[str] = []
@@ -264,6 +287,12 @@ def check_usi_structure(sample: List[Dict]):
 
 # not checking alias duplicates as alias is USI concept and dealt with within check_usi_structure
 def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str]:
+    """
+    Check whether two records have the same in the id field
+    :param sample: list of records
+    :param id_field: optional, the name of the field which is used as id
+    :return: the list of error messages
+    """
     if type(id_field) is not str:
         raise TypeError("id_field parameter must be a string")
     logger.debug("Check duplicates")
@@ -293,6 +322,12 @@ def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str
 # example codes consuming the validation result
 # expected to be replaced by some codes displaying on the web pages
 def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=False) -> Dict:
+    """
+    Process the validation results to provide statistics
+    :param results: the validation results
+    :param verbose: the flag indicates whether to print the message
+    :return: two dicts 1) summary of pass, warning and errors 2) summary of column validation results
+    """
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
     vrc_summary: Dict[ValidationResult.ValidationResultColumn, int] = {}
     for result in results:
@@ -308,6 +343,11 @@ def deal_with_validation_results(results: List[ValidationResult.ValidationResult
 
 
 def deal_with_errors(errors: List[str]) -> None:
+    """
+    Demonstrate how to use the validation results
+    Here, simply send to the logger
+    :param errors: list of errors
+    """
     for error in errors:
         if type(error) is not str:
             raise TypeError("Error message is not a string")
@@ -317,6 +357,12 @@ def deal_with_errors(errors: List[str]) -> None:
 # check whether value used in place and place accuracy match
 def coordinate_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
+    """
+    Context validation to check whether value in the place field matches to the value in the accuracy field
+    :param record: the record data
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
     if type(record) is not dict:
         raise TypeError("record needs to be a record represented as a Dict")
     if type(existing_results) is not ValidationResult.ValidationResultRecord:
@@ -344,6 +390,12 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
 
 def species_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
+    """
+    Context validation to check when species specified in the USI structure matches the species field
+    :param record: the record data
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
     taxon_id = record['taxonId']
     url = record['attributes'][SPECIES][0]['terms'][0]['url']
     if not url.endswith(str(taxon_id)):
@@ -374,11 +426,12 @@ def check_value_equal(source, target, existing_results, field):
 def animal_sample_check(sample: Dict, animal: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
     """
-    For now, only check whether sample and animal have the same species
-    :param animal:
-    :param sample:
-    :param existing_results:
-    :return:
+    Context validation to check whether sample and related animal have the same value for common fields,
+    for now, only species is checked
+    :param animal: the animal record where the sample is taken
+    :param sample: the sample record
+    :param existing_results: the existing validation result
+    :return: the updated validation result
     """
     if type(animal) is not dict:
         raise TypeError("Animal record needs to be represented as a Dict")
@@ -393,6 +446,13 @@ def animal_sample_check(sample: Dict, animal: Dict, existing_results: Validation
 
 def child_of_check(animal: Dict, parents: List, existing_results: ValidationResult.ValidationResultRecord) -> \
         ValidationResult.ValidationResultRecord:
+    """
+    Context validation to check whether child animal and its parent animal(s) have the sensible attributes
+    :param animal: the animal record
+    :param parents: the list of parent animal records
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
     if type(animal) is not dict:
         raise TypeError("Animal record needs to be represented as a Dict")
     if type(parents) is not list:
@@ -442,6 +502,13 @@ def species_breed_check(animal: Dict, existing_results: ValidationResult.Validat
 
 
 def parents_sex_check(related, existing_results):
+    """
+    Context validation to check whether the two annotated parents have two different genders
+    For annotated with unknown sex, a Warning will be raised
+    :param related: the list of two parent animals
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
     one_sex: str = related[0]['attributes']['Sex'][0]['value']
     another_sex: str = related[1]['attributes']['Sex'][0]['value']
     unknown_flag = False
