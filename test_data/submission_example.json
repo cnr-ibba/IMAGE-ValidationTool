@@ -3752,10 +3752,6 @@
         {
           "alias": "animal_52",
           "relationshipNature": "derived from"
-        },
-        {
-          "alias": "animal_52",
-          "relationshipNature": "derived from"
         }
       ]
     }
