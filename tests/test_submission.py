@@ -88,5 +88,5 @@ class TestRuleset(unittest.TestCase):
         submission.load_data("test_data/submission_example.json", section="sample")
         submission.load_ruleset(static_parameters.ruleset_filename)
         submission.validate()
-
+        print(submission.get_validation_results())
 

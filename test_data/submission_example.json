@@ -1167,7 +1167,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -1328,7 +1328,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -1634,7 +1634,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -1784,7 +1784,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2084,7 +2084,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2234,7 +2234,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2384,7 +2384,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2534,7 +2534,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2684,7 +2684,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2834,7 +2834,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
@@ -2941,7 +2941,7 @@
             "value": "version 0.1"
           }
         ],
-        "Material": [
+        "material": [
           {
             "value": "specimen from organism",
             "terms": [
@@ -2984,7 +2984,7 @@
         ],
         "Collection place accuracy": [
           {
-            "value": "missing geographic information"
+            "value": "country level"
           }
         ],
         "Collection place": [
