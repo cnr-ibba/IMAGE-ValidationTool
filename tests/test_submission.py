@@ -1,7 +1,7 @@
 import unittest
 from typing import List
 
-from image_validation import Submission
+from image_validation import Submission, static_parameters
 
 
 class TestRuleset(unittest.TestCase):
@@ -77,10 +77,16 @@ class TestRuleset(unittest.TestCase):
         submission.load_ruleset("test_data/test_ruleset.json")
         self.assertListEqual(submission.get_general_errors(), list())
 
-    def test_validate(self):
+    # more intuitive to test those two method together
+    def test_validate_and_get_validation_results(self):
+        submission = Submission.Submission("test")
+        # useless tests, for 100% coverage
+        submission.validate()
+        submission.data_ready_flag = True
+        submission.validate()
+        # use example data, the fake spaceship data could not do context validation
+        submission.load_data("test_data/submission_example.json", section="sample")
+        submission.load_ruleset(static_parameters.ruleset_filename)
+        submission.validate()
 
-        pass
-
-    def test_get_validation_results(self):
-        pass
 

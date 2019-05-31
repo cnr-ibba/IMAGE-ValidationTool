@@ -111,8 +111,8 @@ class Submission:
                     if status != 200:
                         record_result.add_validation_result_column(
                             ValidationResult.ValidationResultColumn(
-                                "Warning", f"Fail to retrieve record {target} from BioSamples as required in the relationship",
-                                record_id, 'sampleRelationships'))
+                                "Warning", f"Fail to retrieve record {target} from "
+                                f"BioSamples as required in the relationship", record_id, 'sampleRelationships'))
                     else:
                         if target not in self.validation_results:
                             record_result.add_validation_result_column(
