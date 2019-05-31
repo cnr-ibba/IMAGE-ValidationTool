@@ -90,7 +90,8 @@ class Submission:
                 data_by_material.setdefault(material, {})
                 data_by_material[material][record['alias']] = record
             except KeyError:
-                # missing material value or wrong structure etc, already been dealt with by validate
+                # error still exists, e.g. using material rather than Material, which needs to be caught
+                # however the reporting should have already been done by validation
                 pass
 
         for record in self.data:
@@ -114,17 +115,22 @@ class Submission:
                                 "Warning", f"Fail to retrieve record {target} from "
                                 f"BioSamples as required in the relationship", record_id, 'sampleRelationships'))
                     else:
-                        if target not in self.validation_results:
-                            record_result.add_validation_result_column(
-                                ValidationResult.ValidationResultColumn(
-                                    "Error", f"The alias {target} could not be found in the data",
-                                    record_id, 'sampleRelationships'))
+                        # at the moment, no any IMAGE data in BioSamples
+                        pass
                 else:
                     # in the current ruleset, derived from only from organism to specimen,
                     # so safe to only check organism
                     if target in data_by_material['organism']:
                         related.append(dict(data_by_material['organism'][target]))
+                    else:
+                        record_result.add_validation_result_column(
+                            ValidationResult.ValidationResultColumn(
+                                "Error", f"Could not locate the referenced record {target}",
+                                record_id, 'sampleRelationships'))
+                self.validation_results[record['alias']] = record_result
 
+            # if error found during relationship checking, skip context validation
+            # because some context validation (relationship check etc) could not be carried out
             if self.validation_results[record['alias']].get_overall_status() == "Error":
                 continue
 

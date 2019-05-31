@@ -2545,7 +2545,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "animal_50",
+          "alias": "SAMEA7988668",
           "relationshipNature": "derived from"
         }
       ]
@@ -2695,7 +2695,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "animal_50",
+          "alias": "SAMEA0000001",
           "relationshipNature": "derived from"
         }
       ]
@@ -2845,7 +2845,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "animal_50",
+          "alias": "animal_5000",
           "relationshipNature": "derived from"
         }
       ]
