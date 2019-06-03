@@ -220,6 +220,19 @@ class TestValidation(unittest.TestCase):
                              ['Error: taxonId 9913 does not match ontology term used in species '
                               'http://purl.obolibrary.org/obo/NCBITaxon_9823 for Record sample_257'])
 
+        result_organism_part_error = ValidationResult.ValidationResultRecord('sample_255')
+        result_organism_part_error = validation.animal_sample_check(cache['sample_255'], cache['animal_42'],
+                                                              result_organism_part_error)
+        self.assertListEqual(result_organism_part_error.get_messages(),
+                             ['Error: Organism part (Semen) could not be taken from '
+                              'a female animal for Record sample_255'])
+        result_organism_part_warning = ValidationResult.ValidationResultRecord('sample_571')
+        result_organism_part_warning = validation.animal_sample_check(cache['sample_571'], cache['animal_57'],
+                                                              result_organism_part_warning)
+        self.assertListEqual(result_organism_part_warning.get_messages(),
+                             ['Warning: Organism part (Semen) is expected to be taken from a male animal, '
+                              'please check the sex value (record of unknown sex) is correct for Record sample_571'])
+
     def test_child_of_check_type(self):
         self.assertRaises(TypeError, validation.child_of_check, "str", [],
                           ValidationResult.ValidationResultRecord("id"))

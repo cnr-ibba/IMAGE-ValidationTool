@@ -272,6 +272,16 @@
             "value": "ANIMAL:::ID:::CS05_1999"
           }
         ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
+              }
+            ]
+          }
+        ],
         "Species": [
           {
             "value": "Bos taurus",
@@ -342,6 +352,16 @@
             ]
           }
         ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
+              }
+            ]
+          }
+        ],
         "Collection place accuracy": [
           {
             "value": "missing geographic information"
@@ -392,6 +412,16 @@
             "terms": [
               {
                 "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
               }
             ]
           }

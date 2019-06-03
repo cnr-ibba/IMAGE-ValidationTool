@@ -441,6 +441,35 @@ def animal_sample_check(sample: Dict, animal: Dict, existing_results: Validation
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
 
     existing_results = check_value_equal(sample, animal, existing_results, SPECIES)
+    existing_results = organism_part_sex_check(sample, animal, existing_results)
+    return existing_results
+
+
+def organism_part_sex_check(sample, animal, existing_results):
+    """
+    Context validation to check organism part matches sex, i.e. semen only from male animal
+    For annotated with unknown sex, a Warning will be raised
+    :param sample: the sample record
+    :param animal: the derived from animal record
+    :param existing_results: the existing validation result
+    :return: the updated validation result
+    """
+    sex: str = animal['attributes']['Sex'][0]['value']
+    organism_part_ontology = misc.extract_ontology_id_from_iri(sample['attributes']['Organism part']
+                                                               [0]['terms'][0]['url'])
+    if organism_part_ontology == 'UBERON_0001968':
+        if sex.lower() == "female":
+            existing_results.add_validation_result_column(
+                ValidationResult.ValidationResultColumn(
+                    "Error", "Organism part (Semen) could not be taken from a female animal",
+                    existing_results.record_id, "organism part"))
+        # third sex opiton 'record of unknown sex'
+        elif 'unknown sex' in sex.lower():
+            existing_results.add_validation_result_column(
+                ValidationResult.ValidationResultColumn(
+                    "Warning", "Organism part (Semen) is expected to be taken from a male animal, "
+                               "please check the sex value (record of unknown sex) is correct",
+                    existing_results.record_id, "organism part"))
     return existing_results
 
 

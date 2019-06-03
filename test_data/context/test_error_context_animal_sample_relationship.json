@@ -21,6 +21,16 @@
             ]
           }
         ],
+        "Sex": [
+          {
+            "value": "male",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000384"
+              }
+            ]
+          }
+        ],
         "Species": [
           {
             "value": "Sus scrofa",
@@ -54,6 +64,16 @@
             ]
           }
         ],
+        "Sex": [
+          {
+            "value": "female",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/PATO_0000383"
+              }
+            ]
+          }
+        ],
         "Species": [
           {
             "value": "Sus scrofa",
@@ -65,6 +85,199 @@
           }
         ]
       }
+    },
+    {
+      "alias": "animal_57",
+      "title": "ANIMAL_57",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Material": [
+          {
+            "value": "organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0100026"
+              }
+            ]
+          }
+        ],
+        "Sex": [
+          {
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0000858"
+              }
+            ],
+            "value": "record of unknown sex"
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "alias": "sample_571",
+      "title": "SAMPLE_571",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "SAMPLE_571"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL_57"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-02",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
+              }
+            ]
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_57",
+          "relationshipNature": "derived from"
+        }
+      ]
+    },
+    {
+      "alias": "sample_255",
+      "title": "CS05_1999_IBBACNR_PTP_02.06.1999_1",
+      "releaseDate": "2018-10-09",
+      "taxonId": 9823,
+      "attributes": {
+        "Project": [
+          {
+            "value": "IMAGE"
+          }
+        ],
+        "Data source ID": [
+          {
+            "value": "CS05_1999_IBBACNR_PTP_02.06.1999_1"
+          }
+        ],
+        "Material": [
+          {
+            "value": "specimen from organism",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/OBI_0001479"
+              }
+            ]
+          }
+        ],
+        "Derived from": [
+          {
+            "value": "ANIMAL:::ID:::CS12_1999"
+          }
+        ],
+        "Collection date": [
+          {
+            "value": "1999-06-02",
+            "units": "YYYY-MM-DD"
+          }
+        ],
+        "Species": [
+          {
+            "value": "Sus scrofa",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
+              }
+            ]
+          }
+        ],
+        "Collection place accuracy": [
+          {
+            "value": "country level"
+          }
+        ],
+        "Collection place": [
+          {
+            "value": "Italy"
+          }
+        ]
+      },
+      "sampleRelationships": [
+        {
+          "alias": "animal_42",
+          "relationshipNature": "derived from"
+        }
+      ]
     },
     {
       "alias": "sample_256",
@@ -109,6 +322,16 @@
             "terms": [
               {
                 "url": "http://purl.obolibrary.org/obo/NCBITaxon_9913"
+              }
+            ]
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
               }
             ]
           }
@@ -163,6 +386,16 @@
             "terms": [
               {
                 "url": "http://purl.obolibrary.org/obo/NCBITaxon_9823"
+              }
+            ]
+          }
+        ],
+        "Organism part": [
+          {
+            "value": "semen",
+            "terms": [
+              {
+                "url": "http://purl.obolibrary.org/obo/UBERON_0001968"
               }
             ]
           }
