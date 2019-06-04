@@ -90,7 +90,7 @@ def is_doi(doi: str) -> bool:
     :return: True if a valid DOI, False otherwise
     """
     if type(doi) is not str:
-        raise TypeError("The method only take str as its input")
+        raise TypeError("The method only takes str as its input")
     # prefix suffix separated by /, so split and expect two elements
     parts = doi.split('/')
     if len(parts) != 2:
@@ -99,6 +99,22 @@ def is_doi(doi: str) -> bool:
     pattern = re.compile(r"^(doi:)?10\.(\d{4,})(\.\d+)?$")
     # group(1) could be None
     m = re.search(pattern, parts[0])
+    if m:
+        return True
+    else:
+        return False
+
+
+def is_biosample_record(accession: str) -> bool:
+    """
+    check whether the accession is a valid BioSamples accession
+    :param accession: the accession to be checked
+    :return: True when it is BioSamples accession
+    """
+    if type(accession) is not str:
+        raise TypeError("The method only takes str as its input")
+    pattern = re.compile(r"^SAM(N|D|EA)\d+$")
+    m = re.search(pattern, accession)
     if m:
         return True
     else:

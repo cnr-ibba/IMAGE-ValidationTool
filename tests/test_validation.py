@@ -102,13 +102,13 @@ class TestValidation(unittest.TestCase):
             "sample_relationship": [
                 'Wrong JSON structure: relationship needs to be presented as a hash for record with '
                 'alias 404-T-132-4FE274A',
-                'Wrong JSON structure: two and only two keys (alias and relationshipNature) must be presented '
+                'Wrong JSON structure: two and only two keys (alias/accession and relationshipNature) must be presented '
                 'within every relationship. Affected record 404-T-132-4FE274A',
                 'Wrong JSON structure: Unrecognized relationship nature random within record 404-T-132-4FE274A',
-                'Wrong JSON structure: Unrecognized key used (only can be alias and relationshipNature) within one'
-                ' relationship. Affected record 404-T-132-4FE274A',
-                'Wrong JSON structure: Unrecognized key used (only can be alias and relationshipNature) within one'
-                ' relationship. Affected record 404-T-132-4FE274A'
+                'Wrong JSON structure: Unrecognized key used (only can be alias/accession and relationshipNature) '
+                'within one relationship. Affected record 404-T-132-4FE274A',
+                'Wrong JSON structure: Unrecognized key used (only can be alias/accession and relationshipNature) '
+                'within one relationship. Affected record 404-T-132-4FE274A'
             ],
             "sample_relationship_2": [
                 'Wrong JSON structure: More than one relationship natures found within record 404-T-132-4FE274A',
@@ -116,6 +116,12 @@ class TestValidation(unittest.TestCase):
                 'Duplicated relationship derived from with 502-W-133-4FE274B for record 504-Y-133-25ED74E',
                 'Wrong JSON structure: sampleRelationships field must have values '
                 'within an array for record with alias 502-W-133-4FE274B'
+            ],
+            "sample_relationship_accession": [
+                'Wrong JSON structure: In relationship accession can only take BioSamples accession, not SAMX00000001',
+                'Wrong JSON structure: In relationship accession can only take BioSamples accession, '
+                'not 502-W-133-4FE274B',
+                'Wrong JSON structure: In relationship alias can only take non-BioSamples accession, not SAMD00000001'
             ]
         }
         for error in expected.keys():

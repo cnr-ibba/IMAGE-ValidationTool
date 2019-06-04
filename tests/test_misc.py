@@ -103,6 +103,21 @@ class TestMisc(unittest.TestCase):
         self.assertRaises(TypeError, misc.is_doi, -12.34)
         self.assertRaises(TypeError, misc.is_doi, True)
 
+    def test_is_biosample_record_types(self):
+        self.assertRaises(TypeError, misc.is_biosample_record, 34)
+        self.assertRaises(TypeError, misc.is_biosample_record, -12.34)
+        self.assertRaises(TypeError, misc.is_biosample_record, True)
+
+    def test_is_biosample_record(self):
+        self.assertTrue(misc.is_biosample_record('SAMEA000004'))
+        self.assertFalse(misc.is_biosample_record('samea000004'))
+        self.assertTrue(misc.is_biosample_record('SAMN000004'))
+        self.assertTrue(misc.is_biosample_record('SAMD000004'))
+        self.assertFalse(misc.is_biosample_record('SAMEG000004'))
+        self.assertFalse(misc.is_biosample_record('SAMEA000004AAA'))
+        self.assertFalse(misc.is_biosample_record('AME000004'))
+        self.assertFalse(misc.is_biosample_record('SAMX000001'))
+
     def test_get_matched_date_format(self):
         self.assertEqual(misc.get_matched_date("2012-09-07", "YYYY-MM-DD"), "")
         self.assertEqual(misc.get_matched_date("2012-09", "YYYY-MM"), "")

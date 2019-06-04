@@ -196,7 +196,7 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
         # attributes is a list of attributes, represented as dict
         attrs = one['attributes']
         if type(attrs) is not dict:
-            result.append(error_prefix + "attributes must be stored as a map for record with alias " + alias)
+            result.append(error_prefix + f"attributes must be stored as a map for record with alias {alias}")
         else:
             for attr_name in attrs:
                 attr_values = attrs[attr_name]
@@ -219,8 +219,8 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
                                 for key in attr_value.keys():
                                     if key != 'value' and key != 'units' and key != 'terms':
                                         result.append(
-                                            error_prefix + "Unrecognized keyword " + key + " used in attribute "
-                                            + attr_name + " in record " + alias)
+                                            error_prefix + f"Unrecognized keyword {key} used in "
+                                            f"attribute {attr_name} in record {alias}")
                                     elif key == 'terms':
                                         terms_value = attr_value[key]
                                         if type(terms_value) is not list:
@@ -245,11 +245,11 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
                 for relationship in relationships:
                     if type(relationship) is not dict:
                         result.append(
-                            error_prefix + "relationship "
-                            "needs to be presented as a hash for record with alias " + alias)
+                            error_prefix + f"relationship needs to be presented as a hash for record with alias {alias}")
                     else:
                         if len(relationship.keys()) == 2:  # relationship must have two and only two elements
-                            if 'alias' in relationship and 'relationshipNature' in relationship:
+                            if ('alias' in relationship or 'accession' in relationship) \
+                                    and 'relationshipNature' in relationship:
                                 relationship_nature = relationship['relationshipNature']
                                 if relationship_nature not in ALLOWED_RELATIONSHIP_NATURE:
                                     result.append(
@@ -265,18 +265,29 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
                                         else:
                                             result.append(f"{error_prefix}More than one relationship natures found "
                                                           f"within record {alias}")
-                                    target = relationship['alias']
+                                    if 'alias' in relationship:
+                                        target = relationship['alias']
+                                        is_biosample = misc.is_biosample_record(target)
+                                        if is_biosample:
+                                            result.append((f"{error_prefix}In relationship alias "
+                                                           f"can only take non-BioSamples accession, not {target}"))
+                                    else:
+                                        target = relationship['accession']
+                                        is_biosample = misc.is_biosample_record(target)
+                                        if not is_biosample:
+                                            result.append((f"{error_prefix}In relationship accession "
+                                                           f"can only take BioSamples accession, not {target}"))
                                     if target in existing_relationships:  # already found this in
                                         result.append(f"Duplicated relationship {relationship_nature} with {target} "
-                                                      f"for record {alias}")
+                                                  f"for record {alias}")
                                     existing_relationships[target] = relationship['relationshipNature']
                             else:
                                 result.append(
-                                    error_prefix + "Unrecognized key used (only can be alias and "
+                                    error_prefix + "Unrecognized key used (only can be alias/accession and "
                                     "relationshipNature) within one relationship. Affected record " + alias)
                         else:
                             result.append(
-                                error_prefix + "two and only two keys (alias and relationshipNature) must be "
+                                error_prefix + "two and only two keys (alias/accession and relationshipNature) must be "
                                 "presented within every relationship. Affected record " + alias)
 
     for key in count.keys():
