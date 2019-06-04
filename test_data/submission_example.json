@@ -2545,7 +2545,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "SAMEA7988668",
+          "accession": "SAMEA7988668",
           "relationshipNature": "derived from"
         }
       ]
@@ -2695,7 +2695,7 @@
       },
       "sampleRelationships": [
         {
-          "alias": "SAMEA0000001",
+          "accession": "SAMEA0000001",
           "relationshipNature": "derived from"
         }
       ]

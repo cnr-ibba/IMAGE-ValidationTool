@@ -104,8 +104,8 @@ class Submission:
             relationships = record.get('sampleRelationships', [])
             related: List[Dict] = []
             for relationship in relationships:
-                target: str = relationship['alias']
-                if target.startswith("SAM"):  # BioSamples data
+                if 'accession' in relationship:
+                    target = relationship['accession']
                     url = f"https://www.ebi.ac.uk/biosamples/samples/{target}"
                     response = requests.get(url)
                     status = response.status_code
@@ -120,6 +120,7 @@ class Submission:
                 else:
                     # in the current ruleset, derived from only from organism to specimen,
                     # so safe to only check organism
+                    target: str = relationship['alias']
                     if target in data_by_material['organism']:
                         related.append(dict(data_by_material['organism'][target]))
                     else:
