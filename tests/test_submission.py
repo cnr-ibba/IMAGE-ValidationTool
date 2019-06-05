@@ -30,10 +30,10 @@ class TestRuleset(unittest.TestCase):
         self.assertFalse(submission.is_ruleset_ready())
 
     def test_load_data(self):
-        submission = Submission.Submission("test")
+        submission = Submission.Submission("test", id_field='id')
         submission.load_data("test_data/usi/test_error_duplicate_alias.json")
         self.assertFalse(submission.is_data_ready())
-        submission.load_data("test_data/data/test_error_rule_types.json", id_field='id')
+        submission.load_data("test_data/data/test_error_rule_types.json")
         self.assertTrue(submission.is_data_ready())
 
     def test_load_ruleset(self):
@@ -46,7 +46,7 @@ class TestRuleset(unittest.TestCase):
         self.assertTrue(submission.is_ruleset_ready())
 
     def test_get_general_errors(self):
-        submission = Submission.Submission("test")
+        submission = Submission.Submission("test", id_field='id')
         # general errors generated during loading data
         submission.load_data("test_data/usi/file_no_existing.json")
         expected_data_file_not_found: List[str] = ['Could not find the file test_data/usi/file_no_existing.json']
@@ -62,11 +62,11 @@ class TestRuleset(unittest.TestCase):
         expected_data: List[str] = ['There are more than one record having 404-T-132-4FE274A as its alias']
         self.assertListEqual(submission.get_general_errors(), expected_data)
 
-        submission.load_data("test_data/test_error_duplicate_id.json", id_field='id')
+        submission.load_data("test_data/test_error_duplicate_id.json")
         expected_data_duplicated: List[str] = ['There are more than one record having 404-T-132-4FE274A as its id']
         self.assertListEqual(submission.get_general_errors(), expected_data_duplicated)
 
-        submission.load_data("test_data/data/test_error_rule_types.json", id_field='id')
+        submission.load_data("test_data/data/test_error_rule_types.json")
         self.assertListEqual(submission.get_general_errors(), list())
 
         # general errors generated during loading ruleset
