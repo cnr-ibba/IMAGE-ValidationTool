@@ -10,18 +10,33 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class ValidationResultConstant:
+    RULESET_BASED = "ruleset based"
+    RULESET_CHECK = "ruleset check"
+    USI_CHECK = "usi structure"
+    USI_API = "usi api response"
+    RELATIONSHIP = "relationship"
+    CONTEXT = "context validation"
+    EMPTY = ""
+    PASS = "Pass"
+    WARNING = "Warning"
+    ERROR = "Error"
+
+
 class ValidationResultColumn:
     """
     The validation result for one field
     """
     status_id: int = -1
 
-    def __init__(self, status: str, message: str, record_id: str, field_name: str):
+    def __init__(self, status: str, message: str, record_id: str, field_name: str,
+                 source: str = ValidationResultConstant.RULESET_BASED):
         """
         Constructor method
         :param status: status of the validation result, one of pass, warning or error
         :param message: the detail of the warning or error, expected to be empty for pass
         :param record_id: the record id
+        :param source: the source of the validation result
         :param field_name: the field name
         """
         if type(status) is not str:
@@ -32,6 +47,8 @@ class ValidationResultColumn:
             raise TypeError("Record id must be a string")
         if type(field_name) is not str:
             raise TypeError("Field name must be a string")
+        if type(source) is not str:
+            raise TypeError("Source must be a string")
 
         self.status = status.lower()
         if self.status == "pass":
@@ -41,10 +58,11 @@ class ValidationResultColumn:
         elif self.status == "warning":
             self.status_id = 2
         else:
-            raise ValueError('invalid status value %s which can only be pass, error or warning' % status)
+            raise ValueError(f'invalid status value {status} which can only be pass, error or warning')
         self.message = message
         self.record_id = record_id
         self.field_name = field_name
+        self.source = source
 
     # self.field_name is contained in the self.message
     def __str__(self) -> str:
@@ -53,7 +71,10 @@ class ValidationResultColumn:
         :return: the message to be displayed on the screen
         """
         if self.status_id != 1:
-            return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
+            if self.source != ValidationResultConstant.RULESET_CHECK:
+                return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
+            else:
+                return f"{self.status.capitalize()}: {self.message}"
         return ""
 
     def get_record_id(self):
@@ -92,10 +113,19 @@ class ValidationResultColumn:
         else:
             return "Warning"
 
+    def get_source(self) -> str:
+        """
+        Get the error/warning source, empty if pass
+        :return: source of the validation result
+        """
+        if self.status_id == 1:
+            return ValidationResultConstant.EMPTY
+        return self.source
+
     def get_comparable_str(self) -> str:
         """
-
-        :return:
+        Get error/warning message
+        :return: message of the result
         """
         if self.status_id != 1:
             return f"{self.status.capitalize()}: {self.message}"

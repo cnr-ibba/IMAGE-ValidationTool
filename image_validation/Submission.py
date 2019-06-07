@@ -77,8 +77,8 @@ class Submission:
         except KeyError as e:
             self.general_errors.append(str(e))
             return
-        self.general_errors = validation.check_ruleset(self.ruleset)
-        if self.general_errors:
+        ruleset_check_result: ValidationResult.ValidationResultRecord = validation.check_ruleset(self.ruleset)
+        if ruleset_check_result.get_overall_status() != "Pass":
             return
         logger.info("Ruleset loaded")
         self.ruleset_pass_flag = True

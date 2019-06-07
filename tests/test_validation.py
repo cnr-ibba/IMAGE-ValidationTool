@@ -36,24 +36,25 @@ class TestValidation(unittest.TestCase):
         filename = "test_data/test_error_ruleset_missing_attributes.json"
         self.assertRaises(KeyError, validation.read_in_ruleset, filename)
         expected: List[str] = [
-            "Error: valid units provided for field id having type as text which does not expect units",
-            'Error: field crew_capacity has type as number but no valid units provided',
-            "Error: No valid values should be provided to field class as being of text type",
-            "Warning: ontology terms are provided for field color. "
-            "Please re-consider whether it needs to change to ontology_id.",
-            "Error: No valid terms provided to field Fake which is essential to be of ontology_id type",
-            'Error: there is no allowed values for field Availability being of limited value type',
-            "Error: No valid values should be provided to field manufacturer country as being of ontology_id type"
+            'Error: Valid units provided for field id having type as text which does not expect units',
+            'Error: Field crew_capacity has type as number but no valid units provided',
+            'Error: No valid values should be provided to field class as being of text type',
+            'Error: No valid terms provided to field Fake which is essential to be of ontology_id type',
+            'Error: There is no allowed values for field Availability being of limited value type',
+            'Error: No valid values should be provided to field manufacturer country as being of ontology_id type',
+            'Warning: Ontology terms are provided for field color. '
+            'Please re-consider whether it needs to change to ontology_id type.'
         ]
         filename = "test_data/test_error_ruleset.json"
         ruleset = validation.read_in_ruleset(filename)
         results = validation.check_ruleset(ruleset)
-        self.assertListEqual(expected, results)
+        self.assertListEqual(expected, results.get_messages())
+        print("here")
+        print(results.get_messages())
         expected = []
-
         ruleset = validation.read_in_ruleset(static_parameters.ruleset_filename)
         results = validation.check_ruleset(ruleset)
-        self.assertListEqual(expected, results)
+        self.assertListEqual(expected, results.get_messages())
 
     def test_check_usi_structure(self):
         expected: Dict[str, List[str]] = {

@@ -8,12 +8,15 @@ import json
 import logging
 from typing import Dict, List
 
+from image_validation.ValidationResult import ValidationResultConstant as VRConstant
+from image_validation.ValidationResult import ValidationResultColumn as VRC
+from image_validation.ValidationResult import ValidationResultRecord as VRR
 from . import misc
 from . import Ruleset
-from . import ValidationResult
 from . import use_ontology
 from . import static_parameters
 
+RULESET_CHECK_ID = "ruleset check"
 SPECIES = 'Species'
 ALLOWED_RELATIONSHIP_NATURE = ['derived from', 'child of', 'same as', 'recurated from']
 
@@ -77,7 +80,7 @@ def read_in_ruleset(file: str) -> Ruleset.RuleSet:
 # doi       B       N       N
 # date      B       Y       N
 
-def check_ruleset(ruleset: Ruleset.RuleSet) -> List[str]:
+def check_ruleset(ruleset: Ruleset.RuleSet) -> VRR:
     """
     Validate the ruleset itself is a valid ruleset
     :param ruleset: the ruleset to be validated
@@ -86,9 +89,9 @@ def check_ruleset(ruleset: Ruleset.RuleSet) -> List[str]:
     if type(ruleset) is not Ruleset.RuleSet:
         raise TypeError("The parameter must be of a RuleSet object")
     # conditions
-    results: List[str] = []
+    results: VRR = VRR(RULESET_CHECK_ID)
     for section_name in ruleset.get_all_section_names():
-        section_rule = ruleset.get_section_by_name(section_name)
+        section_rule: Ruleset.RuleSection = ruleset.get_section_by_name(section_name)
         rules_in_section = section_rule.get_rules()
         for required in rules_in_section.keys():
             for rule_name in rules_in_section[required].keys():
@@ -96,36 +99,40 @@ def check_ruleset(ruleset: Ruleset.RuleSet) -> List[str]:
                 rule_type = rule.get_type()
                 if rule.get_allowed_values():  # allowed values provided
                     if rule_type == "ontology_id" or rule_type == "text":
-                        msg = "Error: No valid values should be provided to field " + rule.get_name() + \
-                              " as being of " + rule_type + " type"
-                        results.append(msg)
+                        msg = f"No valid values should be provided to field " \
+                            f"{rule.get_name()} as being of {rule_type} type"
+                        results.add_validation_result_column(
+                            VRC("Error", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
                 else:  # no allowed values provided
                     if rule_type == "limited value":
-                        msg = "Error: there is no allowed values for field " + rule.get_name() + \
-                              " being of " + rule_type + " type"
-                        results.append(msg)
+                        msg = f"There is no allowed values for field {rule.get_name()} being of {rule_type} type"
+                        results.add_validation_result_column(
+                            VRC("Error", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
 
                 if rule.get_allowed_units():  # units provided
                     if rule_type != "number" and rule_type != "date":
-                        msg = "Error: valid units provided for field " + rule.get_name() + " having type as " + \
-                              rule_type + " which does not expect units"
-                        results.append(msg)
+                        msg = f"Valid units provided for field {rule.get_name()} " \
+                            f"having type as {rule_type} which does not expect units"
+                        results.add_validation_result_column(
+                            VRC("Error", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
                 else:  # no units provided
                     if rule_type == "number" or rule_type == "date":
-                        msg = "Error: field " + rule.get_name() + " has type as " + rule_type + \
-                              " but no valid units provided"
-                        results.append(msg)
+                        msg = f"Field {rule.get_name()} has type as {rule_type} but no valid units provided"
+                        results.add_validation_result_column(
+                            VRC("Error", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
 
                 if rule.get_allowed_terms():  # ontology terms provided
                     if rule_type != "ontology_id":
-                        msg = "Warning: ontology terms are provided for field " + rule.get_name() + \
-                              ". Please re-consider whether it needs to change to ontology_id."
-                        results.append(msg)
+                        msg = f"Ontology terms are provided for field {rule.get_name()}. " \
+                            f"Please re-consider whether it needs to change to ontology_id type."
+                        results.add_validation_result_column(
+                            VRC("Warning", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
                 else:  # no ontology provided
                     if rule_type == "ontology_id":
-                        msg = "Error: No valid terms provided to field " + rule.get_name() + \
-                              " which is essential to be of ontology_id type"
-                        results.append(msg)
+                        msg = f"No valid terms provided to field {rule.get_name()} " \
+                            f"which is essential to be of ontology_id type"
+                        results.add_validation_result_column(
+                            VRC("Error", msg, RULESET_CHECK_ID, rule_name, VRConstant.RULESET_CHECK))
 
     return results
 
@@ -332,7 +339,7 @@ def check_duplicates(sample: List, id_field: str = 'Data source ID') -> List[str
 
 # example codes consuming the validation result
 # expected to be replaced by some codes displaying on the web pages
-def deal_with_validation_results(results: List[ValidationResult.ValidationResultRecord], verbose=False) -> Dict:
+def deal_with_validation_results(results: List[VRR], verbose=False) -> Dict:
     """
     Process the validation results to provide statistics
     :param results: the validation results
@@ -340,7 +347,7 @@ def deal_with_validation_results(results: List[ValidationResult.ValidationResult
     :return: two dicts 1) summary of pass, warning and errors 2) summary of column validation results
     """
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
-    vrc_summary: Dict[ValidationResult.ValidationResultColumn, int] = {}
+    vrc_summary: Dict[VRC, int] = {}
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
@@ -366,8 +373,7 @@ def deal_with_errors(errors: List[str]) -> None:
 
 
 # check whether value used in place and place accuracy match
-def coordinate_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
-        ValidationResult.ValidationResultRecord:
+def coordinate_check(record: Dict, existing_results: VRR) -> VRR:
     """
     Context validation to check whether value in the place field matches to the value in the accuracy field
     :param record: the record data
@@ -376,7 +382,7 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
     """
     if type(record) is not dict:
         raise TypeError("record needs to be a record represented as a Dict")
-    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+    if type(existing_results) is not VRR:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
     material = record['Material'][0]['value']
     if material == "organism":
@@ -386,21 +392,20 @@ def coordinate_check(record: Dict, existing_results: ValidationResult.Validation
     place_accuracy_field_name = place_field_name + " accuracy"
     if place_field_name not in record:
         if record[place_accuracy_field_name][0]['value'] != "missing geographic information":
-            msg = "No value provided for field " + place_field_name + " but value in field " + \
-                  place_accuracy_field_name + " is not missing geographic information"
+            msg = f"No value provided for field {place_field_name} but value in field" \
+                f" {place_accuracy_field_name} is not missing geographic information"
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id, place_field_name))
+                VRC("Error", msg, existing_results.record_id, place_field_name, VRConstant.CONTEXT))
     else:
         if record[place_accuracy_field_name][0]['value'] == "missing geographic information":
-            msg = "Value " + record[place_field_name][0]['value'] + " provided for field " + place_field_name + \
-                  " but value in field " + place_accuracy_field_name + " is missing geographic information"
+            msg = f"Value {record[place_field_name][0]['value']} provided for field {place_field_name} " \
+                f"but value in field {place_accuracy_field_name} is missing geographic information"
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn("Error", msg, existing_results.record_id, place_field_name))
+                VRC("Error", msg, existing_results.record_id, place_field_name, VRConstant.CONTEXT))
     return existing_results
 
 
-def species_check(record: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
-        ValidationResult.ValidationResultRecord:
+def species_check(record: Dict, existing_results: VRR) -> VRR:
     """
     Context validation to check when species specified in the USI structure matches the species field
     :param record: the record data
@@ -411,13 +416,12 @@ def species_check(record: Dict, existing_results: ValidationResult.ValidationRes
     url = record['attributes'][SPECIES][0]['terms'][0]['url']
     if not url.endswith(str(taxon_id)):
         existing_results.add_validation_result_column(
-            ValidationResult.ValidationResultColumn(
-                "Error", f"taxonId {taxon_id} does not match ontology term used in species {url}",
-                existing_results.record_id, ""))
+            VRC("Error", f"taxonId {taxon_id} does not match ontology term used in species {url}",
+                existing_results.record_id, "taxonomy", VRConstant.CONTEXT))
     return existing_results
 
 
-def check_value_equal(source, target, existing_results, field):
+def check_value_equal(source: Dict, target: Dict, existing_results: VRR, field: str) -> VRR:
     target_field_value = target['attributes'][field][0]['value']
     source_field_value = source['attributes'][field][0]['value']
     source_label = 'sample'
@@ -428,14 +432,13 @@ def check_value_equal(source, target, existing_results, field):
 
     if target_field_value != source_field_value:
         record_id = existing_results.record_id
-        existing_results.add_validation_result_column(ValidationResult.ValidationResultColumn(
+        existing_results.add_validation_result_column(VRC(
             "Error", f"The {field} of {source_label} ({source_field_value}) does not "
-            f"match to the {field} of {target_label} ({target_field_value})", record_id, field))
+            f"match to the {field} of {target_label} ({target_field_value})", record_id, field, VRConstant.CONTEXT))
     return existing_results
 
 
-def animal_sample_check(sample: Dict, animal: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
-        ValidationResult.ValidationResultRecord:
+def animal_sample_check(sample: Dict, animal: Dict, existing_results: VRR) -> VRR:
     """
     Context validation to check whether sample and related animal have the same value for common fields,
     for now, only species is checked
@@ -448,7 +451,7 @@ def animal_sample_check(sample: Dict, animal: Dict, existing_results: Validation
         raise TypeError("Animal record needs to be represented as a Dict")
     if type(sample) is not dict:
         raise TypeError("Sample record needs to be represented as a Dict")
-    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+    if type(existing_results) is not VRR:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
 
     existing_results = check_value_equal(sample, animal, existing_results, SPECIES)
@@ -456,7 +459,7 @@ def animal_sample_check(sample: Dict, animal: Dict, existing_results: Validation
     return existing_results
 
 
-def organism_part_sex_check(sample, animal, existing_results):
+def organism_part_sex_check(sample: Dict, animal: Dict, existing_results: VRR) -> VRR:
     """
     Context validation to check organism part matches sex, i.e. semen only from male animal
     For annotated with unknown sex, a Warning will be raised
@@ -468,24 +471,21 @@ def organism_part_sex_check(sample, animal, existing_results):
     sex: str = animal['attributes']['Sex'][0]['value']
     organism_part_ontology = misc.extract_ontology_id_from_iri(sample['attributes']['Organism part']
                                                                [0]['terms'][0]['url'])
-    if organism_part_ontology == 'UBERON_0001968':
+    if organism_part_ontology == 'UBERON_0001968': #semen
         if sex.lower() == "female":
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn(
-                    "Error", "Organism part (Semen) could not be taken from a female animal",
-                    existing_results.record_id, "organism part"))
-        # third sex opiton 'record of unknown sex'
+                VRC("Error", "Organism part (Semen) could not be taken from a female animal",
+                    existing_results.record_id, "organism part", VRConstant.CONTEXT))
+        # the third sex opiton is 'record of unknown sex'
         elif 'unknown sex' in sex.lower():
             existing_results.add_validation_result_column(
-                ValidationResult.ValidationResultColumn(
-                    "Warning", "Organism part (Semen) is expected to be taken from a male animal, "
+                VRC("Warning", "Organism part (Semen) is expected to be taken from a male animal, "
                                "please check the sex value (record of unknown sex) is correct",
-                    existing_results.record_id, "organism part"))
+                    existing_results.record_id, "organism part", VRConstant.CONTEXT))
     return existing_results
 
 
-def child_of_check(animal: Dict, parents: List, existing_results: ValidationResult.ValidationResultRecord) -> \
-        ValidationResult.ValidationResultRecord:
+def child_of_check(animal: Dict, parents: List, existing_results: VRR) -> VRR:
     """
     Context validation to check whether child animal and its parent animal(s) have the sensible attributes
     :param animal: the animal record
@@ -498,7 +498,7 @@ def child_of_check(animal: Dict, parents: List, existing_results: ValidationResu
     if type(parents) is not list:
         print(type(parents))
         raise TypeError("Parent records need to be represented as a List")
-    if type(existing_results) is not ValidationResult.ValidationResultRecord:
+    if type(existing_results) is not VRR:
         raise TypeError("The existing results parameter needs to be a ValidationResultRecord object")
     for parent in parents:
         existing_results = check_value_equal(animal, parent, existing_results, SPECIES)
@@ -506,8 +506,7 @@ def child_of_check(animal: Dict, parents: List, existing_results: ValidationResu
     return existing_results
 
 
-def species_breed_check(animal: Dict, existing_results: ValidationResult.ValidationResultRecord) -> \
-        ValidationResult.ValidationResultRecord:
+def species_breed_check(animal: Dict, existing_results: VRR) -> VRR:
     """
     check whether mapped breed (recommended) matches species
     if mapped breed not found, gives a warning saying no check has been carried out on supplied breed (mandatory)
@@ -529,19 +528,17 @@ def species_breed_check(animal: Dict, existing_results: ValidationResult.Validat
             match = static_parameters.ontology_library.has_parent(mapped_breed, general_crossbreed_term)
             if not match:
                 existing_results.add_validation_result_column(
-                    ValidationResult.ValidationResultColumn(
-                        "Error", f"The mapped breed {mapped_breed} does not match the given species {species}",
-                        existing_results.record_id, "Mapped breed"))
+                    VRC("Error", f"The mapped breed {mapped_breed} does not match the given species {species}",
+                        existing_results.record_id, "Mapped breed", VRConstant.CONTEXT))
     else:
         existing_results.add_validation_result_column(
-            ValidationResult.ValidationResultColumn(
-                "Warning", f"No check has been carried out on whether "
+            VRC("Warning", f"No check has been carried out on whether "
                 f"{attrs['Supplied breed'][0]['value']} is a {species} breed as no mapped breed provided",
-                existing_results.record_id, "Supplied breed"))
+                existing_results.record_id, "Supplied breed", VRConstant.CONTEXT))
     return existing_results
 
 
-def parents_sex_check(related, existing_results):
+def parents_sex_check(related: List[Dict], existing_results: VRR) -> VRR:
     """
     Context validation to check whether the two annotated parents have two different genders
     For annotated with unknown sex, a Warning will be raised
@@ -555,18 +552,16 @@ def parents_sex_check(related, existing_results):
     if "unknown sex" in one_sex.lower() or "unknown sex" in another_sex.lower():
         unknown_flag = True
         existing_results.add_validation_result_column(
-            ValidationResult.ValidationResultColumn(
-                "Warning", "At least one parent has unknown value for sex, thus could not be checked",
-                existing_results.record_id, "parents sex"))
+            VRC("Warning", "At least one parent has unknown value for sex, thus could not be checked",
+                existing_results.record_id, "parents sex", VRConstant.CONTEXT))
     if not unknown_flag and one_sex == another_sex:
         existing_results.add_validation_result_column(
-            ValidationResult.ValidationResultColumn(
-                "Error", "Two parents could not have same sex", existing_results.record_id, "parents sex"))
+            VRC("Error", "Two parents could not have same sex",
+                existing_results.record_id, "parents sex", VRConstant.CONTEXT))
     return existing_results
 
 
-def context_validation(record: Dict, existing_results: ValidationResult.ValidationResultRecord, related: List = None) \
-        -> ValidationResult.ValidationResultRecord:
+def context_validation(record: Dict, existing_results: VRR, related: List = None) -> VRR:
     """
     do validation based on context, i.e. value in one field affects allowed values in another field
     or involve more than one record
@@ -584,9 +579,8 @@ def context_validation(record: Dict, existing_results: ValidationResult.Validati
         if material == "organism":
             if len(related) > 2:
                 existing_results.add_validation_result_column(
-                    ValidationResult.ValidationResultColumn(
-                        "Error", "Having more than 2 parents defined in sampleRelationships",
-                        existing_results.record_id, "sampleRelationships"))
+                    VRC("Error", "Having more than 2 parents defined in sampleRelationships",
+                        existing_results.record_id, "sampleRelationships", VRConstant.RELATIONSHIP))
             else:
                 existing_results = child_of_check(record, related, existing_results)
                 if len(related) == 2:
@@ -594,8 +588,8 @@ def context_validation(record: Dict, existing_results: ValidationResult.Validati
         else:
             if len(related) != 1:
                 existing_results.add_validation_result_column(
-                    ValidationResult.ValidationResultColumn(
-                        "Error", "Specimen can only derive from one animal", record_id, "sampleRelationships"))
+                    VRC("Error", "Specimen can only derive from one animal",
+                        record_id, "sampleRelationships", VRConstant.RELATIONSHIP))
             else:
                 existing_results = animal_sample_check(record, related[0], existing_results)
 
