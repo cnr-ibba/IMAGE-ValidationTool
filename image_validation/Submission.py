@@ -53,8 +53,8 @@ class Submission:
             if section in self.data:
                 self.data = self.data[section]
         # check usi structure
-        self.general_errors = validation.check_usi_structure(self.data)
-        if self.general_errors:
+        usi_check_result = validation.check_usi_structure(self.data)
+        if usi_check_result.get_overall_status() != "Pass":
             return
         # check duplicate id
         self.general_errors = validation.check_duplicates(self.data, self.id_field)

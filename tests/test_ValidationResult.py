@@ -24,6 +24,11 @@ class TestValidationResult(unittest.TestCase):
         self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', 12)
         self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', -12.34)
         self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', True)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn, 'pass', 'message', 'record', "field", 12)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn,
+                          'pass', 'message', 'record', "field", -12.34)
+        self.assertRaises(TypeError, ValidationResult.ValidationResultColumn,
+                          'pass', 'message', 'record', "field", True)
 
     # test status must be one of three options
     def test_ValidationResultColumn_values(self):
@@ -62,6 +67,13 @@ class TestValidationResult(unittest.TestCase):
         self.assertEqual(self.column_error.get_comparable_str(), "Error: value used in field b is not allowed")
         self.assertNotEqual(self.column_warning.get_comparable_str(), "WARNING: term not match")
         self.assertNotEqual(self.column_warning_2.get_comparable_str(), "recommended to have value for field a")
+
+    def test_get_source(self):
+        self.assertEqual(self.column_pass.get_source(), "")
+        self.assertEqual(self.column_error.get_source(), ValidationResult.ValidationResultConstant.RULESET_BASED)
+        self.assertNotEqual(self.column_warning.get_source(), ValidationResult.ValidationResultConstant.RULESET_CHECK)
+        test = ValidationResult.ValidationResultColumn("Error", "msg", "record", "field", "usi structure")
+        self.assertEqual(test.get_source(), ValidationResult.ValidationResultConstant.USI_CHECK)
 
     def test_equal_ValidationResultColumn(self):
         self.assertNotEqual(self.column_pass, self.column_error)

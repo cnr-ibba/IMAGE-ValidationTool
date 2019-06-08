@@ -71,10 +71,12 @@ class ValidationResultColumn:
         :return: the message to be displayed on the screen
         """
         if self.status_id != 1:
-            if self.source != ValidationResultConstant.RULESET_CHECK:
-                return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
-            else:
+            if self.source == ValidationResultConstant.RULESET_CHECK:
                 return f"{self.status.capitalize()}: {self.message}"
+            elif self.source == ValidationResultConstant.USI_CHECK:
+                return self.message
+            else:
+                return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
         return ""
 
     def get_record_id(self):

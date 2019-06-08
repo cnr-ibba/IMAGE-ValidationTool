@@ -137,7 +137,7 @@ class TestValidation(unittest.TestCase):
                 print("The provided file " + filename + " is not a valid JSON file. Reason: " + str(e))
                 exit(1)
             results = validation.check_usi_structure(data)
-            self.assertListEqual(expected[error], results)
+            self.assertListEqual(expected[error], results.get_messages())
 
     def test_check_duplicates(self):
         filename = "test_data/test_error_duplicate_id.json"

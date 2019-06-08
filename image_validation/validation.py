@@ -17,6 +17,7 @@ from . import use_ontology
 from . import static_parameters
 
 RULESET_CHECK_ID = "ruleset check"
+USI_CHECK_ID = "usi structure check"
 SPECIES = 'Species'
 ALLOWED_RELATIONSHIP_NATURE = ['derived from', 'child of', 'same as', 'recurated from']
 
@@ -141,7 +142,7 @@ def check_ruleset(ruleset: Ruleset.RuleSet) -> VRR:
 # details see https://drive.google.com/open?id=1OwSuusnPzIvF2wzSfPp6ElGgH_jr7qyDgBXb41zB3QY
 # this function checks for USI JSON format only, nothing to do with the IMAGE ruleset
 # therefore not using ValidationResultRecord class
-def check_usi_structure(sample: List[Dict]) -> List[str]:
+def check_usi_structure(sample: List[Dict]) -> VRR:
     """
     Check whether the record values are represented in the format which can be submitted via USI
     This also guarantees that the following validation does not need to worry about how the data is represented
@@ -151,42 +152,57 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
     """
     logger.debug("Check whether data meets USI data format standard")
     count: Dict[str, int] = {}
-    result: List[str] = []
-    error_prefix = 'Wrong JSON structure: '
+    result: VRR = VRR(USI_CHECK_ID)
+    error_prefix = 'Wrong JSON structure:'
     if type(sample) is not list:
-        result.append(error_prefix + "all data need to be encapsulated in an array")
+        result.add_validation_result_column(
+            VRC(VRConstant.ERROR, f"{error_prefix} all data need to be encapsulated in an array", USI_CHECK_ID,
+                "", VRConstant.USI_CHECK))
         return result
     for one in sample:
         # check the structure, if wrong, could not continue, so directly skip to next record
         # rather than setting error flag
         if type(one) is not dict:
-            result.append(error_prefix + "some records are not represented as hashes")
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} some records are not represented as hashes", USI_CHECK_ID,
+                    "", VRConstant.USI_CHECK))
             continue
         if 'alias' not in one:
-            result.append(error_prefix + 'some records do not have alias which is mandatory '
-                                         'and used to identify record')
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} some records do not have alias which is "
+                    f"mandatory and used to identify record", USI_CHECK_ID, "", VRConstant.USI_CHECK))
             continue
         else:
             # check existence of mandatory fields
             alias = one['alias']
             if type(alias) is list or type(alias) is dict:
-                result.append(error_prefix + "alias can only be a string")
+                result.add_validation_result_column(
+                    VRC(VRConstant.ERROR, f"{error_prefix} alias can only be a string", USI_CHECK_ID,
+                        "", VRConstant.USI_CHECK))
                 continue
             count.setdefault(alias, 0)
             count[alias] = count[alias] + 1
 
         error_flag = False
         if 'title' not in one:
-            result.append(error_prefix + "no title field for record with alias as " + alias)
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} no title field for record with alias as {alias}", USI_CHECK_ID,
+                    "", VRConstant.USI_CHECK))
             error_flag = True
         if 'releaseDate' not in one:
-            result.append(error_prefix + "no releaseDate field for record with alias as " + alias)
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} no releaseDate field for record with alias as {alias}",
+                    USI_CHECK_ID, "", VRConstant.USI_CHECK))
             error_flag = True
         if 'taxonId' not in one:
-            result.append(error_prefix + "no taxonId field for record with alias as " + alias)
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} no taxonId field for record with alias as {alias}",
+                    USI_CHECK_ID, "", VRConstant.USI_CHECK))
             error_flag = True
         if 'attributes' not in one:
-            result.append(error_prefix + "no attributes for record with alias as " + alias)
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} no attributes for record with alias as {alias}",
+                    USI_CHECK_ID, "", VRConstant.USI_CHECK))
             error_flag = True
         # return when previous record has error or current record fails the check above
         if error_flag:
@@ -195,49 +211,58 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
         # which is checked above and duplicate check outside this loop
         # taxonId must be an integer
         if not isinstance(one['taxonId'], int):
-            result.append(error_prefix + "taxonId value for record " + alias + " is not an integer")
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} taxonId value for record {alias} is not an integer",
+                    USI_CHECK_ID, "", VRConstant.USI_CHECK))
         # releaseDate needs to be in YYYY-MM-DD
         date_check = misc.get_matched_date(one['releaseDate'], "YYYY-MM-DD")
         if date_check:
-            result.append(f"{error_prefix}{date_check} for record with alias value {alias}")
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} {date_check} for record with alias value {alias}",
+                    USI_CHECK_ID, "", VRConstant.USI_CHECK))
         # attributes is a list of attributes, represented as dict
         attrs = one['attributes']
         if type(attrs) is not dict:
-            result.append(error_prefix + f"attributes must be stored as a map for record with alias {alias}")
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, f"{error_prefix} attributes must be stored as a map for record with alias "
+                    f"{alias}", USI_CHECK_ID, "", VRConstant.USI_CHECK))
         else:
             for attr_name in attrs:
                 attr_values = attrs[attr_name]
                 if type(attr_values) is not list:
-                    result.append(
-                        error_prefix +
-                        "the values for attribute " + attr_name + " needs to be in an array for record " + alias)
+                    result.add_validation_result_column(
+                        VRC(VRConstant.ERROR, f"{error_prefix} the values for attribute {attr_name} "
+                            f"needs to be in an array for record {alias}", USI_CHECK_ID, "", VRConstant.USI_CHECK))
                 else:
                     for attr_value in attr_values:
                         if type(attr_value) is not dict:
-                            result.append(
-                                error_prefix + "the attribute value of " + attr_name +
-                                " needs to be represented as a map in record " + alias)
+                            result.add_validation_result_column(
+                                VRC(VRConstant.ERROR, f"{error_prefix} the attribute value of {attr_name} needs to be "
+                                    f"represented as a map in record {alias}", USI_CHECK_ID, "", VRConstant.USI_CHECK))
                         else:
                             if 'value' not in attr_value:
-                                result.append(
-                                    error_prefix + "could not find 'value' keyword for attribute "
-                                    + attr_name + " in record " + alias)
+                                result.add_validation_result_column(
+                                    VRC(VRConstant.ERROR, f"{error_prefix} could not find 'value' keyword for attribute"
+                                        f" {attr_name} in record {alias}", USI_CHECK_ID, "", VRConstant.USI_CHECK))
                             else:
                                 for key in attr_value.keys():
                                     if key != 'value' and key != 'units' and key != 'terms':
-                                        result.append(
-                                            error_prefix + f"Unrecognized keyword {key} used in "
-                                            f"attribute {attr_name} in record {alias}")
+                                        result.add_validation_result_column(
+                                            VRC(VRConstant.ERROR, f"{error_prefix} Unrecognized keyword {key} used in "
+                                                f"attribute {attr_name} in record {alias}",
+                                                USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                     elif key == 'terms':
                                         terms_value = attr_value[key]
                                         if type(terms_value) is not list:
-                                            msg = error_prefix + 'ontology terms need to be stored ' \
-                                                                 'in an array in record ' + alias
-                                            result.append(msg)
+                                            msg = f"{error_prefix} ontology terms need to be stored " \
+                                                f"in an array in record {alias}"
+                                            result.add_validation_result_column(
+                                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                         elif type(terms_value[0]) is not dict or ('url' not in terms_value[0]):
-                                            result.append(
-                                                error_prefix +
-                                                "url not used as key for ontology term in record " + alias)
+                                            msg = f"{error_prefix} url not used as key for ontology term " \
+                                                f"in record {alias}"
+                                            result.add_validation_result_column(
+                                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
 
         # optional field
         existing_relationships: Dict[str, str] = dict()
@@ -245,23 +270,27 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
         if 'sampleRelationships' in one:
             relationships = one['sampleRelationships']
             if type(relationships) is not list:
-                result.append(
-                    error_prefix + "sampleRelationships field must have values within an array for record with "
-                    "alias " + alias)
+                msg = f"{error_prefix} sampleRelationships field must have values within an array " \
+                    f"for record with alias {alias}"
+                result.add_validation_result_column(
+                    VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
             else:
                 for relationship in relationships:
                     if type(relationship) is not dict:
-                        result.append(
-                            error_prefix + f"relationship needs to be presented as a hash for record with alias {alias}")
+                        msg = f"{error_prefix} relationship needs to be presented as a hash " \
+                            f"for record with alias {alias}"
+                        result.add_validation_result_column(
+                            VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                     else:
                         if len(relationship.keys()) == 2:  # relationship must have two and only two elements
                             if ('alias' in relationship or 'accession' in relationship) \
                                     and 'relationshipNature' in relationship:
                                 relationship_nature = relationship['relationshipNature']
                                 if relationship_nature not in ALLOWED_RELATIONSHIP_NATURE:
-                                    result.append(
-                                        error_prefix + "Unrecognized relationship nature "
-                                        + relationship_nature + " within record " + alias)
+                                    msg = f"{error_prefix} Unrecognized relationship nature {relationship_nature} " \
+                                        f"within record {alias}"
+                                    result.add_validation_result_column(
+                                        VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                 else:
                                     if relationship_nature != 'same as' and relationship_nature != 'recurated from' \
                                             and existing_keyword != relationship_nature \
@@ -270,36 +299,48 @@ def check_usi_structure(sample: List[Dict]) -> List[str]:
                                         if len(existing_keyword) == 0:
                                             existing_keyword = relationship_nature
                                         else:
-                                            result.append(f"{error_prefix}More than one relationship natures found "
-                                                          f"within record {alias}")
+                                            msg = f"{error_prefix} More than one relationship natures found " \
+                                                f"within record {alias}"
+                                            result.add_validation_result_column(
+                                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                     if 'alias' in relationship:
                                         target = relationship['alias']
                                         is_biosample = misc.is_biosample_record(target)
                                         if is_biosample:
-                                            result.append((f"{error_prefix}In relationship alias "
-                                                           f"can only take non-BioSamples accession, not {target}"))
+                                            msg = f"{error_prefix} In relationship alias can only " \
+                                                f"take non-BioSamples accession, not {target}"
+                                            result.add_validation_result_column(
+                                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                     else:
                                         target = relationship['accession']
                                         is_biosample = misc.is_biosample_record(target)
                                         if not is_biosample:
-                                            result.append((f"{error_prefix}In relationship accession "
-                                                           f"can only take BioSamples accession, not {target}"))
+                                            msg = f"{error_prefix} In relationship accession can only " \
+                                                f"take BioSamples accession, not {target}"
+                                            result.add_validation_result_column(
+                                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                     if target in existing_relationships:  # already found this in
-                                        result.append(f"Duplicated relationship {relationship_nature} with {target} "
-                                                  f"for record {alias}")
+                                        msg = f"Duplicated relationship {relationship_nature} with {target}" \
+                                            f" for record {alias}"
+                                        result.add_validation_result_column(
+                                            VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                                     existing_relationships[target] = relationship['relationshipNature']
                             else:
-                                result.append(
-                                    error_prefix + "Unrecognized key used (only can be alias/accession and "
-                                    "relationshipNature) within one relationship. Affected record " + alias)
+                                msg = f"{error_prefix} Unrecognized key used (only can be alias/accession and " \
+                                    f"relationshipNature) within one relationship. Affected record {alias}"
+                                result.add_validation_result_column(
+                                    VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
                         else:
-                            result.append(
-                                error_prefix + "two and only two keys (alias/accession and relationshipNature) must be "
-                                "presented within every relationship. Affected record " + alias)
+                            msg = f"{error_prefix} two and only two keys (alias/accession and relationshipNature) " \
+                                f"must be presented within every relationship. Affected record {alias}"
+                            result.add_validation_result_column(
+                                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
 
     for key in count.keys():
         if count[key] > 1:
-            result.append("There are more than one record having " + key + " as its alias")
+            msg = f"There are more than one record having {key} as its alias"
+            result.add_validation_result_column(
+                VRC(VRConstant.ERROR, msg, USI_CHECK_ID, "", VRConstant.USI_CHECK))
     return result
 
 
