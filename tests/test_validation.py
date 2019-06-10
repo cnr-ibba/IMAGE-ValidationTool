@@ -165,7 +165,41 @@ class TestValidation(unittest.TestCase):
             ValidationResult.ValidationResultColumn(
                 "Error", "coverage for deal with validation results", "record 1", "field"))
         submission_result.append(error)
-        validation.deal_with_validation_results(submission_result, True)
+
+        pass_result = ValidationResult.ValidationResultRecord("pass")
+        submission_result.append(pass_result)
+
+        error_2 = ValidationResult.ValidationResultRecord("record 2")
+        error_2.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Error", "another error", "record 2", "field"))
+        error_2.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Warning", "one warning", "record 2", "another field"))
+        submission_result.append(error_2)
+
+        warning = ValidationResult.ValidationResultRecord("record 3")
+        warning.add_validation_result_column(
+            ValidationResult.ValidationResultColumn(
+                "Warning", "one warning", "record 3", "another field"))
+        submission_result.append(warning)
+        summary, vrc_summary, vrc_details = validation.deal_with_validation_results(submission_result, True)
+        self.assertDictEqual(summary, {'Pass': 1, 'Warning': 1, 'Error': 2})
+        vrc_summary_converted = dict()
+        vrc_detail_converted = dict()
+        for key_value in vrc_summary.keys():
+            vrc_summary_converted[key_value.get_comparable_str()] = vrc_summary[key_value]
+            vrc_detail_converted[key_value.get_comparable_str()] = vrc_details[key_value]
+        self.assertDictEqual(vrc_summary_converted, {
+            "Error: coverage for deal with validation results": 1,
+            "Error: another error": 1,
+            "Warning: one warning": 2
+        })
+        self.assertDictEqual(vrc_detail_converted,{
+            "Error: coverage for deal with validation results": {'record 1'},
+            "Error: another error": {"record 2"},
+            "Warning: one warning": {"record 2", "record 3"}
+        })
 
     def test_coordinate_check_type(self):
         self.assertRaises(TypeError, validation.coordinate_check, "str", ValidationResult.ValidationResultRecord("id"))

@@ -319,7 +319,8 @@ class TestRuleset(unittest.TestCase):
                 submission_result.append(record_result)
                 for msg in record_result.get_messages():
                     actual_values.append(msg)
-            summary, vcr_summary = validation.deal_with_validation_results(submission_result, verbose=False)
+            summary, vcr_summary, vcr_details = \
+                validation.deal_with_validation_results(submission_result, verbose=False)
             summary_str = str(summary)
             actual_values.append(summary_str)
             self.assertListEqual(expected_result[error_type], actual_values)

@@ -6,7 +6,7 @@ All other errors are represented as strings, e.g. ruleset error
 """
 import json
 import logging
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from image_validation.ValidationResult import ValidationResultConstant as VRConstant
 from image_validation.ValidationResult import ValidationResultColumn as VRC
@@ -389,6 +389,7 @@ def deal_with_validation_results(results: List[VRR], verbose=False) -> Dict:
     """
     count = {'Pass': 0, 'Warning': 0, 'Error': 0}
     vrc_summary: Dict[VRC, int] = {}
+    vrc_details: Dict[VRC, Set[str]] = {}
     for result in results:
         overall = result.get_overall_status()
         count[overall] = count[overall] + 1
@@ -398,7 +399,10 @@ def deal_with_validation_results(results: List[VRR], verbose=False) -> Dict:
         for vrc in result.get_specific_result_type("error") + result.get_specific_result_type("warning"):
             vrc_summary.setdefault(vrc, 0)
             vrc_summary[vrc] += 1
-    return count, vrc_summary
+            vrc_details.setdefault(vrc, set())
+            vrc_details[vrc].add(result.record_id)
+
+    return count, vrc_summary, vrc_details
 
 
 def deal_with_errors(errors: List[str]) -> None:

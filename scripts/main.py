@@ -40,11 +40,12 @@ if not submission.is_ruleset_ready():
 
 submission.validate()
 
-summary, vrc_summary = validation.deal_with_validation_results(submission.get_validation_results())
+summary, vrc_summary, vrc_detail = validation.deal_with_validation_results(submission.get_validation_results())
 logger.info("Summary of records validation result")
 logger.info(str(summary))
 logger.info("Validation result details:")
 for vrc in vrc_summary.keys():
-    logger.info(f"{vrc.get_comparable_str()}   {vrc_summary[vrc]}")
+    logger.info(f"{vrc.get_comparable_str()}   {vrc_summary[vrc]}   {str(vrc_detail[vrc])}")
+
 
 logging.info("FINISH")
