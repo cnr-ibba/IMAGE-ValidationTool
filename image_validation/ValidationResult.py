@@ -11,13 +11,24 @@ logger = logging.getLogger(__name__)
 
 
 class ValidationResultConstant:
+    # errors occurred during ruleset based validation
     RULESET_BASED = "ruleset based"
+    # errors occurred during checking ruleset
     RULESET_CHECK = "ruleset check"
+    # errors occurred during checking usi representation of data
     USI_CHECK = "usi structure"
+    # errors occurred during submitting via USI API (the messages returned from API)
     USI_API = "usi api response"
+    # errors occurred during checking relationships (pure relationship,
+    # not the attributes values for the related records
     RELATIONSHIP = "relationship"
+    # errors occurred during context validation
     CONTEXT = "context validation"
+    # general errors e.g. IO error
+    GENERAL = "general"
+    # for pass result
     EMPTY = ""
+    # Three defined statuses
     PASS = "Pass"
     WARNING = "Warning"
     ERROR = "Error"
@@ -73,20 +84,20 @@ class ValidationResultColumn:
         if self.status_id != 1:
             if self.source == ValidationResultConstant.RULESET_CHECK:
                 return f"{self.status.capitalize()}: {self.message}"
-            elif self.source == ValidationResultConstant.USI_CHECK:
+            elif self.source == ValidationResultConstant.USI_CHECK or self.source == ValidationResultConstant.GENERAL:
                 return self.message
             else:
                 return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
         return ""
 
-    def get_record_id(self):
+    def get_record_id(self) -> str:
         """
         Get the record id
         :return: record id
         """
         return self.record_id
 
-    def get_field_name(self):
+    def get_field_name(self) -> str:
         """
         Get the field name
         :return: field name

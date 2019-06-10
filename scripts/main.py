@@ -12,6 +12,7 @@ import logging
 
 from image_validation import static_parameters, Submission, validation
 
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s\t%(levelname)s:\t%(name)s line %(lineno)s\t%(message)s',
@@ -23,17 +24,17 @@ submission = Submission.Submission("test")
 # a-la django style
 basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 filename = os.path.join(basedir, 'test_data/submission_example.json')
-submission.load_data(filename, section='sample')
+load_data_results = submission.load_data(filename, section='sample')
 if not submission.is_data_ready():
     logger.info("There are some issues while loading the data")
-    for error in submission.get_general_errors():
+    for error in load_data_results.get_messages():
         logger.error(error)
     exit(1)
 
-submission.load_ruleset(static_parameters.ruleset_filename)
+load_ruleset_results = submission.load_ruleset(static_parameters.ruleset_filename)
 if not submission.is_ruleset_ready():
     logger.info("There are some issues while loading the ruleset")
-    for error in submission.get_general_errors():
+    for error in load_ruleset_results.get_messages():
         logger.error(error)
     exit(1)
 

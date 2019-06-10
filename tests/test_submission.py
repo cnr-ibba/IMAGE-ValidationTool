@@ -14,7 +14,6 @@ class TestRuleset(unittest.TestCase):
         self.assertIsNone(submission.ruleset)
         self.assertFalse(submission.ruleset_pass_flag)
         self.assertNotEqual(submission.id_field, "id")
-        self.assertListEqual(submission.general_errors, list())
 
     def test_get_title(self):
         submission = Submission.Submission("get_title")
@@ -35,6 +34,27 @@ class TestRuleset(unittest.TestCase):
         self.assertFalse(submission.is_data_ready())
         submission.load_data("test_data/data/test_error_rule_types.json")
         self.assertTrue(submission.is_data_ready())
+        # general errors generated during loading data
+        load_data_result = submission.load_data("test_data/usi/file_no_existing.json")
+        expected_data_file_not_found: List[str] = ['Could not find the file test_data/usi/file_no_existing.json']
+        self.assertListEqual(load_data_result.get_messages(), expected_data_file_not_found)
+
+        load_data_result = submission.load_data("test_data/test_empty.json")
+        expected_data_empty_content: List[str] = [
+            'The provided file test_data/test_empty.json is not a valid JSON file.'
+        ]
+        self.assertListEqual(load_data_result.get_messages(), expected_data_empty_content)
+
+        load_data_result = submission.load_data("test_data/usi/test_error_duplicate_alias.json")
+        expected_data: List[str] = ['There are more than one record having 404-T-132-4FE274A as its alias']
+        self.assertListEqual(load_data_result.get_messages(), expected_data)
+
+        load_data_result = submission.load_data("test_data/test_error_duplicate_id.json")
+        expected_data_duplicated: List[str] = ['There are more than one record having 404-T-132-4FE274A as its id']
+        self.assertListEqual(load_data_result.get_messages(), expected_data_duplicated)
+
+        load_data_result = submission.load_data("test_data/data/test_error_rule_types.json")
+        self.assertListEqual(load_data_result.get_messages(), list())
 
     def test_load_ruleset(self):
         submission = Submission.Submission("test")
@@ -45,37 +65,13 @@ class TestRuleset(unittest.TestCase):
         submission.load_ruleset("test_data/test_ruleset.json")
         self.assertTrue(submission.is_ruleset_ready())
 
-    def test_get_general_errors(self):
-        submission = Submission.Submission("test", id_field='id')
-        # general errors generated during loading data
-        submission.load_data("test_data/usi/file_no_existing.json")
-        expected_data_file_not_found: List[str] = ['Could not find the file test_data/usi/file_no_existing.json']
-        self.assertListEqual(submission.get_general_errors(), expected_data_file_not_found)
-
-        submission.load_data("test_data/test_empty.json")
-        expected_data_empty_content: List[str] = [
-            'The provided file test_data/test_empty.json is not a valid JSON file.'
-        ]
-        self.assertListEqual(submission.get_general_errors(), expected_data_empty_content)
-
-        # submission.load_data("test_data/usi/test_error_duplicate_alias.json")
-        # expected_data: List[str] = ['There are more than one record having 404-T-132-4FE274A as its alias']
-        # self.assertListEqual(submission.get_general_errors(), expected_data)
-        #
-        # submission.load_data("test_data/test_error_duplicate_id.json")
-        # expected_data_duplicated: List[str] = ['There are more than one record having 404-T-132-4FE274A as its id']
-        # self.assertListEqual(submission.get_general_errors(), expected_data_duplicated)
-        #
-        # submission.load_data("test_data/data/test_error_rule_types.json")
-        # self.assertListEqual(submission.get_general_errors(), list())
-        #
-        # # general errors generated during loading ruleset
-        # submission.load_ruleset("test_data/test_error_ruleset_missing_attributes.json")
-        # expected_ruleset: List[str] = ["'Each rule must have at least four attributes: Name, Type, "
-        #                        "Required and Allow Multiple.'"]
-        # self.assertListEqual(submission.get_general_errors(), expected_ruleset)
-        # submission.load_ruleset("test_data/test_ruleset.json")
-        # self.assertListEqual(submission.get_general_errors(), list())
+        # general errors generated during loading ruleset
+        load_ruleset_result = submission.load_ruleset("test_data/test_error_ruleset_missing_attributes.json")
+        expected_ruleset: List[str] = ["'Each rule must have at least four attributes: Name, Type, "
+                                       "Required and Allow Multiple.'"]
+        self.assertListEqual(load_ruleset_result.get_messages(), expected_ruleset)
+        load_ruleset_result = submission.load_ruleset("test_data/test_ruleset.json")
+        self.assertListEqual(load_ruleset_result.get_messages(), list())
 
     # more intuitive to test those two method together
     def test_validate_and_get_validation_results(self):

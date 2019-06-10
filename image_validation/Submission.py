@@ -1,4 +1,7 @@
-from . import ValidationResult, validation, Ruleset
+from . import validation, Ruleset
+from image_validation.ValidationResult import ValidationResultConstant as VRConstants
+from image_validation.ValidationResult import ValidationResultColumn as VRC
+from image_validation.ValidationResult import ValidationResultRecord as VRR
 from typing import List, Dict
 import json
 import logging
@@ -22,15 +25,15 @@ class Submission:
         list which is used to identify records
         """
         self.title: str = title
-        self.validation_results: Dict[str, ValidationResult.ValidationResultRecord] = dict()
+        self.validation_results: Dict[str, VRR] = dict()
         self.data: Dict = None
         self.data_ready_flag: bool = False
         self.ruleset: Ruleset.RuleSet = None
         self.ruleset_pass_flag: bool = False
         self.id_field: str = id_field
-        self.general_errors: List[str] = list()
+        # self.general_errors = ValidationResult.ValidationResultRecord("general")
 
-    def load_data(self, data_file: str, section: str = '') -> None:
+    def load_data(self, data_file: str, section: str = '') -> VRR:
         """
         Load the data from JSON file which is to be validated and
         do preliminary validation (usi structure and duplicate), if successful set data ready flag
@@ -39,31 +42,39 @@ class Submission:
         :param section: optional, the name of the section which contains data
         """
         self.data_ready_flag = False
-        self.general_errors = list()
+        general_errors = VRR("general")
         try:
             with open(data_file) as infile:
                 self.data = json.load(infile)
         except FileNotFoundError:
-            self.general_errors.append(f"Could not find the file {data_file}")
-            return
+            msg = f"Could not find the file {data_file}"
+            general_errors.add_validation_result_column(
+                VRC(VRConstants.ERROR, msg, general_errors.record_id, "", VRConstants.GENERAL))
+            return general_errors
         except json.decoder.JSONDecodeError:
-            self.general_errors.append(f"The provided file {data_file} is not a valid JSON file.")
-            return
+            msg = f"The provided file {data_file} is not a valid JSON file."
+            general_errors.add_validation_result_column(
+                VRC(VRConstants.ERROR, msg, general_errors.record_id, "", VRConstants.GENERAL))
+            return general_errors
         if len(section) > 0:
             if section in self.data:
                 self.data = self.data[section]
         # check usi structure
         usi_check_result = validation.check_usi_structure(self.data)
         if usi_check_result.get_overall_status() != "Pass":
-            return
+            return usi_check_result
         # check duplicate id
-        self.general_errors = validation.check_duplicates(self.data, self.id_field)
-        if self.general_errors:
-            return
+        msgs = validation.check_duplicates(self.data, self.id_field)
+        if msgs:
+            for msg in msgs:
+                general_errors.add_validation_result_column(
+                    VRC(VRConstants.ERROR, msg, general_errors.record_id, "", VRConstants.GENERAL))
+            return general_errors
         logger.info("All sample records have unique data source ids")
         self.data_ready_flag = True
+        return general_errors
 
-    def load_ruleset(self, ruleset_file: str) -> None:
+    def load_ruleset(self, ruleset_file: str) -> VRR:
         """
         Load the ruleset from the JSON file and check the integrity of the ruleset,
         if successful, set ruleset ready flag
@@ -71,17 +82,19 @@ class Submission:
         :param ruleset_file: the JSON file containing the ruleset
         """
         self.ruleset_pass_flag = False
-        self.general_errors = list()
+        general_errors = VRR("general")
         try:
             self.ruleset = validation.read_in_ruleset(ruleset_file)
         except KeyError as e:
-            self.general_errors.append(str(e))
-            return
-        ruleset_check_result: ValidationResult.ValidationResultRecord = validation.check_ruleset(self.ruleset)
+            general_errors.add_validation_result_column(
+                VRC(VRConstants.ERROR, str(e), general_errors.record_id, "", VRConstants.GENERAL))
+            return general_errors
+        ruleset_check_result: VRR = validation.check_ruleset(self.ruleset)
         if ruleset_check_result.get_overall_status() != "Pass":
-            return
+            return ruleset_check_result
         logger.info("Ruleset loaded")
         self.ruleset_pass_flag = True
+        return general_errors
 
     def validate(self) -> None:
         """
@@ -132,8 +145,7 @@ class Submission:
                     status = response.status_code
                     if status != 200:
                         record_result.add_validation_result_column(
-                            ValidationResult.ValidationResultColumn(
-                                "Warning", f"Fail to retrieve record {target} from "
+                            VRC("Warning", f"Fail to retrieve record {target} from "
                                 f"BioSamples as required in the relationship", record_id, 'sampleRelationships'))
                     else:
                         # at the moment, no any IMAGE data in BioSamples
@@ -148,8 +160,7 @@ class Submission:
                         related.append(dict(data_by_material['organism'][target]))
                     else:
                         record_result.add_validation_result_column(
-                            ValidationResult.ValidationResultColumn(
-                                "Error", f"Could not locate the referenced record {target}",
+                            VRC("Error", f"Could not locate the referenced record {target}",
                                 record_id, 'sampleRelationships'))
                 self.validation_results[record['alias']] = record_result
 
@@ -161,11 +172,10 @@ class Submission:
             record_result = validation.context_validation(record, record_result, related)
 
             if record_result.is_empty():
-                record_result.add_validation_result_column(
-                    ValidationResult.ValidationResultColumn("Pass", "", record_result.record_id, ""))
+                record_result.add_validation_result_column(VRC("Pass", "", record_result.record_id, ""))
             self.validation_results[record['alias']] = record_result
 
-    def get_validation_results(self) -> List[ValidationResult.ValidationResultRecord]:
+    def get_validation_results(self) -> List[VRR]:
         """
         Get the validation results
         :return: the list of ruleset-based and context validation results
@@ -185,13 +195,6 @@ class Submission:
         :return: True when ruleset is ready
         """
         return self.ruleset_pass_flag
-
-    def get_general_errors(self) -> List[str]:
-        """
-        Get the preliminary validation result
-        :return: list of preliminary validation results
-        """
-        return self.general_errors
 
     def get_title(self) -> str:
         """
