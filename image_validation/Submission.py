@@ -67,8 +67,10 @@ class Submission:
         msgs = validation.check_duplicates(self.data, self.id_field)
         if msgs:
             for msg in msgs:
+                # classify the error as ruleset based error
+                # as it is implicitly required that id field holds unique values
                 general_errors.add_validation_result_column(
-                    VRC(VRConstants.ERROR, msg, general_errors.record_id, "", VRConstants.GENERAL))
+                    VRC(VRConstants.ERROR, msg, general_errors.record_id, self.id_field, VRConstants.RELATIONSHIP))
             return general_errors
         logger.info("All sample records have unique data source ids")
         self.data_ready_flag = True
@@ -129,7 +131,7 @@ class Submission:
 
         for record in self.data:
             # if the record is with status Error, no more validation will be done
-            if self.validation_results[record['alias']].get_overall_status() == "Error":
+            if self.validation_results[record['alias']].get_overall_status() == VRConstants.ERROR:
                 continue
             record_result = self.validation_results[record['alias']]
             record_id = record['attributes'][self.id_field][0]['value']
@@ -145,8 +147,9 @@ class Submission:
                     status = response.status_code
                     if status != 200:
                         record_result.add_validation_result_column(
-                            VRC("Warning", f"Fail to retrieve record {target} from "
-                                f"BioSamples as required in the relationship", record_id, 'sampleRelationships'))
+                            VRC(VRConstants.WARNING, f"Fail to retrieve record {target} from "
+                                f"BioSamples as required in the relationship", record_id, 'sampleRelationships'
+                                , VRConstants.GENERAL))
                     else:
                         # at the moment, no any IMAGE data in BioSamples
                         # check project = IMAGE
@@ -160,19 +163,20 @@ class Submission:
                         related.append(dict(data_by_material['organism'][target]))
                     else:
                         record_result.add_validation_result_column(
-                            VRC("Error", f"Could not locate the referenced record {target}",
-                                record_id, 'sampleRelationships'))
+                            VRC(VRConstants.ERROR, f"Could not locate the referenced record {target}",
+                                record_id, 'sampleRelationships', VRConstants.RELATIONSHIP))
                 self.validation_results[record['alias']] = record_result
 
             # if error found during relationship checking, skip context validation
             # because some context validation (relationship check etc) could not be carried out
-            if self.validation_results[record['alias']].get_overall_status() == "Error":
+            if self.validation_results[record['alias']].get_overall_status() == VRConstants.ERROR:
                 continue
 
             record_result = validation.context_validation(record, record_result, related)
 
             if record_result.is_empty():
-                record_result.add_validation_result_column(VRC("Pass", "", record_result.record_id, ""))
+                record_result.add_validation_result_column(VRC("Pass", "", record_result.record_id, "",
+                                                               VRConstants.EMPTY))
             self.validation_results[record['alias']] = record_result
 
     def get_validation_results(self) -> List[VRR]:

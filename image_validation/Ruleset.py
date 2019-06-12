@@ -11,7 +11,10 @@ import json
 from typing import List, Dict
 
 from . import misc
-from . import ValidationResult
+# from . import ValidationResult
+from image_validation.ValidationResult import ValidationResultColumn as VRC
+from image_validation.ValidationResult import ValidationResultRecord as VRR
+from image_validation.ValidationResult import ValidationResultConstant as VRConstants
 from . import static_parameters
 
 logger = logging.getLogger(__name__)
@@ -246,7 +249,7 @@ class RuleField:
         :param record_id: the id of the record
         :return: list of validation result represented as validation column result list
         """
-        results: List[ValidationResult.ValidationResultColumn] = []
+        results: List[VRC] = []
         section_info: str = " (" + section_name + " section)"
         mandatory = False
         if self.required == 'mandatory':
@@ -258,24 +261,20 @@ class RuleField:
         if entry_size == 0:
             if mandatory:
                 msg = f"Mandatory field {self.name} has empty value"
-                results.append(
-                    ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 has_error = True
             else:
                 msg = f"{self.required} field {self.name} has empty value, better remove the field"
-                results.append(
-                    ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id, self.name))
+                results.append(VRC(VRConstants.WARNING, msg + section_info, record_id, self.name))
         elif entry_size > 1:
             if not self.allow_multiple():
                 msg = f"Multiple values supplied for field {self.name} which does not allow multiple values"
-                results.append(
-                    ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 has_error = True
             # multiple only be True (reaching here) when existing Allow Multiple, no need to check existence
             if entry_size > 2 and self.get_multiple() == 'max 2':
                 msg = f"Maximum of 2 values allowed for field {self.name} but {str(entry_size)} values provided"
-                results.append(
-                    ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 has_error = True
         # the errors detected above mean that there is no need to validate the actual value(s)
         if has_error:
@@ -291,17 +290,14 @@ class RuleField:
                     if entry['units'] not in allowed_units:
                         msg = f"{entry['units']} for field {self.name} is not " \
                             f"in the valid units list ({allowed_units_str})"
-                        results.append(
-                            ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 else:  # unit not required, but exists, raise a warning
                     msg = f"No units required but {entry['units']} is used as unit for field {self.name}"
-                    results.append(
-                        ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id, self.name))
+                    results.append(VRC(VRConstants.WARNING, msg + section_info, record_id, self.name))
             else:
                 if allowed_units:
                     msg = f"One of {allowed_units_str} need to be present for the field {self.name}"
-                    results.append(
-                        ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                    results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
             # check allowed values
             allowed_values = self.get_allowed_values()
             if allowed_values:
@@ -310,35 +306,30 @@ class RuleField:
                         # available valid values include example@a.com and no longer available, needs to check for email
                         if not misc.is_uri(value):
                             msg = f'<{value}> of field Availability is neither "no longer available" nor a valid URI'
-                            results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
-                                                                                   record_id, self.name))
+                            results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     else:  # not availability
                         allowed_values_str = '>, <'.join(allowed_values)
                         msg = f"<{value}> of field {self.name} is not in the valid values list (<{allowed_values_str}>)"
-                        results.append(
-                            ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
             if results:
                 return results
 
             if 'terms' in entry:
                 if not self.get_allowed_terms():  # allowed conditions empty
                     msg = f"Ontology provided for field {self.name} however there is no requirement in the ruleset"
-                    results.append(
-                        ValidationResult.ValidationResultColumn("Warning", msg + section_info, record_id, self.name))
+                    results.append(VRC(VRConstants.WARNING, msg + section_info, record_id, self.name))
                 else:
                     for term in entry['terms']:
                         iri = term['url']
                         if not misc.is_uri(iri):
                             msg = f"Invalid URI value {iri} in field {self.name}"
-                            results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
-                                                                                   record_id, self.name))
+                            results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                             continue
 
                         term_id = misc.extract_ontology_id_from_iri(iri)
                         if not self.check_ontology_allowed(term_id):
                             msg = f"Not valid ontology term {term_id} in field {self.name}"
-                            results.append(ValidationResult.ValidationResultColumn("Error", msg + section_info,
-                                                                                   record_id, self.name))
+                            results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
             if results:
                 return results
 
@@ -351,21 +342,18 @@ class RuleField:
                 if type(value) is not float and type(value) is not int:
                     msg = f"For field {self.name} the provided value {str(value)} is not represented " \
                         f"as/of the expected type Number"
-                    results.append(
-                        ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                    results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
             else:  # textual types
                 if type(value) is not str:
                     msg = f"For field {self.name} the provided value {str(value)} " \
                         f"is not of the expected type {self.type}"
-                    results.append(
-                        ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                    results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     return results
                 # the following tests are based on the value is a string, so need to return above
                 if self.type == 'ontology_id':
                     if 'terms' not in entry:
                         msg = f"No url found for the field {self.name} which has the type of ontology_id"
-                        results.append(
-                            ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     else:
                         for term in entry['terms']:
                             iri = term['url']
@@ -374,47 +362,35 @@ class RuleField:
                             if iri != ontology.get_iri():
                                 msg = f"Provided iri {iri} does not match the iri " \
                                     f"retrieved from OLS in the field {self.name}"
-                                results.append(
-                                    ValidationResult.ValidationResultColumn(
-                                        "Warning", msg + section_info, record_id, self.name))
+                                results.append(VRC(VRConstants.WARNING, msg + section_info, record_id, self.name))
                             if not ontology.label_match_ontology(value):
                                 if ontology.label_match_ontology(value, False):
                                     msg = f"Provided value {value} has different letter case" \
                                         f" to the term referenced by {iri}"
-                                    results.append(
-                                        ValidationResult.ValidationResultColumn(
-                                            "Warning", msg + section_info, record_id, self.name))
+                                    results.append(VRC(VRConstants.WARNING, msg + section_info, record_id, self.name))
                                 else:
                                     msg = f"Provided value {value} does not match to the provided ontology {iri}"
-                                    results.append(
-                                        ValidationResult.ValidationResultColumn(
-                                            "Error", msg + section_info, record_id, self.name))
+                                    results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 elif self.type == "uri":
                     uri_result = misc.is_uri(value)
                     if not uri_result:
                         msg = f"Invalid URI value {value} for field {self.name}"
-                        results.append(
-                            ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     else:  # is in URI
                         # in image ruleset, when email provided, it must begin with mailto:
                         if misc.is_email(value):
                             if misc.is_email(value, True):  # the whole value of value is an email, which is wrong
                                 msg = f'Email address must have prefix "mailto:" in the field {self.name}'
-                                results.append(
-                                    ValidationResult.ValidationResultColumn(
-                                        "Error", msg + section_info, record_id, self.name))
+                                results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                         else:  # it is URL, but not email: could be a normal URL or wrong mailto: location
                             if value.find("mailto:") > 0:
                                 msg = f"mailto must be at position 1 to be a valid email value in the field {self.name}"
-                                results.append(
-                                    ValidationResult.ValidationResultColumn(
-                                        "Error", msg + section_info, record_id, self.name))
+                                results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 elif self.type == 'doi':
                     doi_result = misc.is_doi(value)
                     if not doi_result:
                         msg = f"Invalid DOI value supplied in the field {self.name}"
-                        results.append(
-                            ValidationResult.ValidationResultColumn("Error", msg + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 elif self.type == 'date':
                     # there is always a format(unit) for the date type (checked in the validation.read_in_ruleset)
                     # therefore entry[units] existence should have already been
@@ -422,9 +398,7 @@ class RuleField:
                     date_format = entry['units']
                     date_result = misc.get_matched_date(value, date_format)
                     if date_result:
-                        results.append(
-                            ValidationResult.ValidationResultColumn(
-                                "Error", date_result + section_info, record_id, self.name))
+                        results.append(VRC(VRConstants.ERROR, date_result + section_info, record_id, self.name))
 
             # it would be safer to skip the validations below as unmatched type detected
             if results:
@@ -572,8 +546,7 @@ class RuleSection:
                 return False
         return True
 
-    def validate(self, attributes: Dict, record_id: str, id_field: str) -> \
-            List[ValidationResult.ValidationResultColumn]:
+    def validate(self, attributes: Dict, record_id: str, id_field: str) -> List[VRC]:
         """
         Validate the record using all field rules in the section
         :param attributes: the record attribute values
@@ -581,7 +554,7 @@ class RuleSection:
         :param id_field: the name of the id field
         :return: list of field validaitn results
         """
-        results: List[ValidationResult.ValidationResultColumn] = []
+        results: List[VRC] = []
         # all mandatory fields must be there, not checking details in this step
         if 'mandatory' in self.rules:
             mandatory_rules = self.rules['mandatory']
@@ -590,7 +563,7 @@ class RuleSection:
                     continue
                 if field_name not in attributes:
                     msg = f"Mandatory field {field_name} in {self.get_section_name()} section could not be found"
-                    results.append(ValidationResult.ValidationResultColumn("Error", msg, record_id, field_name))
+                    results.append(VRC(VRConstants.ERROR, msg, record_id, field_name))
             if results:
                 return results
         # check values for all required levels
@@ -660,7 +633,7 @@ class RuleSet:
             raise ValueError("No section found according to the given name " + section_name)
         return self.rule_sections.get(section_name)
 
-    def validate(self, record: Dict, id_field: str = 'Data source ID') -> ValidationResult.ValidationResultRecord:
+    def validate(self, record: Dict, id_field: str = 'Data source ID') -> VRR:
         """
         Validate the record with the full ruleset
         :param record: the record data
@@ -670,7 +643,7 @@ class RuleSet:
         logger.debug(f"got record: {record}, id_field: {id_field}")
         attributes = record['attributes']
         record_id = attributes[id_field][0]['value']
-        record_result = ValidationResult.ValidationResultRecord(record_id)
+        record_result = VRR(record_id)
 
         unmapped = attributes.copy()  # create a copy and remove the ruleset-mapped columns
         del unmapped[id_field]
@@ -699,11 +672,7 @@ class RuleSet:
 
             for key in unmapped.keys():
                 record_result.add_validation_result_column(
-                    ValidationResult.ValidationResultColumn(
-                        "Warning",
-                        "Column " + key + " could not be found in ruleset",
-                        record_id, key))
-
+                    VRC(VRConstants.WARNING, f"Column {key} could not be found in ruleset", record_id, key))
         else:
             logger.debug("No unmapped columns left")
 

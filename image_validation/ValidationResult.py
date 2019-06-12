@@ -20,7 +20,7 @@ class ValidationResultConstant:
     # errors occurred during submitting via USI API (the messages returned from API)
     USI_API = "usi api response"
     # errors occurred during checking relationships (pure relationship,
-    # not the attributes values for the related records
+    # not the attributes values for the related records (context validation)
     RELATIONSHIP = "relationship"
     # errors occurred during context validation
     CONTEXT = "context validation"
@@ -84,7 +84,9 @@ class ValidationResultColumn:
         if self.status_id != 1:
             if self.source == ValidationResultConstant.RULESET_CHECK:
                 return f"{self.status.capitalize()}: {self.message}"
-            elif self.source == ValidationResultConstant.USI_CHECK or self.source == ValidationResultConstant.GENERAL:
+            elif self.source == ValidationResultConstant.USI_CHECK \
+                    or self.source == ValidationResultConstant.RELATIONSHIP\
+                    or self.source == ValidationResultConstant.GENERAL:
                 return self.message
             else:
                 return f"{self.status.capitalize()}: {self.message} for Record {self.record_id}"
@@ -120,11 +122,11 @@ class ValidationResultColumn:
         :return: validation status
         """
         if self.status_id == 1:
-            return "Pass"
+            return ValidationResultConstant.PASS
         elif self.status_id == 0:
-            return "Error"
+            return ValidationResultConstant.ERROR
         else:
-            return "Warning"
+            return ValidationResultConstant.WARNING
 
     def get_source(self) -> str:
         """
@@ -203,11 +205,11 @@ class ValidationResultRecord:
         for one in self.result_set:
             result = result * one.status_id
         if result == 1:
-            return "Pass"
+            return ValidationResultConstant.PASS
         elif result == 0:
-            return "Error"
+            return ValidationResultConstant.ERROR
         else:
-            return "Warning"
+            return ValidationResultConstant.WARNING
 
     def get_size(self) -> int:
         """
@@ -244,14 +246,14 @@ class ValidationResultRecord:
             raise TypeError("Inclusive parameter must be a boolean value")
         status: str = self.get_overall_status()
         msgs: List[str] = []
-        if status == "Pass":
+        if status == ValidationResultConstant.PASS:
             return []
-        elif status == "Error":
-            msgs = self.add_messages(msgs, self.get_specific_result_type("Error"))
+        elif status == ValidationResultConstant.ERROR:
+            msgs = self.add_messages(msgs, self.get_specific_result_type(ValidationResultConstant.ERROR))
             if inclusive:
-                msgs = self.add_messages(msgs, self.get_specific_result_type("Warning"))
+                msgs = self.add_messages(msgs, self.get_specific_result_type(ValidationResultConstant.WARNING))
         else:
-            msgs = self.add_messages(msgs, self.get_specific_result_type("Warning"))
+            msgs = self.add_messages(msgs, self.get_specific_result_type(ValidationResultConstant.WARNING))
         return msgs
 
     @staticmethod
