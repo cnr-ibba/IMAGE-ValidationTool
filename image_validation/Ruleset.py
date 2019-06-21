@@ -304,7 +304,7 @@ class RuleField:
                 if value not in allowed_values:
                     if self.name == "Availability":
                         # available valid values include example@a.com and no longer available, needs to check for email
-                        if not misc.is_uri(value):
+                        if not misc.is_url(value):
                             msg = f'<{value}> of field Availability is neither "no longer available" nor a valid URI'
                             results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     else:  # not availability
@@ -321,7 +321,7 @@ class RuleField:
                 else:
                     for term in entry['terms']:
                         iri = term['url']
-                        if not misc.is_uri(iri):
+                        if not misc.is_url(iri):
                             msg = f"Invalid URI value {iri} in field {self.name}"
                             results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                             continue
@@ -372,8 +372,8 @@ class RuleField:
                                     msg = f"Provided value {value} does not match to the provided ontology {iri}"
                                     results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                 elif self.type == "uri":
-                    uri_result = misc.is_uri(value)
-                    if not uri_result:
+                    url_result = misc.is_url(value)
+                    if not url_result:
                         msg = f"Invalid URI value {value} for field {self.name}"
                         results.append(VRC(VRConstants.ERROR, msg + section_info, record_id, self.name))
                     else:  # is in URI

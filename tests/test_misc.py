@@ -64,18 +64,21 @@ class TestMisc(unittest.TestCase):
         self.assertRaises(TypeError, misc.is_email, -12.34)
         self.assertRaises(TypeError, misc.is_email, True)
 
-    def test_is_uri(self):
-        self.assertTrue(misc.is_uri("www.google.com"))
-        self.assertTrue(misc.is_uri("http://www.google.com"))
-        self.assertTrue(misc.is_uri("mailto:somebody@google.com"))
-        self.assertTrue(misc.is_uri("somebody@google.com"))
-        self.assertTrue(misc.is_uri("www.url-with-querystring.com/?url=has-querystring"))
-        self.assertFalse(misc.is_uri("www.  url-with-querystring.com /?url=has-querystring"))
+    def test_is_url(self):
+        self.assertTrue(misc.is_url("www.google.com"))
+        self.assertTrue(misc.is_url("http://www.google.com"))
+        self.assertTrue(misc.is_url("mailto:somebody@google.com"))
+        self.assertTrue(misc.is_url("somebody@google.com"))
+        self.assertTrue(misc.is_url("www.url-with-querystring.com/?url=has-querystring"))
+        self.assertFalse(misc.is_url("www.  url-with-querystring.com /?url=has-querystring"))
+        self.assertFalse(misc.is_url("justAstring"))
+        self.assertFalse(misc.is_url("justAstring."))
+        self.assertFalse(misc.is_url(".justAstring"))
 
-    def test_is_uri_types(self):
-        self.assertRaises(TypeError, misc.is_uri, 34)
-        self.assertRaises(TypeError, misc.is_uri, -12.34)
-        self.assertRaises(TypeError, misc.is_uri, True)
+    def test_is_url_types(self):
+        self.assertRaises(TypeError, misc.is_url, 34)
+        self.assertRaises(TypeError, misc.is_url, -12.34)
+        self.assertRaises(TypeError, misc.is_url, True)
 
     def test_is_doi(self):
         # not URI

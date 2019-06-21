@@ -125,6 +125,7 @@ class TestValidation(unittest.TestCase):
                 'Wrong JSON structure: In relationship alias can only take non-BioSamples accession, not SAMD00000001'
             ]
         }
+        data = dict()
         for error in expected.keys():
             filename = "test_data/usi/test_error_"+error+".json"
             try:

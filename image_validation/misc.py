@@ -64,19 +64,18 @@ def is_email(email: str, only: bool = False) -> bool:
     return False
 
 
-def is_uri(uri: str) -> bool:
+def is_url(url: str) -> bool:
     """
     check whether a string is a valid URI
     :param uri: the string to be checked
     :return: True if a valid URI, False otherwise
     """
-    if type(uri) is not str:
+    if type(url) is not str:
         raise TypeError("The method only take str as its input")
     # https://stackoverflow.com/questions/161738/what-is-the-best-regular-expression-to-check-if-a-string-is-a-valid-url
-    pattern = re.compile(
-        r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)"
-        r"[A-Za-z0-9.-]+)((?:\/[\+~%\/.-_\w]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)")
-    m = re.search(pattern, uri)
+    pattern = re.compile(r"^((http|ftp)s?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b"
+                         r"([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$")
+    m = re.search(pattern, url)
     if m:
         return True
     return False
